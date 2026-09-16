@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-obsidian: #0f172a;
+  --color-slate: #64748b;
+  --color-stone: #e2e8f0;
+  --color-lime: #dbff00;
+  --font-sans: var(--font-instrument);
+  --font-display: var(--font-barlow);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  @apply bg-white text-obsidian antialiased;
+}
