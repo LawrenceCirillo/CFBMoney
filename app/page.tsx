@@ -52,7 +52,7 @@ export default function HomePage() {
       <KpiStrip />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/spending"
             className="group border border-stone p-6 hover:border-obsidian transition-colors"
@@ -87,6 +87,18 @@ export default function HomePage() {
             </h3>
             <p className="mt-2 text-sm text-slate">
               Texas vs Ohio State — or any two schools — on spend, wins, and efficiency.
+            </p>
+          </Link>
+          <Link
+            href="/build"
+            className="group border border-stone p-6 hover:border-obsidian transition-colors"
+          >
+            <p className="text-[10px] font-medium uppercase tracking-wider text-slate">04</p>
+            <h3 className="mt-2 font-display text-2xl font-bold uppercase text-obsidian group-hover:underline">
+              Build
+            </h3>
+            <p className="mt-2 text-sm text-slate">
+              Sketch a roster budget and see which programs sit nearest that midpoint.
             </p>
           </Link>
         </div>

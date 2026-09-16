@@ -18,6 +18,12 @@ type Props = {
 
 export function SpendWinsScatter({ teams }: Props) {
   const [hovered, setHovered] = useState<Team | null>(null);
+  const [conference, setConference] = useState<string>("All");
+
+  const visible = useMemo(
+    () => teams.filter((t) => matchesConference(t, conference)),
+    [teams, conference],
+  );
 
   const plot = useMemo(() => {
     const innerW = WIDTH - MARGIN.left - MARGIN.right;
@@ -95,7 +101,7 @@ export function SpendWinsScatter({ teams }: Props) {
             >
               2025 wins
             </text>
-            {teams.map((team) => {
+            {visible.map((team) => {
               const wins = team.record2025.wins ?? 0;
               const cx = plot.x(team.budgetMid);
               const cy = plot.y(wins);
@@ -119,14 +125,37 @@ export function SpendWinsScatter({ teams }: Props) {
             })}
           </g>
         </svg>
-        <ul className="mt-2 flex flex-wrap gap-4 text-xs text-slate">
+        <ul className="mt-2 flex flex-wrap gap-2 text-xs text-slate">
+          <li>
+            <button
+              type="button"
+              onClick={() => setConference("All")}
+              className={`border px-2 py-1 ${
+                conference === "All"
+                  ? "border-obsidian text-obsidian"
+                  : "border-stone hover:border-obsidian"
+              }`}
+            >
+              All
+            </button>
+          </li>
           {CONFERENCE_LEGEND.map((c) => (
-            <li key={c.label} className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: c.color }}
-              />
-              {c.label}
+            <li key={c.label}>
+              <button
+                type="button"
+                onClick={() => setConference(c.label)}
+                className={`inline-flex items-center gap-1.5 border px-2 py-1 ${
+                  conference === c.label
+                    ? "border-obsidian text-obsidian"
+                    : "border-stone hover:border-obsidian"
+                }`}
+              >
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: c.color }}
+                />
+                {c.label}
+              </button>
             </li>
           ))}
         </ul>
@@ -135,7 +164,7 @@ export function SpendWinsScatter({ teams }: Props) {
         <p className="text-[10px] font-medium uppercase tracking-wider text-slate">
           Hover a team
         </p>
-        {hovered ? (
+        {hovered && visible.some((t) => t.slug === hovered.slug) ? (
           <div className="mt-3 space-y-2">
             <Link
               href={`/team/${hovered.slug}`}
@@ -162,9 +191,19 @@ export function SpendWinsScatter({ teams }: Props) {
             </dl>
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate">Move over a dot to preview budget and wins.</p>
+          <p className="mt-3 text-sm text-slate">
+            {conference === "All"
+              ? "Move over a dot to preview budget and wins."
+              : `${visible.length} ${conference} team${visible.length === 1 ? "" : "s"} — hover a dot.`}
+          </p>
         )}
       </aside>
     </div>
   );
+}
+
+function matchesConference(team: Team, filter: string): boolean {
+  if (filter === "All") return true;
+  if (filter === "Notre Dame") return team.name === "Notre Dame";
+  return team.conference === filter;
 }

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { TeamSearch } from "@/components/TeamSearch";
+import { getTeams } from "@/lib/data";
 
 const NAV = [
   { href: "/spending", label: "Teams" },
@@ -10,6 +12,7 @@ const NAV = [
 ];
 
 export function SiteHeader() {
+  const teams = getTeams();
   return (
     <header className="border-b border-stone bg-white">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
@@ -25,6 +28,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+        <TeamSearch teams={teams} />
       </div>
     </header>
   );
