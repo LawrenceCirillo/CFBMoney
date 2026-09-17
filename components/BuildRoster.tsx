@@ -233,7 +233,11 @@ export function BuildRoster({ teams, meta }: Props) {
             </button>
             <button
               type="button"
-              onClick={() => dispatch({ type: "reset" })}
+              onClick={() => {
+                dispatch({ type: "reset" });
+                setLocked(true);
+                setSelected("QB");
+              }}
               className="border border-stone px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-slate hover:border-obsidian hover:text-obsidian"
             >
               Reset
