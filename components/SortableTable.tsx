@@ -63,7 +63,7 @@ export function SortableTable<T>({
   }, [rows, columns, state]);
 
   return (
-    <div className="overflow-x-auto border border-stone">
+    <div className="overflow-x-auto overflow-y-hidden rounded-xl border border-stone">
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead>
           <tr className="border-b border-stone bg-stone/40">

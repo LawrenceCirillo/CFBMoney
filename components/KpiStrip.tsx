@@ -54,9 +54,9 @@ export function KpiStrip() {
 
   return (
     <section className="border-y border-stone bg-stone/30">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px bg-stone sm:grid-cols-3 lg:grid-cols-5">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 px-4 py-4 sm:grid-cols-3 sm:px-6 lg:grid-cols-5">
         {cards.map((card) => (
-          <div key={card.label} className="bg-white px-4 py-5 sm:px-5">
+          <div key={card.label} className="rounded-xl border border-stone bg-white px-4 py-5 sm:px-5">
             <p className="text-[10px] font-medium uppercase tracking-wider text-slate">
               {card.label}
             </p>

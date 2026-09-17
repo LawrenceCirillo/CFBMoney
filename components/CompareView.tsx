@@ -225,7 +225,7 @@ export function CompareView({ teams, initialLeft, initialRight }: Props) {
         />
       </div>
 
-      <div className="mt-10 overflow-x-auto border border-stone">
+      <div className="mt-10 overflow-x-auto overflow-y-hidden rounded-xl border border-stone">
         <table className="w-full min-w-[640px] text-sm">
           <thead>
             <tr className="border-b border-stone bg-stone/40">

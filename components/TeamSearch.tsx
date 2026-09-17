@@ -45,7 +45,7 @@ export function TeamSearch({ teams }: Props) {
         className="w-full border border-stone bg-white px-3 py-1.5 text-sm text-obsidian placeholder:text-slate"
       />
       {open && results.length > 0 ? (
-        <ul className="absolute right-0 z-20 mt-1 w-full border border-stone bg-white py-1 shadow-sm">
+        <ul className="absolute right-0 z-20 mt-1 w-full overflow-hidden rounded-xl border border-stone bg-white py-1 shadow-sm">
           {results.map((team) => (
             <li key={team.slug}>
               <Link
