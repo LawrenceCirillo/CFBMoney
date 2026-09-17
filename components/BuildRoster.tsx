@@ -51,57 +51,87 @@ function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }
 
+function tenths(n: number): number {
+  return Math.round(n * 10);
+}
+
+function fromTenths(t: number): number {
+  return t / 10;
+}
+
 function sumAlloc(a: Alloc): number {
-  return round1(POSITIONS.reduce((s, p) => s + a[p.id], 0));
+  return fromTenths(POSITIONS.reduce((s, p) => s + tenths(a[p.id]), 0));
+}
+
+function apportionTenths(
+  ids: PosId[],
+  weights: Record<PosId, number>,
+  totalTenths: number,
+): Record<PosId, number> {
+  const out = {} as Record<PosId, number>;
+  if (ids.length === 0) return out;
+  if (totalTenths <= 0) {
+    ids.forEach((id) => {
+      out[id] = 0;
+    });
+    return out;
+  }
+  const weightSum = ids.reduce((s, id) => s + Math.max(0, weights[id]), 0);
+  if (weightSum <= 0) {
+    ids.forEach((id, i) => {
+      out[id] = i === 0 ? totalTenths : 0;
+    });
+    return out;
+  }
+  const raw = ids.map((id) => (Math.max(0, weights[id]) / weightSum) * totalTenths);
+  const floors = raw.map((x) => Math.floor(x + 1e-9));
+  let leftover = totalTenths - floors.reduce((s, n) => s + n, 0);
+  const order = ids
+    .map((id, i) => ({ id, frac: raw[i] - floors[i], w: weights[id] }))
+    .sort((x, y) => y.frac - x.frac || y.w - x.w);
+  ids.forEach((id, i) => {
+    out[id] = floors[i];
+  });
+  for (let k = 0; leftover > 0 && k < order.length; k++) {
+    out[order[k].id] += 1;
+    leftover -= 1;
+  }
+  if (leftover > 0) out[ids[0]] += leftover;
+  return out;
 }
 
 function scaleAlloc(a: Alloc, target: number): Alloc {
-  const current = sumAlloc(a);
+  const currentTenths = POSITIONS.reduce((s, p) => s + tenths(a[p.id]), 0);
+  if (currentTenths <= 0) return { ...DEFAULT_ALLOC };
+  const weights = {} as Record<PosId, number>;
+  POSITIONS.forEach((p) => {
+    weights[p.id] = a[p.id];
+  });
+  const parts = apportionTenths(
+    POSITIONS.map((p) => p.id),
+    weights,
+    tenths(target),
+  );
   const next = { ...a };
-  if (current <= 0) return { ...DEFAULT_ALLOC };
-  let running = 0;
-  POSITIONS.forEach((p, i) => {
-    if (i === POSITIONS.length - 1) {
-      next[p.id] = Math.max(0, round1(target - running));
-    } else {
-      next[p.id] = Math.max(0, round1((a[p.id] * target) / current));
-      running += next[p.id];
-    }
+  POSITIONS.forEach((p) => {
+    next[p.id] = fromTenths(parts[p.id]);
   });
   return next;
 }
 
 function setPosKeepingTotal(a: Alloc, id: PosId, value: number): Alloc {
-  const total = sumAlloc(a);
-  const cap = Math.min(POS_MAX, total);
-  const newVal = round1(Math.min(cap, Math.max(0, value)));
-  const remaining = round1(total - newVal);
+  const totalTenths = POSITIONS.reduce((s, p) => s + tenths(a[p.id]), 0);
+  const newTenths = Math.min(Math.min(tenths(POS_MAX), totalTenths), Math.max(0, tenths(value)));
   const others = POSITIONS.map((p) => p.id).filter((oid) => oid !== id);
-  const otherSum = others.reduce((s, oid) => s + a[oid], 0);
-  const next = { ...a, [id]: newVal };
-
-  if (otherSum <= 0) {
-    others.forEach((oid, i) => {
-      next[oid] = i === 0 ? remaining : 0;
-    });
-    return next;
-  }
-
-  let running = 0;
-  others.forEach((oid, i) => {
-    if (i === others.length - 1) {
-      next[oid] = Math.max(0, round1(remaining - running));
-    } else {
-      next[oid] = Math.max(0, round1((a[oid] / otherSum) * remaining));
-      running += next[oid];
-    }
+  const weights = {} as Record<PosId, number>;
+  others.forEach((oid) => {
+    weights[oid] = a[oid];
   });
-
-  const drift = round1(sumAlloc(next) - total);
-  if (drift !== 0) {
-    const last = others[others.length - 1];
-    next[last] = Math.max(0, round1(next[last] - drift));
-  }
+  const parts = apportionTenths(others, weights, totalTenths - newTenths);
+  const next = { ...a, [id]: fromTenths(newTenths) };
+  others.forEach((oid) => {
+    next[oid] = fromTenths(parts[oid]);
+  });
   return next;
 }
 
