@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useState } from "react";
+import { RosterFormation, type PosId } from "@/components/RosterFormation";
 import type { Meta, Team } from "@/lib/types";
 import {
   formatBudgetMid,
@@ -11,37 +12,38 @@ import {
 } from "@/lib/format";
 
 const POSITIONS = [
-  { id: "QB", label: "QB" },
-  { id: "RB", label: "RB" },
-  { id: "WR", label: "WR" },
-  { id: "OL", label: "OL" },
-  { id: "DL", label: "DL" },
-  { id: "LB", label: "LB" },
-  { id: "DB", label: "DB" },
-  { id: "ST", label: "ST" },
-] as const;
+  { id: "QB" as const, label: "Quarterback", unit: "Offense" },
+  { id: "RB" as const, label: "Running back", unit: "Offense" },
+  { id: "WR" as const, label: "Wide receiver", unit: "Offense" },
+  { id: "TE" as const, label: "Tight end", unit: "Offense" },
+  { id: "OL" as const, label: "Offensive line", unit: "Offense" },
+  { id: "DL" as const, label: "Defensive line", unit: "Defense" },
+  { id: "LB" as const, label: "Linebacker", unit: "Defense" },
+  { id: "DB" as const, label: "Defensive back", unit: "Defense" },
+  { id: "ST" as const, label: "Special teams", unit: "Special teams" },
+];
 
-type PosId = (typeof POSITIONS)[number]["id"];
 type Alloc = Record<PosId, number>;
 
 const DEFAULT_ALLOC: Alloc = {
-  QB: 4.2,
-  RB: 1.9,
-  WR: 5.2,
+  QB: 4.0,
+  RB: 1.8,
+  WR: 3.6,
+  TE: 1.4,
   OL: 5.2,
-  DL: 5.2,
-  LB: 3.8,
-  DB: 3.8,
-  ST: 0.7,
+  DL: 5.0,
+  LB: 3.5,
+  DB: 4.5,
+  ST: 1.0,
 };
 
 const PEER_BAND = 3;
 const TOTAL_MIN = 8;
 const TOTAL_MAX = 55;
-const POS_MAX = 20;
+const POS_MAX = 25;
 
 type Action =
-  | { type: "setPos"; id: PosId; value: number }
+  | { type: "setPos"; id: PosId; value: number; locked: boolean }
   | { type: "setTotal"; value: number }
   | { type: "reset" };
 
@@ -69,10 +71,48 @@ function scaleAlloc(a: Alloc, target: number): Alloc {
   return next;
 }
 
+function setPosKeepingTotal(a: Alloc, id: PosId, value: number): Alloc {
+  const total = sumAlloc(a);
+  const cap = Math.min(POS_MAX, total);
+  const newVal = round1(Math.min(cap, Math.max(0, value)));
+  const remaining = round1(total - newVal);
+  const others = POSITIONS.map((p) => p.id).filter((oid) => oid !== id);
+  const otherSum = others.reduce((s, oid) => s + a[oid], 0);
+  const next = { ...a, [id]: newVal };
+
+  if (otherSum <= 0) {
+    others.forEach((oid, i) => {
+      next[oid] = i === 0 ? remaining : 0;
+    });
+    return next;
+  }
+
+  let running = 0;
+  others.forEach((oid, i) => {
+    if (i === others.length - 1) {
+      next[oid] = Math.max(0, round1(remaining - running));
+    } else {
+      next[oid] = Math.max(0, round1((a[oid] / otherSum) * remaining));
+      running += next[oid];
+    }
+  });
+
+  const drift = round1(sumAlloc(next) - total);
+  if (drift !== 0) {
+    const last = others[others.length - 1];
+    next[last] = Math.max(0, round1(next[last] - drift));
+  }
+  return next;
+}
+
 function reducer(state: Alloc, action: Action): Alloc {
   switch (action.type) {
     case "setPos":
-      return { ...state, [action.id]: round1(Math.min(POS_MAX, Math.max(0, action.value))) };
+      if (action.locked) return setPosKeepingTotal(state, action.id, action.value);
+      return {
+        ...state,
+        [action.id]: round1(Math.min(POS_MAX, Math.max(0, action.value))),
+      };
     case "setTotal": {
       const target = round1(Math.min(TOTAL_MAX, Math.max(TOTAL_MIN, action.value)));
       return scaleAlloc(state, target);
@@ -89,6 +129,12 @@ function budgetMatchPct(mid: number, total: number): number {
   return Math.max(0, Math.round(100 * (1 - d / 20)));
 }
 
+function unitTotal(a: Alloc, unit: string): number {
+  return round1(
+    POSITIONS.filter((p) => p.unit === unit).reduce((s, p) => s + a[p.id], 0),
+  );
+}
+
 type Props = {
   teams: Team[];
   meta: Meta;
@@ -96,8 +142,12 @@ type Props = {
 
 export function BuildRoster({ teams, meta }: Props) {
   const [alloc, dispatch] = useReducer(reducer, DEFAULT_ALLOC);
+  const [locked, setLocked] = useState(true);
+  const [selected, setSelected] = useState<PosId>("QB");
   const total = sumAlloc(alloc);
   const expected = meta.moneyballModel.intercept + meta.moneyballModel.slope * total;
+  const selectedMeta = POSITIONS.find((p) => p.id === selected)!;
+  const sliderMax = locked ? Math.max(alloc[selected], total) : POS_MAX;
 
   const nearest = useMemo(() => {
     return [...teams]
@@ -115,6 +165,15 @@ export function BuildRoster({ teams, meta }: Props) {
     [teams, total],
   );
 
+  function nudge(delta: number) {
+    dispatch({
+      type: "setPos",
+      id: selected,
+      value: alloc[selected] + delta,
+      locked,
+    });
+  }
+
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
       <section>
@@ -124,19 +183,37 @@ export function BuildRoster({ teams, meta }: Props) {
               Your budget
             </p>
             <p className="font-mono text-4xl font-medium text-obsidian">${total.toFixed(1)}M</p>
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-slate">
+              Off {unitTotal(alloc, "Offense").toFixed(1)} · Def{" "}
+              {unitTotal(alloc, "Defense").toFixed(1)} · ST {unitTotal(alloc, "Special teams").toFixed(1)}
+            </p>
           </div>
-          <button
-            type="button"
-            onClick={() => dispatch({ type: "reset" })}
-            className="border border-stone px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-slate hover:border-obsidian hover:text-obsidian"
-          >
-            Reset
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setLocked((v) => !v)}
+              aria-pressed={locked}
+              className={`border px-3 py-1.5 text-xs font-medium uppercase tracking-wider ${
+                locked
+                  ? "border-obsidian bg-obsidian text-white"
+                  : "border-stone text-slate hover:border-obsidian hover:text-obsidian"
+              }`}
+            >
+              {locked ? "Budget locked" : "Lock budget"}
+            </button>
+            <button
+              type="button"
+              onClick={() => dispatch({ type: "reset" })}
+              className="border border-stone px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-slate hover:border-obsidian hover:text-obsidian"
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
         <label className="mt-6 block">
           <span className="text-[10px] font-medium uppercase tracking-wider text-slate">
-            Scale total
+            {locked ? "Set locked total" : "Scale total"}
           </span>
           <input
             type="range"
@@ -148,33 +225,66 @@ export function BuildRoster({ teams, meta }: Props) {
             className="mt-2 w-full accent-[#DBFF00]"
           />
         </label>
+        <p className="mt-2 text-xs text-slate">
+          {locked
+            ? "Moving a position takes from the rest of the roster so the total stays put."
+            : "Unlocked: raising a position increases the overall budget."}
+        </p>
 
-        <ul className="mt-8 space-y-4">
-          {POSITIONS.map((p) => (
-            <li key={p.id} className="grid grid-cols-[2.5rem_1fr_4.5rem] items-center gap-3">
-              <span className="font-mono text-sm font-medium text-obsidian">{p.label}</span>
-              <input
-                type="range"
-                min={0}
-                max={POS_MAX}
-                step={0.1}
-                value={alloc[p.id]}
-                onChange={(e) =>
-                  dispatch({ type: "setPos", id: p.id, value: Number(e.target.value) })
-                }
-                className="w-full accent-[#DBFF00]"
-                aria-label={`${p.label} allocation`}
-              />
-              <span className="text-right font-mono text-sm text-obsidian">
-                ${alloc[p.id].toFixed(1)}M
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-8">
+          <RosterFormation selected={selected} alloc={alloc} onSelect={setSelected} />
+        </div>
+
+        <div className="mt-6 border border-stone p-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <p className="font-display text-xl font-bold uppercase text-obsidian">
+              {selectedMeta.label}
+            </p>
+            <p className="font-mono text-lg text-obsidian">${alloc[selected].toFixed(1)}M</p>
+          </div>
+          <p className="text-[10px] uppercase tracking-wider text-slate">{selectedMeta.unit}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => nudge(-0.1)}
+              className="border border-stone px-2 py-1 font-mono text-sm hover:border-obsidian"
+              aria-label="Decrease group"
+            >
+              −
+            </button>
+            <input
+              type="range"
+              min={0}
+              max={sliderMax}
+              step={0.1}
+              value={Math.min(alloc[selected], sliderMax)}
+              onChange={(e) =>
+                dispatch({
+                  type: "setPos",
+                  id: selected,
+                  value: Number(e.target.value),
+                  locked,
+                })
+              }
+              className="w-full accent-[#DBFF00]"
+              aria-label={`${selectedMeta.label} allocation`}
+            />
+            <button
+              type="button"
+              onClick={() => nudge(0.1)}
+              className="border border-stone px-2 py-1 font-mono text-sm hover:border-obsidian"
+              aria-label="Increase group"
+            >
+              +
+            </button>
+          </div>
+        </div>
 
         <p className="mt-6 text-xs leading-relaxed text-slate">
-          Position splits are a planning sketch, not Athletic data. Published figures are team-level
-          ranges only. Expected wins use {meta.moneyballModel.formula}.
+          Field is 11-on-11 in 11 personnel (X/Y/Z receivers, HB) and a 4–3 front, plus
+          returners and specialists. Same-color chips share one group pool — all five OL
+          spots are one OL budget. Splits are a planning sketch, not Athletic data. Expected
+          wins use {meta.moneyballModel.formula}.
         </p>
       </section>
 

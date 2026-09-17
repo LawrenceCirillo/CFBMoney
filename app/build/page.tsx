@@ -17,9 +17,8 @@ export default function BuildPage() {
         Build a roster
       </h1>
       <p className="mt-4 max-w-2xl text-slate">
-        Set a hypothetical 2026 roster budget, allocate it by position, and see which Power 4
-        programs sit nearest that midpoint. Splits are yours; published Athletic numbers remain
-        ranges.
+        Tap a spot on the field to fund that position group. Lock the budget and the other
+        groups give so the total stays put. Splits are yours; Athletic numbers remain ranges.
       </p>
       <div className="mt-10">
         <BuildRoster teams={teams} meta={meta} />
