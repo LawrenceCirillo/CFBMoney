@@ -1,0 +1,4945 @@
+[
+  {
+    "slug": "ohio-state",
+    "name": "Ohio State",
+    "conference": "Big Ten",
+    "budgetMin": 49.0,
+    "budgetMax": 54.0,
+    "budgetMid": 51.5,
+    "record2025": {
+      "wins": 12,
+      "losses": 2,
+      "confWins": 9,
+      "confLosses": 0
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 11.135,
+      "winsAboveExpected2025": 0.865,
+      "dollarsPerWin2025MidM": 4.2917,
+      "dollarsPerWin2026MidM": 51.5
+    },
+    "recruiting": {
+      "rank2025": 4,
+      "points2025": 297.72,
+      "rankAvg2022_2025": 4.5,
+      "pointsAvg2022_2025": 294.19
+    },
+    "ratings": {
+      "spPlus2025": 30.1,
+      "spRank2025": 2,
+      "spPlus2026": 29.2,
+      "spRank2026": 2,
+      "fpi2025": 27.617,
+      "fpiRank2025": 2,
+      "fpi2026": 30.42,
+      "fpiRank2026": 1
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 11,
+        "avgRating": 0.8856,
+        "starPoints": 31.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 60
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.8869,
+        "starPoints": 54.0,
+        "stars4": 6,
+        "stars5": 0,
+        "rankInP4": 44
+      }
+    },
+    "knightNewhouse": {
+      "institution": "The Ohio State University",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/ohio-state-university",
+      "fy": 2025,
+      "totalRevM": 336.078,
+      "totalExpM": 320.662,
+      "ticketSalesM": 81.651,
+      "donationsM": 68.955,
+      "mediaConferenceM": 97.839,
+      "footballSpendingM": 92.359,
+      "coachesCompM": 59.838,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.11,
+      "rosterAsPctOfFootballSpend": 55.76,
+      "rosterAsPctOfTotalRev": 15.32
+    },
+    "cfbdTeam": "Ohio State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $51.5M"
+  },
+  {
+    "slug": "oregon",
+    "name": "Oregon",
+    "conference": "Big Ten",
+    "budgetMin": 48.0,
+    "budgetMax": 54.0,
+    "budgetMid": 51.0,
+    "record2025": {
+      "wins": 13,
+      "losses": 2,
+      "confWins": 8,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 11.059,
+      "winsAboveExpected2025": 1.941,
+      "dollarsPerWin2025MidM": 3.9231,
+      "dollarsPerWin2026MidM": 51.0
+    },
+    "recruiting": {
+      "rank2025": 5,
+      "points2025": 296.1,
+      "rankAvg2022_2025": 7.5,
+      "pointsAvg2022_2025": 277.78
+    },
+    "ratings": {
+      "spPlus2025": 25.9,
+      "spRank2025": 4,
+      "spPlus2026": 22.9,
+      "spRank2026": 9,
+      "fpi2025": 23.872,
+      "fpiRank2025": 4,
+      "fpi2026": 17.062,
+      "fpiRank2026": 13
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 11,
+        "avgRating": 0.903,
+        "starPoints": 40.0,
+        "stars4": 8,
+        "stars5": 0,
+        "rankInP4": 54
+      },
+      "2026": {
+        "transfersIn": 13,
+        "avgRating": 0.885,
+        "starPoints": 39.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 59
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Oregon",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-oregon",
+      "fy": 2025,
+      "totalRevM": 185.421,
+      "totalExpM": 182.702,
+      "ticketSalesM": 34.92,
+      "donationsM": 33.165,
+      "mediaConferenceM": 69.211,
+      "footballSpendingM": 60.847,
+      "coachesCompM": 44.191,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.483,
+      "rosterAsPctOfFootballSpend": 83.82,
+      "rosterAsPctOfTotalRev": 27.5
+    },
+    "cfbdTeam": "Oregon",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $51.0M"
+  },
+  {
+    "slug": "texas",
+    "name": "Texas",
+    "conference": "SEC",
+    "budgetMin": 45.0,
+    "budgetMax": 55.0,
+    "budgetMid": 50.0,
+    "record2025": {
+      "wins": 10,
+      "losses": 3,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 10.906,
+      "winsAboveExpected2025": -0.906,
+      "dollarsPerWin2025MidM": 5.0,
+      "dollarsPerWin2026MidM": 25.0
+    },
+    "recruiting": {
+      "rank2025": 1,
+      "points2025": 312.27,
+      "rankAvg2022_2025": 3.75,
+      "pointsAvg2022_2025": 298.63
+    },
+    "ratings": {
+      "spPlus2025": 16.2,
+      "spRank2025": 17,
+      "spPlus2026": 25.0,
+      "spRank2026": 6,
+      "fpi2025": 18.576,
+      "fpiRank2025": 11,
+      "fpi2026": 30.109,
+      "fpiRank2026": 2
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 11,
+        "avgRating": 0.88,
+        "starPoints": 33.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 58
+      },
+      "2026": {
+        "transfersIn": 22,
+        "avgRating": 0.8879,
+        "starPoints": 70.0,
+        "stars4": 7,
+        "stars5": 1,
+        "rankInP4": 29
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Texas at Austin",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-texas-austin",
+      "fy": 2025,
+      "totalRevM": 352.548,
+      "totalExpM": 379.285,
+      "ticketSalesM": 70.984,
+      "donationsM": 171.166,
+      "mediaConferenceM": 33.604,
+      "footballSpendingM": 73.882,
+      "coachesCompM": 57.05,
+      "nilRevShareLine44M": 3.235,
+      "recruitingExpM": 5.785,
+      "rosterAsPctOfFootballSpend": 67.68,
+      "rosterAsPctOfTotalRev": 14.18
+    },
+    "cfbdTeam": "Texas",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $50.0M"
+  },
+  {
+    "slug": "lsu",
+    "name": "LSU",
+    "conference": "SEC",
+    "budgetMin": 47.0,
+    "budgetMax": 50.0,
+    "budgetMid": 48.5,
+    "record2025": {
+      "wins": 7,
+      "losses": 6,
+      "confWins": 3,
+      "confLosses": 5
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 10.677,
+      "winsAboveExpected2025": -3.677,
+      "dollarsPerWin2025MidM": 6.9286,
+      "dollarsPerWin2026MidM": 24.25
+    },
+    "recruiting": {
+      "rank2025": 10,
+      "points2025": 281.53,
+      "rankAvg2022_2025": 8.75,
+      "pointsAvg2022_2025": 273.69
+    },
+    "ratings": {
+      "spPlus2025": 10.3,
+      "spRank2025": 32,
+      "spPlus2026": 24.1,
+      "spRank2026": 8,
+      "fpi2025": 10.712,
+      "fpiRank2025": 25,
+      "fpi2026": 22.594,
+      "fpiRank2026": 9
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8994,
+        "starPoints": 65.0,
+        "stars4": 11,
+        "stars5": 0,
+        "rankInP4": 27
+      },
+      "2026": {
+        "transfersIn": 44,
+        "avgRating": 0.8878,
+        "starPoints": 147.0,
+        "stars4": 15,
+        "stars5": 3,
+        "rankInP4": 2
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Louisiana State University",
+      "url": "https://knightnewhousedata.org/fbs/sec/louisiana-state-university",
+      "fy": 2025,
+      "totalRevM": 223.457,
+      "totalExpM": 223.429,
+      "ticketSalesM": 53.628,
+      "donationsM": 68.684,
+      "mediaConferenceM": 75.446,
+      "footballSpendingM": 50.739,
+      "coachesCompM": 46.786,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 5.263,
+      "rosterAsPctOfFootballSpend": 95.59,
+      "rosterAsPctOfTotalRev": 21.7
+    },
+    "cfbdTeam": "LSU",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $48.5M"
+  },
+  {
+    "slug": "texas-a-m",
+    "name": "Texas A&M",
+    "conference": "SEC",
+    "budgetMin": 45.0,
+    "budgetMax": 50.0,
+    "budgetMid": 47.5,
+    "record2025": {
+      "wins": 11,
+      "losses": 2,
+      "confWins": 7,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 10.524,
+      "winsAboveExpected2025": 0.476,
+      "dollarsPerWin2025MidM": 4.3182,
+      "dollarsPerWin2026MidM": 23.75
+    },
+    "recruiting": {
+      "rank2025": 9,
+      "points2025": 282.42,
+      "rankAvg2022_2025": 11.0,
+      "pointsAvg2022_2025": 282.39
+    },
+    "ratings": {
+      "spPlus2025": 20.7,
+      "spRank2025": 9,
+      "spPlus2026": 24.2,
+      "spRank2026": 7,
+      "fpi2025": 18.374,
+      "fpiRank2025": 12,
+      "fpi2026": 23.071,
+      "fpiRank2026": 8
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 13,
+        "avgRating": 0.8831,
+        "starPoints": 44.0,
+        "stars4": 5,
+        "stars5": 0,
+        "rankInP4": 51
+      },
+      "2026": {
+        "transfersIn": 19,
+        "avgRating": 0.8794,
+        "starPoints": 58.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 37
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Texas A & M University",
+      "url": "https://knightnewhousedata.org/fbs/sec/texas-m-university",
+      "fy": 2025,
+      "totalRevM": 235.547,
+      "totalExpM": 228.351,
+      "ticketSalesM": 64.341,
+      "donationsM": 50.063,
+      "mediaConferenceM": 65.695,
+      "footballSpendingM": 60.23,
+      "coachesCompM": 38.24,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.899,
+      "rosterAsPctOfFootballSpend": 78.86,
+      "rosterAsPctOfTotalRev": 20.17
+    },
+    "cfbdTeam": "Texas A&M",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $47.5M"
+  },
+  {
+    "slug": "miami",
+    "name": "Miami",
+    "conference": "ACC",
+    "budgetMin": 44.0,
+    "budgetMax": 50.0,
+    "budgetMid": 47.0,
+    "record2025": {
+      "wins": 13,
+      "losses": 3,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 10.447,
+      "winsAboveExpected2025": 2.553,
+      "dollarsPerWin2025MidM": 3.6154,
+      "dollarsPerWin2026MidM": 23.5
+    },
+    "recruiting": {
+      "rank2025": 13,
+      "points2025": 257.66,
+      "rankAvg2022_2025": 10.0,
+      "pointsAvg2022_2025": 267.22
+    },
+    "ratings": {
+      "spPlus2025": 20.7,
+      "spRank2025": 9,
+      "spPlus2026": 25.6,
+      "spRank2026": 4,
+      "fpi2025": 22.396,
+      "fpiRank2025": 5,
+      "fpi2026": 25.741,
+      "fpiRank2026": 5
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8929,
+        "starPoints": 59.0,
+        "stars4": 8,
+        "stars5": 0,
+        "rankInP4": 33
+      },
+      "2026": {
+        "transfersIn": 12,
+        "avgRating": 0.8967,
+        "starPoints": 43.0,
+        "stars4": 7,
+        "stars5": 0,
+        "rankInP4": 56
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Miami",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $47.0M"
+  },
+  {
+    "slug": "notre-dame",
+    "name": "Notre Dame",
+    "conference": "Independent",
+    "budgetMin": 41.0,
+    "budgetMax": 48.0,
+    "budgetMid": 44.5,
+    "record2025": {
+      "wins": 10,
+      "losses": 2,
+      "confWins": null,
+      "confLosses": null
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 10.066,
+      "winsAboveExpected2025": -0.066,
+      "dollarsPerWin2025MidM": 4.45,
+      "dollarsPerWin2026MidM": 22.25
+    },
+    "recruiting": {
+      "rank2025": 12,
+      "points2025": 270.22,
+      "rankAvg2022_2025": 10.0,
+      "pointsAvg2022_2025": 273.49
+    },
+    "ratings": {
+      "spPlus2025": 24.4,
+      "spRank2025": 5,
+      "spPlus2026": 29.0,
+      "spRank2026": 3,
+      "fpi2025": 25.279,
+      "fpiRank2025": 3,
+      "fpi2026": 27.901,
+      "fpiRank2026": 3
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 8,
+        "avgRating": 0.87,
+        "starPoints": 22.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 66
+      },
+      "2026": {
+        "transfersIn": 7,
+        "avgRating": 0.9271,
+        "starPoints": 28.0,
+        "stars4": 7,
+        "stars5": 0,
+        "rankInP4": 66
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Notre Dame",
+    "notes": "Independent: no conference W-L; 2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $44.5M"
+  },
+  {
+    "slug": "ole-miss",
+    "name": "Ole Miss",
+    "conference": "SEC",
+    "budgetMin": 39.0,
+    "budgetMax": 45.0,
+    "budgetMid": 42.0,
+    "record2025": {
+      "wins": 13,
+      "losses": 2,
+      "confWins": 7,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.683,
+      "winsAboveExpected2025": 3.317,
+      "dollarsPerWin2025MidM": 3.2308,
+      "dollarsPerWin2026MidM": 21.0
+    },
+    "recruiting": {
+      "rank2025": 16,
+      "points2025": 251.63,
+      "rankAvg2022_2025": 20.75,
+      "pointsAvg2022_2025": 235.54
+    },
+    "ratings": {
+      "spPlus2025": 24.0,
+      "spRank2025": 7,
+      "spPlus2026": 15.2,
+      "spRank2026": 20,
+      "fpi2025": 19.342,
+      "fpiRank2025": 9,
+      "fpi2026": 15.47,
+      "fpiRank2026": 17
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 28,
+        "avgRating": 0.8768,
+        "starPoints": 92.0,
+        "stars4": 8,
+        "stars5": 0,
+        "rankInP4": 11
+      },
+      "2026": {
+        "transfersIn": 28,
+        "avgRating": 0.8839,
+        "starPoints": 94.0,
+        "stars4": 10,
+        "stars5": 0,
+        "rankInP4": 14
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Mississippi",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-mississippi",
+      "fy": 2025,
+      "totalRevM": 178.621,
+      "totalExpM": 183.768,
+      "ticketSalesM": 26.582,
+      "donationsM": 49.85,
+      "mediaConferenceM": 72.796,
+      "footballSpendingM": 61.881,
+      "coachesCompM": 39.892,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.295,
+      "rosterAsPctOfFootballSpend": 67.87,
+      "rosterAsPctOfTotalRev": 23.51
+    },
+    "cfbdTeam": "Ole Miss",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $42.0M"
+  },
+  {
+    "slug": "tennessee",
+    "name": "Tennessee",
+    "conference": "SEC",
+    "budgetMin": 41.0,
+    "budgetMax": 43.0,
+    "budgetMid": 42.0,
+    "record2025": {
+      "wins": 8,
+      "losses": 5,
+      "confWins": 4,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.683,
+      "winsAboveExpected2025": -1.683,
+      "dollarsPerWin2025MidM": 5.25,
+      "dollarsPerWin2026MidM": 21.0
+    },
+    "recruiting": {
+      "rank2025": 11,
+      "points2025": 277.93,
+      "rankAvg2022_2025": 13.25,
+      "pointsAvg2022_2025": 263.74
+    },
+    "ratings": {
+      "spPlus2025": 15.0,
+      "spRank2025": 19,
+      "spPlus2026": 20.2,
+      "spRank2026": 11,
+      "fpi2025": 14.31,
+      "fpiRank2025": 19,
+      "fpi2026": 17.866,
+      "fpiRank2026": 11
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 7,
+        "avgRating": 0.8657,
+        "starPoints": 22.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 67
+      },
+      "2026": {
+        "transfersIn": 21,
+        "avgRating": 0.8695,
+        "starPoints": 60.0,
+        "stars4": 1,
+        "stars5": 1,
+        "rankInP4": 35
+      }
+    },
+    "knightNewhouse": {
+      "institution": "The University of Tennessee",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-tennessee",
+      "fy": 2025,
+      "totalRevM": 304.118,
+      "totalExpM": 288.186,
+      "ticketSalesM": 52.164,
+      "donationsM": 113.59,
+      "mediaConferenceM": 66.036,
+      "footballSpendingM": 74.018,
+      "coachesCompM": 45.632,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 7.7,
+      "rosterAsPctOfFootballSpend": 56.74,
+      "rosterAsPctOfTotalRev": 13.81
+    },
+    "cfbdTeam": "Tennessee",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $42.0M"
+  },
+  {
+    "slug": "alabama",
+    "name": "Alabama",
+    "conference": "SEC",
+    "budgetMin": 38.0,
+    "budgetMax": 42.0,
+    "budgetMid": 40.0,
+    "record2025": {
+      "wins": 11,
+      "losses": 4,
+      "confWins": 7,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.378,
+      "winsAboveExpected2025": 1.622,
+      "dollarsPerWin2025MidM": 3.6364,
+      "dollarsPerWin2026MidM": 20.0
+    },
+    "recruiting": {
+      "rank2025": 3,
+      "points2025": 298.4,
+      "rankAvg2022_2025": 2.0,
+      "pointsAvg2022_2025": 314.85
+    },
+    "ratings": {
+      "spPlus2025": 14.8,
+      "spRank2025": 20,
+      "spPlus2026": 21.2,
+      "spRank2026": 10,
+      "fpi2025": 19.012,
+      "fpiRank2025": 10,
+      "fpi2026": 23.24,
+      "fpiRank2026": 7
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 11,
+        "avgRating": 0.8791,
+        "starPoints": 37.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 56
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.8812,
+        "starPoints": 56.0,
+        "stars4": 5,
+        "stars5": 0,
+        "rankInP4": 42
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Alabama",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-alabama",
+      "fy": 2025,
+      "totalRevM": 267.436,
+      "totalExpM": 234.739,
+      "ticketSalesM": 49.108,
+      "donationsM": 67.428,
+      "mediaConferenceM": 80.067,
+      "footballSpendingM": 82.859,
+      "coachesCompM": 44.104,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 6.162,
+      "rosterAsPctOfFootballSpend": 48.27,
+      "rosterAsPctOfTotalRev": 14.96
+    },
+    "cfbdTeam": "Alabama",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $40.0M"
+  },
+  {
+    "slug": "texas-tech",
+    "name": "Texas Tech",
+    "conference": "Big 12",
+    "budgetMin": 38.0,
+    "budgetMax": 42.0,
+    "budgetMid": 40.0,
+    "record2025": {
+      "wins": 12,
+      "losses": 2,
+      "confWins": 8,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.378,
+      "winsAboveExpected2025": 2.622,
+      "dollarsPerWin2025MidM": 3.3333,
+      "dollarsPerWin2026MidM": 20.0
+    },
+    "recruiting": {
+      "rank2025": 48,
+      "points2025": 201.51,
+      "rankAvg2022_2025": 36.0,
+      "pointsAvg2022_2025": 214.25
+    },
+    "ratings": {
+      "spPlus2025": 27.6,
+      "spRank2025": 3,
+      "spPlus2026": 19.1,
+      "spRank2026": 15,
+      "fpi2025": 21.536,
+      "fpiRank2025": 6,
+      "fpi2026": 16.068,
+      "fpiRank2026": 16
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 21,
+        "avgRating": 0.8876,
+        "starPoints": 72.0,
+        "stars4": 9,
+        "stars5": 0,
+        "rankInP4": 21
+      },
+      "2026": {
+        "transfersIn": 23,
+        "avgRating": 0.874,
+        "starPoints": 69.0,
+        "stars4": 4,
+        "stars5": 1,
+        "rankInP4": 30
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Texas Tech University",
+      "url": "https://knightnewhousedata.org/fbs/big-12/texas-tech-university",
+      "fy": 2025,
+      "totalRevM": 145.303,
+      "totalExpM": 144.42,
+      "ticketSalesM": 19.52,
+      "donationsM": 42.87,
+      "mediaConferenceM": 39.81,
+      "footballSpendingM": 51.315,
+      "coachesCompM": 28.37,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.95,
+      "rosterAsPctOfFootballSpend": 77.95,
+      "rosterAsPctOfTotalRev": 27.53
+    },
+    "cfbdTeam": "Texas Tech",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $40.0M"
+  },
+  {
+    "slug": "usc",
+    "name": "USC",
+    "conference": "Big Ten",
+    "budgetMin": 37.0,
+    "budgetMax": 40.0,
+    "budgetMid": 38.5,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 7,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 3,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.149,
+      "winsAboveExpected2025": -0.149,
+      "dollarsPerWin2025MidM": 4.2778,
+      "dollarsPerWin2026MidM": 12.8333
+    },
+    "recruiting": {
+      "rank2025": 14,
+      "points2025": 257.02,
+      "rankAvg2022_2025": 27.25,
+      "pointsAvg2022_2025": 239.18
+    },
+    "ratings": {
+      "spPlus2025": 16.9,
+      "spRank2025": 16,
+      "spPlus2026": 19.5,
+      "spRank2026": 12,
+      "fpi2025": 17.962,
+      "fpiRank2025": 13,
+      "fpi2026": 18.452,
+      "fpiRank2026": 10
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 15,
+        "avgRating": 0.8713,
+        "starPoints": 49.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 45
+      },
+      "2026": {
+        "transfersIn": 9,
+        "avgRating": 0.8787,
+        "starPoints": 27.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 67
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "USC",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $38.5M"
+  },
+  {
+    "slug": "indiana",
+    "name": "Indiana",
+    "conference": "Big Ten",
+    "budgetMin": 36.0,
+    "budgetMax": 40.0,
+    "budgetMid": 38.0,
+    "record2025": {
+      "wins": 16,
+      "losses": 0,
+      "confWins": 9,
+      "confLosses": 0
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.072,
+      "winsAboveExpected2025": 6.928,
+      "dollarsPerWin2025MidM": 2.375,
+      "dollarsPerWin2026MidM": 19.0
+    },
+    "recruiting": {
+      "rank2025": 47,
+      "points2025": 201.75,
+      "rankAvg2022_2025": 51.75,
+      "pointsAvg2022_2025": 194.76
+    },
+    "ratings": {
+      "spPlus2025": 32.4,
+      "spRank2025": 1,
+      "spPlus2026": 25.4,
+      "spRank2026": 5,
+      "fpi2025": 31.487,
+      "fpiRank2025": 1,
+      "fpi2026": 25.313,
+      "fpiRank2026": 6
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 23,
+        "avgRating": 0.8638,
+        "starPoints": 65.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 28
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.8873,
+        "starPoints": 50.0,
+        "stars4": 5,
+        "stars5": 0,
+        "rankInP4": 51
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Indiana University, Bloomington",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/indiana-university-bloomington",
+      "fy": 2025,
+      "totalRevM": 183.433,
+      "totalExpM": 173.021,
+      "ticketSalesM": 29.574,
+      "donationsM": 26.431,
+      "mediaConferenceM": 80.626,
+      "footballSpendingM": 50.71,
+      "coachesCompM": 38.155,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.599,
+      "rosterAsPctOfFootballSpend": 74.94,
+      "rosterAsPctOfTotalRev": 20.72
+    },
+    "cfbdTeam": "Indiana",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $38.0M"
+  },
+  {
+    "slug": "michigan",
+    "name": "Michigan",
+    "conference": "Big Ten",
+    "budgetMin": 36.0,
+    "budgetMax": 40.0,
+    "budgetMid": 38.0,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 7,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 9.072,
+      "winsAboveExpected2025": -0.072,
+      "dollarsPerWin2025MidM": 4.2222,
+      "dollarsPerWin2026MidM": 19.0
+    },
+    "recruiting": {
+      "rank2025": 6,
+      "points2025": 290.87,
+      "rankAvg2022_2025": 12.0,
+      "pointsAvg2022_2025": 265.02
+    },
+    "ratings": {
+      "spPlus2025": 12.4,
+      "spRank2025": 25,
+      "spPlus2026": 13.8,
+      "spRank2026": 25,
+      "fpi2025": 14.243,
+      "fpiRank2025": 20,
+      "fpi2026": 14.449,
+      "fpiRank2026": 22
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 17,
+        "avgRating": 0.8612,
+        "starPoints": 50.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 43
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.8786,
+        "starPoints": 52.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 46
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Michigan",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-michigan",
+      "fy": 2025,
+      "totalRevM": 275.844,
+      "totalExpM": 269.554,
+      "ticketSalesM": 75.862,
+      "donationsM": 50.362,
+      "mediaConferenceM": 80.623,
+      "footballSpendingM": 61.663,
+      "coachesCompM": 40.544,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 6.105,
+      "rosterAsPctOfFootballSpend": 61.63,
+      "rosterAsPctOfTotalRev": 13.78
+    },
+    "cfbdTeam": "Michigan",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $38.0M"
+  },
+  {
+    "slug": "florida",
+    "name": "Florida",
+    "conference": "SEC",
+    "budgetMin": 31.0,
+    "budgetMax": 41.0,
+    "budgetMid": 36.0,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 2,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 8.767,
+      "winsAboveExpected2025": -4.767,
+      "dollarsPerWin2025MidM": 9.0,
+      "dollarsPerWin2026MidM": 18.0
+    },
+    "recruiting": {
+      "rank2025": 7,
+      "points2025": 287.77,
+      "rankAvg2022_2025": 12.5,
+      "pointsAvg2022_2025": 265.11
+    },
+    "ratings": {
+      "spPlus2025": 3.5,
+      "spRank2025": 63,
+      "spPlus2026": 19.4,
+      "spRank2026": 13,
+      "fpi2025": 8.194,
+      "fpiRank2025": 35,
+      "fpi2026": 16.215,
+      "fpiRank2026": 15
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 8,
+        "avgRating": 0.8543,
+        "starPoints": 24.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 65
+      },
+      "2026": {
+        "transfersIn": 27,
+        "avgRating": 0.8625,
+        "starPoints": 73.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 27
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Florida",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-florida",
+      "fy": 2025,
+      "totalRevM": 221.066,
+      "totalExpM": 201.0,
+      "ticketSalesM": 47.699,
+      "donationsM": 53.496,
+      "mediaConferenceM": 76.762,
+      "footballSpendingM": 52.016,
+      "coachesCompM": 38.316,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.401,
+      "rosterAsPctOfFootballSpend": 69.21,
+      "rosterAsPctOfTotalRev": 16.28
+    },
+    "cfbdTeam": "Florida",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $36.0M"
+  },
+  {
+    "slug": "south-carolina",
+    "name": "South Carolina",
+    "conference": "SEC",
+    "budgetMin": 32.0,
+    "budgetMax": 35.0,
+    "budgetMid": 33.5,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 1,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 8.385,
+      "winsAboveExpected2025": -4.385,
+      "dollarsPerWin2025MidM": 8.375,
+      "dollarsPerWin2026MidM": 16.75
+    },
+    "recruiting": {
+      "rank2025": 18,
+      "points2025": 244.27,
+      "rankAvg2022_2025": 20.25,
+      "pointsAvg2022_2025": 240.08
+    },
+    "ratings": {
+      "spPlus2025": 5.9,
+      "spRank2025": 49,
+      "spPlus2026": 16.9,
+      "spRank2026": 17,
+      "fpi2025": 8.965,
+      "fpiRank2025": 32,
+      "fpi2026": 14.691,
+      "fpiRank2026": 21
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8772,
+        "starPoints": 59.0,
+        "stars4": 5,
+        "stars5": 0,
+        "rankInP4": 34
+      },
+      "2026": {
+        "transfersIn": 27,
+        "avgRating": 0.8658,
+        "starPoints": 76.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 24
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of South Carolina",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-south-carolina",
+      "fy": 2025,
+      "totalRevM": 204.567,
+      "totalExpM": 203.259,
+      "ticketSalesM": 33.354,
+      "donationsM": 18.285,
+      "mediaConferenceM": 65.809,
+      "footballSpendingM": 55.86,
+      "coachesCompM": 41.421,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.461,
+      "rosterAsPctOfFootballSpend": 59.97,
+      "rosterAsPctOfTotalRev": 16.38
+    },
+    "cfbdTeam": "South Carolina",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $33.5M"
+  },
+  {
+    "slug": "auburn",
+    "name": "Auburn",
+    "conference": "SEC",
+    "budgetMin": 31.0,
+    "budgetMax": 35.0,
+    "budgetMid": 33.0,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 1,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 8.308,
+      "winsAboveExpected2025": -3.308,
+      "dollarsPerWin2025MidM": 6.6,
+      "dollarsPerWin2026MidM": 16.5
+    },
+    "recruiting": {
+      "rank2025": 8,
+      "points2025": 286.89,
+      "rankAvg2022_2025": 14.25,
+      "pointsAvg2022_2025": 258.63
+    },
+    "ratings": {
+      "spPlus2025": 11.6,
+      "spRank2025": 29,
+      "spPlus2026": 11.7,
+      "spRank2026": 30,
+      "fpi2025": 11.083,
+      "fpiRank2025": 24,
+      "fpi2026": 14.177,
+      "fpiRank2026": 23
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 21,
+        "avgRating": 0.8755,
+        "starPoints": 68.0,
+        "stars4": 6,
+        "stars5": 0,
+        "rankInP4": 23
+      },
+      "2026": {
+        "transfersIn": 39,
+        "avgRating": 0.8692,
+        "starPoints": 121.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 7
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Auburn University",
+      "url": "https://knightnewhousedata.org/fbs/sec/auburn-university",
+      "fy": 2025,
+      "totalRevM": 205.929,
+      "totalExpM": 203.847,
+      "ticketSalesM": 35.14,
+      "donationsM": 59.661,
+      "mediaConferenceM": 70.544,
+      "footballSpendingM": 59.372,
+      "coachesCompM": 38.314,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.451,
+      "rosterAsPctOfFootballSpend": 55.58,
+      "rosterAsPctOfTotalRev": 16.02
+    },
+    "cfbdTeam": "Auburn",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $33.0M"
+  },
+  {
+    "slug": "nebraska",
+    "name": "Nebraska",
+    "conference": "Big Ten",
+    "budgetMin": 31.0,
+    "budgetMax": 35.0,
+    "budgetMid": 33.0,
+    "record2025": {
+      "wins": 7,
+      "losses": 6,
+      "confWins": 4,
+      "confLosses": 5
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 8.308,
+      "winsAboveExpected2025": -1.308,
+      "dollarsPerWin2025MidM": 4.7143,
+      "dollarsPerWin2026MidM": 16.5
+    },
+    "recruiting": {
+      "rank2025": 22,
+      "points2025": 237.53,
+      "rankAvg2022_2025": 26.5,
+      "pointsAvg2022_2025": 226.95
+    },
+    "ratings": {
+      "spPlus2025": 6.2,
+      "spRank2025": 46,
+      "spPlus2026": 13.0,
+      "spRank2026": 27,
+      "fpi2025": 5.45,
+      "fpiRank2025": 42,
+      "fpi2026": 14.803,
+      "fpiRank2026": 20
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 15,
+        "avgRating": 0.8727,
+        "starPoints": 50.0,
+        "stars4": 6,
+        "stars5": 0,
+        "rankInP4": 44
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.865,
+        "starPoints": 52.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 47
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Nebraska-Lincoln",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-nebraska-lincoln",
+      "fy": 2025,
+      "totalRevM": 215.089,
+      "totalExpM": 212.744,
+      "ticketSalesM": 40.678,
+      "donationsM": 48.408,
+      "mediaConferenceM": 93.351,
+      "footballSpendingM": 72.692,
+      "coachesCompM": 36.775,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.172,
+      "rosterAsPctOfFootballSpend": 45.4,
+      "rosterAsPctOfTotalRev": 15.34
+    },
+    "cfbdTeam": "Nebraska",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $33.0M"
+  },
+  {
+    "slug": "georgia",
+    "name": "Georgia",
+    "conference": "SEC",
+    "budgetMin": 31.0,
+    "budgetMax": 34.0,
+    "budgetMid": 32.5,
+    "record2025": {
+      "wins": 12,
+      "losses": 2,
+      "confWins": 7,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 8.232,
+      "winsAboveExpected2025": 3.768,
+      "dollarsPerWin2025MidM": 2.7083,
+      "dollarsPerWin2026MidM": 16.25
+    },
+    "recruiting": {
+      "rank2025": 2,
+      "points2025": 304.64,
+      "rankAvg2022_2025": 2.0,
+      "pointsAvg2022_2025": 313.93
+    },
+    "ratings": {
+      "spPlus2025": 24.1,
+      "spRank2025": 6,
+      "spPlus2026": 29.3,
+      "spRank2026": 1,
+      "fpi2025": 21.443,
+      "fpiRank2025": 7,
+      "fpi2026": 26.554,
+      "fpiRank2026": 4
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 10,
+        "avgRating": 0.884,
+        "starPoints": 33.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 59
+      },
+      "2026": {
+        "transfersIn": 9,
+        "avgRating": 0.8922,
+        "starPoints": 31.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 64
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Georgia",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-georgia",
+      "fy": 2025,
+      "totalRevM": 233.527,
+      "totalExpM": 240.263,
+      "ticketSalesM": 42.142,
+      "donationsM": 54.25,
+      "mediaConferenceM": 72.871,
+      "footballSpendingM": 71.108,
+      "coachesCompM": 46.622,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.98,
+      "rosterAsPctOfFootballSpend": 45.71,
+      "rosterAsPctOfTotalRev": 13.92
+    },
+    "cfbdTeam": "Georgia",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $32.5M"
+  },
+  {
+    "slug": "oklahoma",
+    "name": "Oklahoma",
+    "conference": "SEC",
+    "budgetMin": 28.0,
+    "budgetMax": 34.0,
+    "budgetMid": 31.0,
+    "record2025": {
+      "wins": 10,
+      "losses": 3,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 8.003,
+      "winsAboveExpected2025": 1.997,
+      "dollarsPerWin2025MidM": 3.1,
+      "dollarsPerWin2026MidM": 31.0
+    },
+    "recruiting": {
+      "rank2025": 17,
+      "points2025": 248.6,
+      "rankAvg2022_2025": 9.25,
+      "pointsAvg2022_2025": 270.0
+    },
+    "ratings": {
+      "spPlus2025": 18.3,
+      "spRank2025": 14,
+      "spPlus2026": 19.2,
+      "spRank2026": 14,
+      "fpi2025": 15.944,
+      "fpiRank2025": 15,
+      "fpi2026": 17.84,
+      "fpiRank2026": 12
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 20,
+        "avgRating": 0.8711,
+        "starPoints": 60.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 30
+      },
+      "2026": {
+        "transfersIn": 16,
+        "avgRating": 0.8719,
+        "starPoints": 52.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 48
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Oklahoma",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-oklahoma",
+      "fy": 2025,
+      "totalRevM": 205.67,
+      "totalExpM": 254.539,
+      "ticketSalesM": 54.512,
+      "donationsM": 98.24,
+      "mediaConferenceM": 16.55,
+      "footballSpendingM": 63.822,
+      "coachesCompM": 41.374,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 6.231,
+      "rosterAsPctOfFootballSpend": 48.57,
+      "rosterAsPctOfTotalRev": 15.07
+    },
+    "cfbdTeam": "Oklahoma",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $31.0M"
+  },
+  {
+    "slug": "clemson",
+    "name": "Clemson",
+    "conference": "ACC",
+    "budgetMin": 29.0,
+    "budgetMax": 32.0,
+    "budgetMid": 30.5,
+    "record2025": {
+      "wins": 7,
+      "losses": 6,
+      "confWins": 4,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 7.926,
+      "winsAboveExpected2025": -0.926,
+      "dollarsPerWin2025MidM": 4.3571,
+      "dollarsPerWin2026MidM": 30.5
+    },
+    "recruiting": {
+      "rank2025": 26,
+      "points2025": 227.23,
+      "rankAvg2022_2025": 14.5,
+      "pointsAvg2022_2025": 258.42
+    },
+    "ratings": {
+      "spPlus2025": 9.5,
+      "spRank2025": 34,
+      "spPlus2026": 8.1,
+      "spRank2026": 40,
+      "fpi2025": 9.454,
+      "fpiRank2025": 29,
+      "fpi2026": 5.336,
+      "fpiRank2026": 45
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 4,
+        "avgRating": 0.87,
+        "starPoints": 10.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 68
+      },
+      "2026": {
+        "transfersIn": 11,
+        "avgRating": 0.8582,
+        "starPoints": 33.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 62
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Clemson University",
+      "url": "https://knightnewhousedata.org/fbs/acc/clemson-university",
+      "fy": 2025,
+      "totalRevM": 198.579,
+      "totalExpM": 197.685,
+      "ticketSalesM": 39.128,
+      "donationsM": 56.185,
+      "mediaConferenceM": 54.14,
+      "footballSpendingM": 82.951,
+      "coachesCompM": 42.797,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 5.081,
+      "rosterAsPctOfFootballSpend": 36.77,
+      "rosterAsPctOfTotalRev": 15.36
+    },
+    "cfbdTeam": "Clemson",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $30.5M"
+  },
+  {
+    "slug": "penn-state",
+    "name": "Penn State",
+    "conference": "Big Ten",
+    "budgetMin": 29.0,
+    "budgetMax": 32.0,
+    "budgetMid": 30.5,
+    "record2025": {
+      "wins": 7,
+      "losses": 6,
+      "confWins": 3,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 7.926,
+      "winsAboveExpected2025": -0.926,
+      "dollarsPerWin2025MidM": 4.3571,
+      "dollarsPerWin2026MidM": 15.25
+    },
+    "recruiting": {
+      "rank2025": 15,
+      "points2025": 255.36,
+      "rankAvg2022_2025": 12.5,
+      "pointsAvg2022_2025": 267.43
+    },
+    "ratings": {
+      "spPlus2025": 18.1,
+      "spRank2025": 15,
+      "spPlus2026": 17.7,
+      "spRank2026": 16,
+      "fpi2025": 15.929,
+      "fpiRank2025": 16,
+      "fpi2026": 16.447,
+      "fpiRank2026": 14
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 8,
+        "avgRating": 0.8775,
+        "starPoints": 26.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 63
+      },
+      "2026": {
+        "transfersIn": 38,
+        "avgRating": 0.8695,
+        "starPoints": 116.0,
+        "stars4": 5,
+        "stars5": 0,
+        "rankInP4": 8
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Pennsylvania State University",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/pennsylvania-state-university",
+      "fy": 2025,
+      "totalRevM": 254.868,
+      "totalExpM": 254.644,
+      "ticketSalesM": 50.363,
+      "donationsM": 64.558,
+      "mediaConferenceM": 89.583,
+      "footballSpendingM": 89.187,
+      "coachesCompM": 48.621,
+      "nilRevShareLine44M": 18.368,
+      "recruitingExpM": 4.566,
+      "rosterAsPctOfFootballSpend": 34.2,
+      "rosterAsPctOfTotalRev": 11.97
+    },
+    "cfbdTeam": "Penn State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $30.5M"
+  },
+  {
+    "slug": "wisconsin",
+    "name": "Wisconsin",
+    "conference": "Big Ten",
+    "budgetMin": 27.0,
+    "budgetMax": 31.0,
+    "budgetMid": 29.0,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 2,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 7.697,
+      "winsAboveExpected2025": -3.697,
+      "dollarsPerWin2025MidM": 7.25,
+      "dollarsPerWin2026MidM": 29.0
+    },
+    "recruiting": {
+      "rank2025": 27,
+      "points2025": 227.22,
+      "rankAvg2022_2025": 38.0,
+      "pointsAvg2022_2025": 212.24
+    },
+    "ratings": {
+      "spPlus2025": -4.4,
+      "spRank2025": 85,
+      "spPlus2026": 1.9,
+      "spRank2026": 66,
+      "fpi2025": 2.537,
+      "fpiRank2025": 51,
+      "fpi2026": 2.57,
+      "fpiRank2026": 54
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8661,
+        "starPoints": 56.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 37
+      },
+      "2026": {
+        "transfersIn": 33,
+        "avgRating": 0.8576,
+        "starPoints": 99.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 9
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Wisconsin-Madison",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-wisconsin-madison",
+      "fy": 2025,
+      "totalRevM": 197.927,
+      "totalExpM": 193.63,
+      "ticketSalesM": 38.385,
+      "donationsM": 26.219,
+      "mediaConferenceM": 77.921,
+      "footballSpendingM": 41.495,
+      "coachesCompM": 33.194,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.366,
+      "rosterAsPctOfFootballSpend": 69.89,
+      "rosterAsPctOfTotalRev": 14.65
+    },
+    "cfbdTeam": "Wisconsin",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $29.0M"
+  },
+  {
+    "slug": "missouri",
+    "name": "Missouri",
+    "conference": "SEC",
+    "budgetMin": 27.0,
+    "budgetMax": 30.0,
+    "budgetMid": 28.5,
+    "record2025": {
+      "wins": 8,
+      "losses": 5,
+      "confWins": 4,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 7.621,
+      "winsAboveExpected2025": 0.379,
+      "dollarsPerWin2025MidM": 3.5625,
+      "dollarsPerWin2026MidM": 14.25
+    },
+    "recruiting": {
+      "rank2025": 20,
+      "points2025": 243.48,
+      "rankAvg2022_2025": 22.25,
+      "pointsAvg2022_2025": 233.37
+    },
+    "ratings": {
+      "spPlus2025": 14.4,
+      "spRank2025": 21,
+      "spPlus2026": 15.1,
+      "spRank2026": 21,
+      "fpi2025": 13.078,
+      "fpiRank2025": 22,
+      "fpi2026": 12.33,
+      "fpiRank2026": 26
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 21,
+        "avgRating": 0.87,
+        "starPoints": 67.0,
+        "stars4": 3,
+        "stars5": 1,
+        "rankInP4": 25
+      },
+      "2026": {
+        "transfersIn": 30,
+        "avgRating": 0.8637,
+        "starPoints": 94.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 15
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Missouri, Columbia",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-missouri-columbia",
+      "fy": 2025,
+      "totalRevM": 181.868,
+      "totalExpM": 191.001,
+      "ticketSalesM": 23.398,
+      "donationsM": 46.492,
+      "mediaConferenceM": 61.763,
+      "footballSpendingM": 49.316,
+      "coachesCompM": 33.73,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.077,
+      "rosterAsPctOfFootballSpend": 57.79,
+      "rosterAsPctOfTotalRev": 15.67
+    },
+    "cfbdTeam": "Missouri",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $28.5M"
+  },
+  {
+    "slug": "ucla",
+    "name": "UCLA",
+    "conference": "Big Ten",
+    "budgetMin": 26.0,
+    "budgetMax": 30.0,
+    "budgetMid": 28.0,
+    "record2025": {
+      "wins": 3,
+      "losses": 9,
+      "confWins": 3,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 7.544,
+      "winsAboveExpected2025": -4.544,
+      "dollarsPerWin2025MidM": 9.3333,
+      "dollarsPerWin2026MidM": 14.0
+    },
+    "recruiting": {
+      "rank2025": 46,
+      "points2025": 202.28,
+      "rankAvg2022_2025": 58.5,
+      "pointsAvg2022_2025": 185.22
+    },
+    "ratings": {
+      "spPlus2025": -8.7,
+      "spRank2025": 98,
+      "spPlus2026": 9.1,
+      "spRank2026": 38,
+      "fpi2025": -2.444,
+      "fpiRank2025": 59,
+      "fpi2026": 7.036,
+      "fpiRank2026": 37
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 30,
+        "avgRating": 0.8614,
+        "starPoints": 88.0,
+        "stars4": 0,
+        "stars5": 1,
+        "rankInP4": 14
+      },
+      "2026": {
+        "transfersIn": 43,
+        "avgRating": 0.8595,
+        "starPoints": 122.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 6
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of California, Los Angeles",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-california-los-angeles",
+      "fy": 2025,
+      "totalRevM": 151.797,
+      "totalExpM": 173.429,
+      "ticketSalesM": 18.314,
+      "donationsM": 13.478,
+      "mediaConferenceM": 77.263,
+      "footballSpendingM": 55.205,
+      "coachesCompM": 33.019,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.501,
+      "rosterAsPctOfFootballSpend": 50.72,
+      "rosterAsPctOfTotalRev": 18.45
+    },
+    "cfbdTeam": "UCLA",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $28.0M"
+  },
+  {
+    "slug": "mississippi-st",
+    "name": "Mississippi St.",
+    "conference": "SEC",
+    "budgetMin": 25.0,
+    "budgetMax": 30.0,
+    "budgetMid": 27.5,
+    "record2025": {
+      "wins": 5,
+      "losses": 8,
+      "confWins": 1,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 7.468,
+      "winsAboveExpected2025": -2.468,
+      "dollarsPerWin2025MidM": 5.5,
+      "dollarsPerWin2026MidM": 13.75
+    },
+    "recruiting": {
+      "rank2025": 28,
+      "points2025": 224.62,
+      "rankAvg2022_2025": 27.5,
+      "pointsAvg2022_2025": 222.55
+    },
+    "ratings": {
+      "spPlus2025": 4.1,
+      "spRank2025": 58,
+      "spPlus2026": 10.0,
+      "spRank2026": 36,
+      "fpi2025": 3.389,
+      "fpiRank2025": 49,
+      "fpi2026": 12.159,
+      "fpiRank2026": 27
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 32,
+        "avgRating": 0.8683,
+        "starPoints": 96.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 9
+      },
+      "2026": {
+        "transfersIn": 28,
+        "avgRating": 0.8607,
+        "starPoints": 86.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 21
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Mississippi State University",
+      "url": "https://knightnewhousedata.org/fbs/sec/mississippi-state-university",
+      "fy": 2025,
+      "totalRevM": 164.684,
+      "totalExpM": 168.826,
+      "ticketSalesM": 18.748,
+      "donationsM": 59.503,
+      "mediaConferenceM": 62.474,
+      "footballSpendingM": 37.576,
+      "coachesCompM": 27.406,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.215,
+      "rosterAsPctOfFootballSpend": 73.19,
+      "rosterAsPctOfTotalRev": 16.7
+    },
+    "cfbdTeam": "Mississippi State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $27.5M"
+  },
+  {
+    "slug": "virginia-tech",
+    "name": "Virginia Tech",
+    "conference": "ACC",
+    "budgetMin": 25.0,
+    "budgetMax": 30.0,
+    "budgetMid": 27.5,
+    "record2025": {
+      "wins": 3,
+      "losses": 9,
+      "confWins": 2,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 7.468,
+      "winsAboveExpected2025": -4.468,
+      "dollarsPerWin2025MidM": 9.1667,
+      "dollarsPerWin2026MidM": 13.75
+    },
+    "recruiting": {
+      "rank2025": 39,
+      "points2025": 208.19,
+      "rankAvg2022_2025": 39.75,
+      "pointsAvg2022_2025": 206.29
+    },
+    "ratings": {
+      "spPlus2025": -10.1,
+      "spRank2025": 105,
+      "spPlus2026": 12.7,
+      "spRank2026": 28,
+      "fpi2025": -1.216,
+      "fpiRank2025": 57,
+      "fpi2026": 10.265,
+      "fpiRank2026": 31
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 30,
+        "avgRating": 0.8583,
+        "starPoints": 87.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 16
+      },
+      "2026": {
+        "transfersIn": 29,
+        "avgRating": 0.8662,
+        "starPoints": 88.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 19
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Virginia Polytechnic Institute and State University",
+      "url": "https://knightnewhousedata.org/fbs/acc/virginia-polytechnic-institute-and-state-university",
+      "fy": 2025,
+      "totalRevM": 161.218,
+      "totalExpM": 156.148,
+      "ticketSalesM": 23.716,
+      "donationsM": 38.783,
+      "mediaConferenceM": 48.069,
+      "footballSpendingM": 44.461,
+      "coachesCompM": 26.364,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.384,
+      "rosterAsPctOfFootballSpend": 61.85,
+      "rosterAsPctOfTotalRev": 17.06
+    },
+    "cfbdTeam": "Virginia Tech",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $27.5M"
+  },
+  {
+    "slug": "florida-state",
+    "name": "Florida State",
+    "conference": "ACC",
+    "budgetMin": 23.0,
+    "budgetMax": 30.0,
+    "budgetMid": 26.5,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 2,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 7.315,
+      "winsAboveExpected2025": -2.315,
+      "dollarsPerWin2025MidM": 5.3,
+      "dollarsPerWin2026MidM": 26.5
+    },
+    "recruiting": {
+      "rank2025": 19,
+      "points2025": 244.11,
+      "rankAvg2022_2025": 17.5,
+      "pointsAvg2022_2025": 245.62
+    },
+    "ratings": {
+      "spPlus2025": 7.2,
+      "spRank2025": 41,
+      "spPlus2026": 7.7,
+      "spRank2026": 44,
+      "fpi2025": 9.396,
+      "fpiRank2025": 31,
+      "fpi2026": 7.69,
+      "fpiRank2026": 36
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 22,
+        "avgRating": 0.8791,
+        "starPoints": 74.0,
+        "stars4": 8,
+        "stars5": 0,
+        "rankInP4": 20
+      },
+      "2026": {
+        "transfersIn": 22,
+        "avgRating": 0.866,
+        "starPoints": 63.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 34
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Florida State University",
+      "url": "https://knightnewhousedata.org/fbs/acc/florida-state-university",
+      "fy": 2025,
+      "totalRevM": 211.951,
+      "totalExpM": 208.187,
+      "ticketSalesM": 28.515,
+      "donationsM": 55.635,
+      "mediaConferenceM": 47.669,
+      "footballSpendingM": 85.377,
+      "coachesCompM": 31.003,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.578,
+      "rosterAsPctOfFootballSpend": 31.04,
+      "rosterAsPctOfTotalRev": 12.5
+    },
+    "cfbdTeam": "Florida State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $26.5M"
+  },
+  {
+    "slug": "vanderbilt",
+    "name": "Vanderbilt",
+    "conference": "SEC",
+    "budgetMin": 25.0,
+    "budgetMax": 28.0,
+    "budgetMid": 26.5,
+    "record2025": {
+      "wins": 10,
+      "losses": 3,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 7.315,
+      "winsAboveExpected2025": 2.685,
+      "dollarsPerWin2025MidM": 2.65,
+      "dollarsPerWin2026MidM": 13.25
+    },
+    "recruiting": {
+      "rank2025": 76,
+      "points2025": 173.04,
+      "rankAvg2022_2025": 50.0,
+      "pointsAvg2022_2025": 197.08
+    },
+    "ratings": {
+      "spPlus2025": 20.3,
+      "spRank2025": 11,
+      "spPlus2026": 10.1,
+      "spRank2026": 35,
+      "fpi2025": 17.048,
+      "fpiRank2025": 14,
+      "fpi2026": 6.821,
+      "fpiRank2026": 38
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 20,
+        "avgRating": 0.8639,
+        "starPoints": 57.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 36
+      },
+      "2026": {
+        "transfersIn": 18,
+        "avgRating": 0.8656,
+        "starPoints": 50.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 52
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Vanderbilt",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $26.5M"
+  },
+  {
+    "slug": "georgia-tech",
+    "name": "Georgia Tech",
+    "conference": "ACC",
+    "budgetMin": 23.0,
+    "budgetMax": 26.0,
+    "budgetMid": 24.5,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 0,
+      "losses": 2
+    },
+    "moneyball": {
+      "expectedWins2025": 7.009,
+      "winsAboveExpected2025": 1.991,
+      "dollarsPerWin2025MidM": 2.7222,
+      "dollarsPerWin2026MidM": null
+    },
+    "recruiting": {
+      "rank2025": 21,
+      "points2025": 240.77,
+      "rankAvg2022_2025": 42.5,
+      "pointsAvg2022_2025": 206.19
+    },
+    "ratings": {
+      "spPlus2025": 9.3,
+      "spRank2025": 35,
+      "spPlus2026": 2.7,
+      "spRank2026": 64,
+      "fpi2025": 7.622,
+      "fpiRank2025": 38,
+      "fpi2026": 1.664,
+      "fpiRank2026": 57
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 23,
+        "avgRating": 0.8619,
+        "starPoints": 68.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 24
+      },
+      "2026": {
+        "transfersIn": 19,
+        "avgRating": 0.8683,
+        "starPoints": 60.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 36
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Georgia Institute of Technology",
+      "url": "https://knightnewhousedata.org/fbs/acc/georgia-institute-technology",
+      "fy": 2025,
+      "totalRevM": 156.051,
+      "totalExpM": 155.973,
+      "ticketSalesM": 15.67,
+      "donationsM": 38.779,
+      "mediaConferenceM": 55.17,
+      "footballSpendingM": 39.792,
+      "coachesCompM": 21.785,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.591,
+      "rosterAsPctOfFootballSpend": 61.57,
+      "rosterAsPctOfTotalRev": 15.7
+    },
+    "cfbdTeam": "Georgia Tech",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $24.5M"
+  },
+  {
+    "slug": "kentucky",
+    "name": "Kentucky",
+    "conference": "SEC",
+    "budgetMin": 23.0,
+    "budgetMax": 26.0,
+    "budgetMid": 24.5,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 2,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 7.009,
+      "winsAboveExpected2025": -2.009,
+      "dollarsPerWin2025MidM": 4.9,
+      "dollarsPerWin2026MidM": 24.5
+    },
+    "recruiting": {
+      "rank2025": 29,
+      "points2025": 224.01,
+      "rankAvg2022_2025": 24.75,
+      "pointsAvg2022_2025": 228.36
+    },
+    "ratings": {
+      "spPlus2025": 1.8,
+      "spRank2025": 66,
+      "spPlus2026": 6.2,
+      "spRank2026": 52,
+      "fpi2025": 5.127,
+      "fpiRank2025": 44,
+      "fpi2026": 4.202,
+      "fpiRank2026": 50
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 25,
+        "avgRating": 0.8728,
+        "starPoints": 82.0,
+        "stars4": 7,
+        "stars5": 0,
+        "rankInP4": 17
+      },
+      "2026": {
+        "transfersIn": 31,
+        "avgRating": 0.8687,
+        "starPoints": 95.0,
+        "stars4": 5,
+        "stars5": 0,
+        "rankInP4": 13
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Kentucky",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-kentucky",
+      "fy": 2025,
+      "totalRevM": 185.083,
+      "totalExpM": 192.551,
+      "ticketSalesM": 48.784,
+      "donationsM": 32.71,
+      "mediaConferenceM": 83.011,
+      "footballSpendingM": 42.016,
+      "coachesCompM": 40.468,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.008,
+      "rosterAsPctOfFootballSpend": 58.31,
+      "rosterAsPctOfTotalRev": 13.24
+    },
+    "cfbdTeam": "Kentucky",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $24.5M"
+  },
+  {
+    "slug": "nc-state",
+    "name": "NC State",
+    "conference": "ACC",
+    "budgetMin": 22.0,
+    "budgetMax": 26.0,
+    "budgetMid": 24.0,
+    "record2025": {
+      "wins": 8,
+      "losses": 5,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.933,
+      "winsAboveExpected2025": 1.067,
+      "dollarsPerWin2025MidM": 3.0,
+      "dollarsPerWin2026MidM": 24.0
+    },
+    "recruiting": {
+      "rank2025": 34,
+      "points2025": 214.25,
+      "rankAvg2022_2025": 42.0,
+      "pointsAvg2022_2025": 203.65
+    },
+    "ratings": {
+      "spPlus2025": 4.8,
+      "spRank2025": 55,
+      "spPlus2026": 8.0,
+      "spRank2026": 41,
+      "fpi2025": 5.215,
+      "fpiRank2025": 43,
+      "fpi2026": 2.441,
+      "fpiRank2026": 56
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8576,
+        "starPoints": 51.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 39
+      },
+      "2026": {
+        "transfersIn": 20,
+        "avgRating": 0.8632,
+        "starPoints": 57.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 38
+      }
+    },
+    "knightNewhouse": {
+      "institution": "North Carolina State University",
+      "url": "https://knightnewhousedata.org/fbs/acc/north-carolina-state-university",
+      "fy": 2025,
+      "totalRevM": 141.549,
+      "totalExpM": 134.542,
+      "ticketSalesM": 26.323,
+      "donationsM": 36.881,
+      "mediaConferenceM": 48.148,
+      "footballSpendingM": 38.032,
+      "coachesCompM": 31.617,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.401,
+      "rosterAsPctOfFootballSpend": 63.1,
+      "rosterAsPctOfTotalRev": 16.96
+    },
+    "cfbdTeam": "NC State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $24.0M"
+  },
+  {
+    "slug": "arkansas",
+    "name": "Arkansas",
+    "conference": "SEC",
+    "budgetMin": 22.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.5,
+    "record2025": {
+      "wins": 2,
+      "losses": 10,
+      "confWins": 0,
+      "confLosses": 8
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.857,
+      "winsAboveExpected2025": -4.857,
+      "dollarsPerWin2025MidM": 11.75,
+      "dollarsPerWin2026MidM": 23.5
+    },
+    "recruiting": {
+      "rank2025": 32,
+      "points2025": 219.73,
+      "rankAvg2022_2025": 28.25,
+      "pointsAvg2022_2025": 220.59
+    },
+    "ratings": {
+      "spPlus2025": 5.1,
+      "spRank2025": 53,
+      "spPlus2026": 1.5,
+      "spRank2026": 68,
+      "fpi2025": 6.597,
+      "fpiRank2025": 39,
+      "fpi2026": -1.736,
+      "fpiRank2026": 65
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 31,
+        "avgRating": 0.8659,
+        "starPoints": 94.0,
+        "stars4": 4,
+        "stars5": 0,
+        "rankInP4": 10
+      },
+      "2026": {
+        "transfersIn": 42,
+        "avgRating": 0.8592,
+        "starPoints": 125.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 5
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Arkansas",
+      "url": "https://knightnewhousedata.org/fbs/sec/university-arkansas",
+      "fy": 2025,
+      "totalRevM": 195.88,
+      "totalExpM": 188.989,
+      "ticketSalesM": 63.482,
+      "donationsM": 38.038,
+      "mediaConferenceM": 66.384,
+      "footballSpendingM": 57.371,
+      "coachesCompM": 41.196,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.367,
+      "rosterAsPctOfFootballSpend": 40.96,
+      "rosterAsPctOfTotalRev": 12.0
+    },
+    "cfbdTeam": "Arkansas",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.5M"
+  },
+  {
+    "slug": "louisville",
+    "name": "Louisville",
+    "conference": "ACC",
+    "budgetMin": 22.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.5,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 4,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.857,
+      "winsAboveExpected2025": 2.143,
+      "dollarsPerWin2025MidM": 2.6111,
+      "dollarsPerWin2026MidM": 23.5
+    },
+    "recruiting": {
+      "rank2025": 68,
+      "points2025": 183.1,
+      "rankAvg2022_2025": 52.0,
+      "pointsAvg2022_2025": 193.8
+    },
+    "ratings": {
+      "spPlus2025": 12.4,
+      "spRank2025": 25,
+      "spPlus2026": 14.1,
+      "spRank2026": 23,
+      "fpi2025": 10.15,
+      "fpiRank2025": 26,
+      "fpi2026": 11.936,
+      "fpiRank2026": 28
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 30,
+        "avgRating": 0.8597,
+        "starPoints": 88.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 15
+      },
+      "2026": {
+        "transfersIn": 33,
+        "avgRating": 0.8626,
+        "starPoints": 96.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 11
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Louisville",
+      "url": "https://knightnewhousedata.org/fbs/acc/university-louisville",
+      "fy": 2025,
+      "totalRevM": 146.912,
+      "totalExpM": 160.408,
+      "ticketSalesM": 34.24,
+      "donationsM": 21.204,
+      "mediaConferenceM": 48.957,
+      "footballSpendingM": 31.71,
+      "coachesCompM": 30.267,
+      "nilRevShareLine44M": 12.658,
+      "recruitingExpM": 2.74,
+      "rosterAsPctOfFootballSpend": 74.11,
+      "rosterAsPctOfTotalRev": 16.0
+    },
+    "cfbdTeam": "Louisville",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.5M"
+  },
+  {
+    "slug": "tcu",
+    "name": "TCU",
+    "conference": "Big 12",
+    "budgetMin": 22.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.5,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.857,
+      "winsAboveExpected2025": 2.143,
+      "dollarsPerWin2025MidM": 2.6111,
+      "dollarsPerWin2026MidM": 23.5
+    },
+    "recruiting": {
+      "rank2025": 24,
+      "points2025": 229.8,
+      "rankAvg2022_2025": 31.0,
+      "pointsAvg2022_2025": 218.2
+    },
+    "ratings": {
+      "spPlus2025": 8.3,
+      "spRank2025": 37,
+      "spPlus2026": 11.3,
+      "spRank2026": 32,
+      "fpi2025": 9.43,
+      "fpiRank2025": 30,
+      "fpi2026": 6.346,
+      "fpiRank2026": 40
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 11,
+        "avgRating": 0.8645,
+        "starPoints": 34.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 57
+      },
+      "2026": {
+        "transfersIn": 12,
+        "avgRating": 0.8582,
+        "starPoints": 33.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 63
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "TCU",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.5M"
+  },
+  {
+    "slug": "maryland",
+    "name": "Maryland",
+    "conference": "Big Ten",
+    "budgetMin": 21.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.0,
+    "record2025": {
+      "wins": 3,
+      "losses": 8,
+      "confWins": 1,
+      "confLosses": 8
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.78,
+      "winsAboveExpected2025": -3.78,
+      "dollarsPerWin2025MidM": 7.6667,
+      "dollarsPerWin2026MidM": 11.5
+    },
+    "recruiting": {
+      "rank2025": 25,
+      "points2025": 228.43,
+      "rankAvg2022_2025": 32.75,
+      "pointsAvg2022_2025": 214.61
+    },
+    "ratings": {
+      "spPlus2025": 0.6,
+      "spRank2025": 75,
+      "spPlus2026": 8.7,
+      "spRank2026": 39,
+      "fpi2025": -1.746,
+      "fpiRank2025": 58,
+      "fpi2026": 5.521,
+      "fpiRank2026": 44
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 15,
+        "avgRating": 0.8693,
+        "starPoints": 46.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 48
+      },
+      "2026": {
+        "transfersIn": 14,
+        "avgRating": 0.8521,
+        "starPoints": 42.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 57
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Maryland, College Park",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-maryland-college-park",
+      "fy": 2025,
+      "totalRevM": 123.998,
+      "totalExpM": 128.662,
+      "ticketSalesM": 12.807,
+      "donationsM": 11.311,
+      "mediaConferenceM": 62.909,
+      "footballSpendingM": 35.503,
+      "coachesCompM": 31.544,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.723,
+      "rosterAsPctOfFootballSpend": 64.78,
+      "rosterAsPctOfTotalRev": 18.55
+    },
+    "cfbdTeam": "Maryland",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.0M"
+  },
+  {
+    "slug": "michigan-st",
+    "name": "Michigan St.",
+    "conference": "Big Ten",
+    "budgetMin": 21.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.0,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 1,
+      "confLosses": 8
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.78,
+      "winsAboveExpected2025": -2.78,
+      "dollarsPerWin2025MidM": 5.75,
+      "dollarsPerWin2026MidM": 11.5
+    },
+    "recruiting": {
+      "rank2025": 57,
+      "points2025": 196.1,
+      "rankAvg2022_2025": 36.75,
+      "pointsAvg2022_2025": 211.58
+    },
+    "ratings": {
+      "spPlus2025": -3.4,
+      "spRank2025": 82,
+      "spPlus2026": 3.5,
+      "spRank2026": 60,
+      "fpi2025": 0.838,
+      "fpiRank2025": 55,
+      "fpi2026": 3.446,
+      "fpiRank2026": 52
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 23,
+        "avgRating": 0.8604,
+        "starPoints": 70.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 22
+      },
+      "2026": {
+        "transfersIn": 28,
+        "avgRating": 0.8558,
+        "starPoints": 75.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 26
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Michigan State University",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/michigan-state-university",
+      "fy": 2025,
+      "totalRevM": 179.892,
+      "totalExpM": 178.288,
+      "ticketSalesM": 30.64,
+      "donationsM": 36.98,
+      "mediaConferenceM": 78.334,
+      "footballSpendingM": 49.999,
+      "coachesCompM": 37.369,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.908,
+      "rosterAsPctOfFootballSpend": 46.0,
+      "rosterAsPctOfTotalRev": 12.79
+    },
+    "cfbdTeam": "Michigan State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.0M"
+  },
+  {
+    "slug": "northwestern",
+    "name": "Northwestern",
+    "conference": "Big Ten",
+    "budgetMin": 21.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.0,
+    "record2025": {
+      "wins": 6,
+      "losses": 6,
+      "confWins": 4,
+      "confLosses": 5
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.78,
+      "winsAboveExpected2025": -0.78,
+      "dollarsPerWin2025MidM": 3.8333,
+      "dollarsPerWin2026MidM": 23.0
+    },
+    "recruiting": {
+      "rank2025": 66,
+      "points2025": 187.75,
+      "rankAvg2022_2025": 60.25,
+      "pointsAvg2022_2025": 186.3
+    },
+    "ratings": {
+      "spPlus2025": 5.8,
+      "spRank2025": 51,
+      "spPlus2026": 7.8,
+      "spRank2026": 42,
+      "fpi2025": 3.514,
+      "fpiRank2025": 48,
+      "fpi2026": 2.493,
+      "fpiRank2026": 55
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 14,
+        "avgRating": 0.85,
+        "starPoints": 42.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 52
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.8627,
+        "starPoints": 49.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 53
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Northwestern",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.0M"
+  },
+  {
+    "slug": "washington",
+    "name": "Washington",
+    "conference": "Big Ten",
+    "budgetMin": 21.0,
+    "budgetMax": 25.0,
+    "budgetMid": 23.0,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.78,
+      "winsAboveExpected2025": 2.22,
+      "dollarsPerWin2025MidM": 2.5556,
+      "dollarsPerWin2026MidM": 11.5
+    },
+    "recruiting": {
+      "rank2025": 23,
+      "points2025": 235.26,
+      "rankAvg2022_2025": 48.0,
+      "pointsAvg2022_2025": 197.63
+    },
+    "ratings": {
+      "spPlus2025": 18.4,
+      "spRank2025": 13,
+      "spPlus2026": 11.1,
+      "spRank2026": 33,
+      "fpi2025": 14.005,
+      "fpiRank2025": 21,
+      "fpi2026": 5.879,
+      "fpiRank2026": 43
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8621,
+        "starPoints": 49.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 46
+      },
+      "2026": {
+        "transfersIn": 14,
+        "avgRating": 0.8625,
+        "starPoints": 39.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 60
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Washington",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-washington",
+      "fy": 2025,
+      "totalRevM": 178.473,
+      "totalExpM": 184.355,
+      "ticketSalesM": 31.138,
+      "donationsM": 52.877,
+      "mediaConferenceM": 47.862,
+      "footballSpendingM": 80.545,
+      "coachesCompM": 36.296,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.516,
+      "rosterAsPctOfFootballSpend": 28.56,
+      "rosterAsPctOfTotalRev": 12.89
+    },
+    "cfbdTeam": "Washington",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $23.0M"
+  },
+  {
+    "slug": "byu",
+    "name": "BYU",
+    "conference": "Big 12",
+    "budgetMin": 20.0,
+    "budgetMax": 25.0,
+    "budgetMid": 22.5,
+    "record2025": {
+      "wins": 12,
+      "losses": 2,
+      "confWins": 8,
+      "confLosses": 1
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.704,
+      "winsAboveExpected2025": 5.296,
+      "dollarsPerWin2025MidM": 1.875,
+      "dollarsPerWin2026MidM": 11.25
+    },
+    "recruiting": {
+      "rank2025": 55,
+      "points2025": 197.17,
+      "rankAvg2022_2025": 55.0,
+      "pointsAvg2022_2025": 190.31
+    },
+    "ratings": {
+      "spPlus2025": 15.9,
+      "spRank2025": 18,
+      "spPlus2026": 16.8,
+      "spRank2026": 18,
+      "fpi2025": 15.333,
+      "fpiRank2025": 17,
+      "fpi2026": 15.368,
+      "fpiRank2026": 18
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 13,
+        "avgRating": 0.8408,
+        "starPoints": 39.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 55
+      },
+      "2026": {
+        "transfersIn": 9,
+        "avgRating": 0.8767,
+        "starPoints": 30.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 65
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "BYU",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $22.5M"
+  },
+  {
+    "slug": "north-carolina",
+    "name": "North Carolina",
+    "conference": "ACC",
+    "budgetMin": 20.0,
+    "budgetMax": 25.0,
+    "budgetMid": 22.5,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 2,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.704,
+      "winsAboveExpected2025": -2.704,
+      "dollarsPerWin2025MidM": 5.625,
+      "dollarsPerWin2026MidM": 11.25
+    },
+    "recruiting": {
+      "rank2025": 41,
+      "points2025": 207.81,
+      "rankAvg2022_2025": 27.0,
+      "pointsAvg2022_2025": 228.62
+    },
+    "ratings": {
+      "spPlus2025": -6.6,
+      "spRank2025": 91,
+      "spPlus2026": 6.4,
+      "spRank2026": 51,
+      "fpi2025": -5.878,
+      "fpiRank2025": 66,
+      "fpi2026": 6.312,
+      "fpiRank2026": 41
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 39,
+        "avgRating": 0.8689,
+        "starPoints": 115.0,
+        "stars4": 7,
+        "stars5": 0,
+        "rankInP4": 3
+      },
+      "2026": {
+        "transfersIn": 19,
+        "avgRating": 0.8611,
+        "starPoints": 57.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 39
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of North Carolina, Chapel Hill",
+      "url": "https://knightnewhousedata.org/fbs/acc/university-north-carolina-chapel-hill",
+      "fy": 2025,
+      "totalRevM": 172.951,
+      "totalExpM": 187.967,
+      "ticketSalesM": 32.117,
+      "donationsM": 40.215,
+      "mediaConferenceM": 51.931,
+      "footballSpendingM": 49.146,
+      "coachesCompM": 37.936,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 4.193,
+      "rosterAsPctOfFootballSpend": 45.78,
+      "rosterAsPctOfTotalRev": 13.01
+    },
+    "cfbdTeam": "North Carolina",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $22.5M"
+  },
+  {
+    "slug": "california",
+    "name": "California",
+    "conference": "ACC",
+    "budgetMin": 20.0,
+    "budgetMax": 24.0,
+    "budgetMid": 22.0,
+    "record2025": {
+      "wins": 7,
+      "losses": 6,
+      "confWins": 4,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.627,
+      "winsAboveExpected2025": 0.373,
+      "dollarsPerWin2025MidM": 3.1429,
+      "dollarsPerWin2026MidM": 22.0
+    },
+    "recruiting": {
+      "rank2025": 69,
+      "points2025": 180.41,
+      "rankAvg2022_2025": 65.5,
+      "pointsAvg2022_2025": 177.22
+    },
+    "ratings": {
+      "spPlus2025": -3.2,
+      "spRank2025": 80,
+      "spPlus2026": -0.6,
+      "spRank2026": 73,
+      "fpi2025": -3.391,
+      "fpiRank2025": 61,
+      "fpi2026": -1.516,
+      "fpiRank2026": 64
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 36,
+        "avgRating": 0.8568,
+        "starPoints": 102.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 6
+      },
+      "2026": {
+        "transfersIn": 32,
+        "avgRating": 0.87,
+        "starPoints": 96.0,
+        "stars4": 6,
+        "stars5": 0,
+        "rankInP4": 12
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of California, Berkeley",
+      "url": "https://knightnewhousedata.org/fbs/acc/university-california-berkeley",
+      "fy": 2025,
+      "totalRevM": 148.841,
+      "totalExpM": 173.116,
+      "ticketSalesM": 14.26,
+      "donationsM": 20.523,
+      "mediaConferenceM": 24.696,
+      "footballSpendingM": 46.722,
+      "coachesCompM": 31.17,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.866,
+      "rosterAsPctOfFootballSpend": 47.09,
+      "rosterAsPctOfTotalRev": 14.78
+    },
+    "cfbdTeam": "California",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $22.0M"
+  },
+  {
+    "slug": "smu",
+    "name": "SMU",
+    "conference": "ACC",
+    "budgetMin": 21.0,
+    "budgetMax": 23.0,
+    "budgetMid": 22.0,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.627,
+      "winsAboveExpected2025": 2.373,
+      "dollarsPerWin2025MidM": 2.4444,
+      "dollarsPerWin2026MidM": 11.0
+    },
+    "recruiting": {
+      "rank2025": 31,
+      "points2025": 220.85,
+      "rankAvg2022_2025": 73.0,
+      "pointsAvg2022_2025": 170.11
+    },
+    "ratings": {
+      "spPlus2025": 13.4,
+      "spRank2025": 23,
+      "spPlus2026": 15.3,
+      "spRank2026": 19,
+      "fpi2025": 12.495,
+      "fpiRank2025": 23,
+      "fpi2026": 13.776,
+      "fpiRank2026": 24
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 20,
+        "avgRating": 0.8653,
+        "starPoints": 60.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 31
+      },
+      "2026": {
+        "transfersIn": 15,
+        "avgRating": 0.8707,
+        "starPoints": 48.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 54
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "SMU",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $22.0M"
+  },
+  {
+    "slug": "virginia",
+    "name": "Virginia",
+    "conference": "ACC",
+    "budgetMin": 20.0,
+    "budgetMax": 24.0,
+    "budgetMid": 22.0,
+    "record2025": {
+      "wins": 11,
+      "losses": 3,
+      "confWins": 7,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.627,
+      "winsAboveExpected2025": 4.373,
+      "dollarsPerWin2025MidM": 2.0,
+      "dollarsPerWin2026MidM": 11.0
+    },
+    "recruiting": {
+      "rank2025": 58,
+      "points2025": 195.76,
+      "rankAvg2022_2025": 69.0,
+      "pointsAvg2022_2025": 175.76
+    },
+    "ratings": {
+      "spPlus2025": 11.1,
+      "spRank2025": 31,
+      "spPlus2026": 12.7,
+      "spRank2026": 28,
+      "fpi2025": 8.247,
+      "fpiRank2025": 34,
+      "fpi2026": 12.554,
+      "fpiRank2026": 25
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 31,
+        "avgRating": 0.8617,
+        "starPoints": 92.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 12
+      },
+      "2026": {
+        "transfersIn": 31,
+        "avgRating": 0.8607,
+        "starPoints": 88.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 20
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Virginia",
+      "url": "https://knightnewhousedata.org/fbs/acc/university-virginia",
+      "fy": 2025,
+      "totalRevM": 155.121,
+      "totalExpM": 162.066,
+      "ticketSalesM": 15.902,
+      "donationsM": 34.619,
+      "mediaConferenceM": 47.352,
+      "footballSpendingM": 34.257,
+      "coachesCompM": 31.028,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.909,
+      "rosterAsPctOfFootballSpend": 64.22,
+      "rosterAsPctOfTotalRev": 14.18
+    },
+    "cfbdTeam": "Virginia",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $22.0M"
+  },
+  {
+    "slug": "baylor",
+    "name": "Baylor",
+    "conference": "Big 12",
+    "budgetMin": 20.0,
+    "budgetMax": 23.0,
+    "budgetMid": 21.5,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 3,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.551,
+      "winsAboveExpected2025": -1.551,
+      "dollarsPerWin2025MidM": 4.3,
+      "dollarsPerWin2026MidM": 21.5
+    },
+    "recruiting": {
+      "rank2025": 36,
+      "points2025": 210.4,
+      "rankAvg2022_2025": 43.75,
+      "pointsAvg2022_2025": 202.06
+    },
+    "ratings": {
+      "spPlus2025": 1.4,
+      "spRank2025": 71,
+      "spPlus2026": 7.4,
+      "spRank2026": 46,
+      "fpi2025": 2.973,
+      "fpiRank2025": 50,
+      "fpi2026": 8.201,
+      "fpiRank2026": 35
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 23,
+        "avgRating": 0.8559,
+        "starPoints": 67.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 26
+      },
+      "2026": {
+        "transfersIn": 31,
+        "avgRating": 0.86,
+        "starPoints": 92.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 16
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Baylor",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $21.5M"
+  },
+  {
+    "slug": "rutgers",
+    "name": "Rutgers",
+    "conference": "Big Ten",
+    "budgetMin": 20.0,
+    "budgetMax": 23.0,
+    "budgetMid": 21.5,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 2,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 0,
+      "losses": 2
+    },
+    "moneyball": {
+      "expectedWins2025": 6.551,
+      "winsAboveExpected2025": -1.551,
+      "dollarsPerWin2025MidM": 4.3,
+      "dollarsPerWin2026MidM": null
+    },
+    "recruiting": {
+      "rank2025": 33,
+      "points2025": 218.6,
+      "rankAvg2022_2025": 39.75,
+      "pointsAvg2022_2025": 207.7
+    },
+    "ratings": {
+      "spPlus2025": 1.0,
+      "spRank2025": 72,
+      "spPlus2026": -2.8,
+      "spRank2026": 80,
+      "fpi2025": 1.453,
+      "fpiRank2025": 53,
+      "fpi2026": -7.257,
+      "fpiRank2026": 68
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 19,
+        "avgRating": 0.8561,
+        "starPoints": 55.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 38
+      },
+      "2026": {
+        "transfersIn": 15,
+        "avgRating": 0.8507,
+        "starPoints": 42.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 58
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Rutgers, The State University of New Jersey-New Brunswick",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/rutgers-state-university-new-jersey-new-brunswick",
+      "fy": 2025,
+      "totalRevM": 146.638,
+      "totalExpM": 193.832,
+      "ticketSalesM": 15.847,
+      "donationsM": 8.123,
+      "mediaConferenceM": 78.467,
+      "footballSpendingM": 76.085,
+      "coachesCompM": 47.74,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.545,
+      "rosterAsPctOfFootballSpend": 28.26,
+      "rosterAsPctOfTotalRev": 14.66
+    },
+    "cfbdTeam": "Rutgers",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $21.5M"
+  },
+  {
+    "slug": "arizona-state",
+    "name": "Arizona State",
+    "conference": "Big 12",
+    "budgetMin": 19.0,
+    "budgetMax": 23.0,
+    "budgetMid": 21.0,
+    "record2025": {
+      "wins": 8,
+      "losses": 5,
+      "confWins": 6,
+      "confLosses": 3
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.475,
+      "winsAboveExpected2025": 1.525,
+      "dollarsPerWin2025MidM": 2.625,
+      "dollarsPerWin2026MidM": 21.0
+    },
+    "recruiting": {
+      "rank2025": 44,
+      "points2025": 203.39,
+      "rankAvg2022_2025": 59.75,
+      "pointsAvg2022_2025": 181.06
+    },
+    "ratings": {
+      "spPlus2025": 3.9,
+      "spRank2025": 60,
+      "spPlus2026": 7.8,
+      "spRank2026": 42,
+      "fpi2025": 6.294,
+      "fpiRank2025": 41,
+      "fpi2026": 4.942,
+      "fpiRank2026": 46
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 17,
+        "avgRating": 0.8535,
+        "starPoints": 51.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 40
+      },
+      "2026": {
+        "transfersIn": 24,
+        "avgRating": 0.8695,
+        "starPoints": 69.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 31
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Arizona State University",
+      "url": "https://knightnewhousedata.org/fbs/big-12/arizona-state-university",
+      "fy": 2025,
+      "totalRevM": 166.138,
+      "totalExpM": 164.714,
+      "ticketSalesM": 17.282,
+      "donationsM": 22.781,
+      "mediaConferenceM": 44.437,
+      "footballSpendingM": 56.927,
+      "coachesCompM": 34.799,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.905,
+      "rosterAsPctOfFootballSpend": 36.89,
+      "rosterAsPctOfTotalRev": 12.64
+    },
+    "cfbdTeam": "Arizona State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $21.0M"
+  },
+  {
+    "slug": "illinois",
+    "name": "Illinois",
+    "conference": "Big Ten",
+    "budgetMin": 19.0,
+    "budgetMax": 23.0,
+    "budgetMid": 21.0,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.475,
+      "winsAboveExpected2025": 2.525,
+      "dollarsPerWin2025MidM": 2.3333,
+      "dollarsPerWin2026MidM": 21.0
+    },
+    "recruiting": {
+      "rank2025": 45,
+      "points2025": 202.76,
+      "rankAvg2022_2025": 44.5,
+      "pointsAvg2022_2025": 199.96
+    },
+    "ratings": {
+      "spPlus2025": 12.9,
+      "spRank2025": 24,
+      "spPlus2026": 7.2,
+      "spRank2026": 47,
+      "fpi2025": 10.0,
+      "fpiRank2025": 28,
+      "fpi2026": 4.51,
+      "fpiRank2026": 48
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 18,
+        "avgRating": 0.8633,
+        "starPoints": 51.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 41
+      },
+      "2026": {
+        "transfersIn": 20,
+        "avgRating": 0.8556,
+        "starPoints": 55.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 43
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Illinois Urbana-Champaign",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-illinois-urbana-champaign",
+      "fy": 2025,
+      "totalRevM": 194.761,
+      "totalExpM": 189.86,
+      "ticketSalesM": 29.973,
+      "donationsM": 50.72,
+      "mediaConferenceM": 83.732,
+      "footballSpendingM": 49.268,
+      "coachesCompM": 37.125,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.564,
+      "rosterAsPctOfFootballSpend": 42.62,
+      "rosterAsPctOfTotalRev": 10.78
+    },
+    "cfbdTeam": "Illinois",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $21.0M"
+  },
+  {
+    "slug": "kansas-state",
+    "name": "Kansas State",
+    "conference": "Big 12",
+    "budgetMin": 19.0,
+    "budgetMax": 22.0,
+    "budgetMid": 20.5,
+    "record2025": {
+      "wins": 6,
+      "losses": 6,
+      "confWins": 5,
+      "confLosses": 5
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.398,
+      "winsAboveExpected2025": -0.398,
+      "dollarsPerWin2025MidM": 3.4167,
+      "dollarsPerWin2026MidM": 10.25
+    },
+    "recruiting": {
+      "rank2025": 35,
+      "points2025": 213.85,
+      "rankAvg2022_2025": 47.0,
+      "pointsAvg2022_2025": 196.76
+    },
+    "ratings": {
+      "spPlus2025": 7.0,
+      "spRank2025": 42,
+      "spPlus2026": 13.9,
+      "spRank2026": 24,
+      "fpi2025": 7.784,
+      "fpiRank2025": 36,
+      "fpi2026": 10.89,
+      "fpiRank2026": 30
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 16,
+        "avgRating": 0.8587,
+        "starPoints": 45.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 49
+      },
+      "2026": {
+        "transfersIn": 27,
+        "avgRating": 0.8604,
+        "starPoints": 76.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 25
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Kansas State University",
+      "url": "https://knightnewhousedata.org/fbs/big-12/kansas-state-university",
+      "fy": 2025,
+      "totalRevM": 116.29,
+      "totalExpM": 103.671,
+      "ticketSalesM": 20.253,
+      "donationsM": 40.327,
+      "mediaConferenceM": 39.367,
+      "footballSpendingM": 27.762,
+      "coachesCompM": 23.697,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.234,
+      "rosterAsPctOfFootballSpend": 73.84,
+      "rosterAsPctOfTotalRev": 17.63
+    },
+    "cfbdTeam": "Kansas State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $20.5M"
+  },
+  {
+    "slug": "minnesota",
+    "name": "Minnesota",
+    "conference": "Big Ten",
+    "budgetMin": 18.0,
+    "budgetMax": 22.0,
+    "budgetMid": 20.0,
+    "record2025": {
+      "wins": 8,
+      "losses": 5,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.322,
+      "winsAboveExpected2025": 1.678,
+      "dollarsPerWin2025MidM": 2.5,
+      "dollarsPerWin2026MidM": 20.0
+    },
+    "recruiting": {
+      "rank2025": 49,
+      "points2025": 200.95,
+      "rankAvg2022_2025": 45.0,
+      "pointsAvg2022_2025": 200.79
+    },
+    "ratings": {
+      "spPlus2025": 1.5,
+      "spRank2025": 70,
+      "spPlus2026": 4.7,
+      "spRank2026": 55,
+      "fpi2025": 1.067,
+      "fpiRank2025": 54,
+      "fpi2026": -1.303,
+      "fpiRank2026": 63
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 21,
+        "avgRating": 0.8628,
+        "starPoints": 58.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 35
+      },
+      "2026": {
+        "transfersIn": 19,
+        "avgRating": 0.8659,
+        "starPoints": 53.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 45
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Minnesota, Twin Cities",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-minnesota-twin-cities",
+      "fy": 2025,
+      "totalRevM": 163.605,
+      "totalExpM": 161.202,
+      "ticketSalesM": 19.599,
+      "donationsM": 22.377,
+      "mediaConferenceM": 80.561,
+      "footballSpendingM": 47.577,
+      "coachesCompM": 34.728,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.288,
+      "rosterAsPctOfFootballSpend": 42.04,
+      "rosterAsPctOfTotalRev": 12.22
+    },
+    "cfbdTeam": "Minnesota",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $20.0M"
+  },
+  {
+    "slug": "utah",
+    "name": "Utah",
+    "conference": "Big 12",
+    "budgetMin": 18.0,
+    "budgetMax": 22.0,
+    "budgetMid": 20.0,
+    "record2025": {
+      "wins": 11,
+      "losses": 2,
+      "confWins": 7,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.322,
+      "winsAboveExpected2025": 4.678,
+      "dollarsPerWin2025MidM": 1.8182,
+      "dollarsPerWin2026MidM": 10.0
+    },
+    "recruiting": {
+      "rank2025": 40,
+      "points2025": 207.85,
+      "rankAvg2022_2025": 38.25,
+      "pointsAvg2022_2025": 209.6
+    },
+    "ratings": {
+      "spPlus2025": 22.2,
+      "spRank2025": 8,
+      "spPlus2026": 14.8,
+      "spRank2026": 22,
+      "fpi2025": 20.065,
+      "fpiRank2025": 8,
+      "fpi2026": 15.104,
+      "fpiRank2026": 19
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 21,
+        "avgRating": 0.8626,
+        "starPoints": 61.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 29
+      },
+      "2026": {
+        "transfersIn": 17,
+        "avgRating": 0.8606,
+        "starPoints": 52.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 49
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Utah",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-utah",
+      "fy": 2025,
+      "totalRevM": 140.253,
+      "totalExpM": 135.56,
+      "ticketSalesM": 14.036,
+      "donationsM": 49.863,
+      "mediaConferenceM": 43.714,
+      "footballSpendingM": 51.792,
+      "coachesCompM": 28.062,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.388,
+      "rosterAsPctOfFootballSpend": 38.62,
+      "rosterAsPctOfTotalRev": 14.26
+    },
+    "cfbdTeam": "Utah",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $20.0M"
+  },
+  {
+    "slug": "west-virginia",
+    "name": "West Virginia",
+    "conference": "Big 12",
+    "budgetMin": 18.0,
+    "budgetMax": 22.0,
+    "budgetMid": 20.0,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 2,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.322,
+      "winsAboveExpected2025": -2.322,
+      "dollarsPerWin2025MidM": 5.0,
+      "dollarsPerWin2026MidM": 10.0
+    },
+    "recruiting": {
+      "rank2025": 43,
+      "points2025": 205.16,
+      "rankAvg2022_2025": 43.0,
+      "pointsAvg2022_2025": 203.84
+    },
+    "ratings": {
+      "spPlus2025": -6.8,
+      "spRank2025": 93,
+      "spPlus2026": 3.0,
+      "spRank2026": 63,
+      "fpi2025": -4.064,
+      "fpiRank2025": 63,
+      "fpi2026": 1.118,
+      "fpiRank2026": 59
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 51,
+        "avgRating": 0.8541,
+        "starPoints": 148.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 1
+      },
+      "2026": {
+        "transfersIn": 34,
+        "avgRating": 0.8524,
+        "starPoints": 99.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 10
+      }
+    },
+    "knightNewhouse": {
+      "institution": "West Virginia University",
+      "url": "https://knightnewhousedata.org/fbs/big-12/west-virginia-university",
+      "fy": 2025,
+      "totalRevM": 128.116,
+      "totalExpM": 130.707,
+      "ticketSalesM": 23.574,
+      "donationsM": 31.343,
+      "mediaConferenceM": 40.413,
+      "footballSpendingM": 34.153,
+      "coachesCompM": 21.578,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.482,
+      "rosterAsPctOfFootballSpend": 58.56,
+      "rosterAsPctOfTotalRev": 15.61
+    },
+    "cfbdTeam": "West Virginia",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $20.0M"
+  },
+  {
+    "slug": "colorado",
+    "name": "Colorado",
+    "conference": "Big 12",
+    "budgetMin": 18.0,
+    "budgetMax": 21.0,
+    "budgetMid": 19.5,
+    "record2025": {
+      "wins": 3,
+      "losses": 9,
+      "confWins": 1,
+      "confLosses": 8
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.245,
+      "winsAboveExpected2025": -3.245,
+      "dollarsPerWin2025MidM": 6.5,
+      "dollarsPerWin2026MidM": 9.75
+    },
+    "recruiting": {
+      "rank2025": 37,
+      "points2025": 209.08,
+      "rankAvg2022_2025": 48.5,
+      "pointsAvg2022_2025": 196.56
+    },
+    "ratings": {
+      "spPlus2025": -8.3,
+      "spRank2025": 96,
+      "spPlus2026": 3.7,
+      "spRank2026": 59,
+      "fpi2025": -2.678,
+      "fpiRank2025": 60,
+      "fpi2026": 4.48,
+      "fpiRank2026": 49
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 33,
+        "avgRating": 0.8642,
+        "starPoints": 99.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 7
+      },
+      "2026": {
+        "transfersIn": 42,
+        "avgRating": 0.8651,
+        "starPoints": 129.0,
+        "stars4": 3,
+        "stars5": 0,
+        "rankInP4": 4
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Colorado Boulder",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-colorado-boulder",
+      "fy": 2025,
+      "totalRevM": 161.672,
+      "totalExpM": 161.512,
+      "ticketSalesM": 27.581,
+      "donationsM": 19.164,
+      "mediaConferenceM": 38.903,
+      "footballSpendingM": 42.805,
+      "coachesCompM": 23.204,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 1.873,
+      "rosterAsPctOfFootballSpend": 45.56,
+      "rosterAsPctOfTotalRev": 12.06
+    },
+    "cfbdTeam": "Colorado",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $19.5M"
+  },
+  {
+    "slug": "syracuse",
+    "name": "Syracuse",
+    "conference": "ACC",
+    "budgetMin": 17.0,
+    "budgetMax": 22.0,
+    "budgetMid": 19.5,
+    "record2025": {
+      "wins": 3,
+      "losses": 9,
+      "confWins": 1,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.245,
+      "winsAboveExpected2025": -3.245,
+      "dollarsPerWin2025MidM": 6.5,
+      "dollarsPerWin2026MidM": 19.5
+    },
+    "recruiting": {
+      "rank2025": 42,
+      "points2025": 206.41,
+      "rankAvg2022_2025": 59.0,
+      "pointsAvg2022_2025": 184.96
+    },
+    "ratings": {
+      "spPlus2025": -13.1,
+      "spRank2025": 115,
+      "spPlus2026": 1.7,
+      "spRank2026": 67,
+      "fpi2025": -9.277,
+      "fpiRank2025": 67,
+      "fpi2026": 1.197,
+      "fpiRank2026": 58
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 16,
+        "avgRating": 0.8627,
+        "starPoints": 48.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 47
+      },
+      "2026": {
+        "transfersIn": 19,
+        "avgRating": 0.8595,
+        "starPoints": 57.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 40
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Syracuse",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $19.5M"
+  },
+  {
+    "slug": "iowa",
+    "name": "Iowa",
+    "conference": "Big Ten",
+    "budgetMin": 17.0,
+    "budgetMax": 21.0,
+    "budgetMid": 19.0,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 6,
+      "confLosses": 3
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.169,
+      "winsAboveExpected2025": 2.831,
+      "dollarsPerWin2025MidM": 2.1111,
+      "dollarsPerWin2026MidM": 9.5
+    },
+    "recruiting": {
+      "rank2025": 38,
+      "points2025": 208.27,
+      "rankAvg2022_2025": 35.25,
+      "pointsAvg2022_2025": 210.77
+    },
+    "ratings": {
+      "spPlus2025": 19.7,
+      "spRank2025": 12,
+      "spPlus2026": 13.8,
+      "spRank2026": 25,
+      "fpi2025": 15.306,
+      "fpiRank2025": 18,
+      "fpi2026": 9.898,
+      "fpiRank2026": 32
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 9,
+        "avgRating": 0.8622,
+        "starPoints": 28.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 61
+      },
+      "2026": {
+        "transfersIn": 15,
+        "avgRating": 0.8531,
+        "starPoints": 39.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 61
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Iowa",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/university-iowa",
+      "fy": 2025,
+      "totalRevM": 179.978,
+      "totalExpM": 173.38,
+      "ticketSalesM": 33.104,
+      "donationsM": 35.071,
+      "mediaConferenceM": 81.11,
+      "footballSpendingM": 50.894,
+      "coachesCompM": 38.969,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.305,
+      "rosterAsPctOfFootballSpend": 37.33,
+      "rosterAsPctOfTotalRev": 10.56
+    },
+    "cfbdTeam": "Iowa",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $19.0M"
+  },
+  {
+    "slug": "pitt",
+    "name": "Pitt",
+    "conference": "ACC",
+    "budgetMin": 16.0,
+    "budgetMax": 20.0,
+    "budgetMid": 18.0,
+    "record2025": {
+      "wins": 8,
+      "losses": 5,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.016,
+      "winsAboveExpected2025": 1.984,
+      "dollarsPerWin2025MidM": 2.25,
+      "dollarsPerWin2026MidM": 9.0
+    },
+    "recruiting": {
+      "rank2025": 51,
+      "points2025": 199.28,
+      "rankAvg2022_2025": 54.75,
+      "pointsAvg2022_2025": 188.2
+    },
+    "ratings": {
+      "spPlus2025": 8.4,
+      "spRank2025": 36,
+      "spPlus2026": 10.0,
+      "spRank2026": 36,
+      "fpi2025": 7.657,
+      "fpiRank2025": 37,
+      "fpi2026": 11.622,
+      "fpiRank2026": 29
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 15,
+        "avgRating": 0.8571,
+        "starPoints": 42.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 53
+      },
+      "2026": {
+        "transfersIn": 16,
+        "avgRating": 0.8479,
+        "starPoints": 46.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 55
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Pittsburgh",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $18.0M"
+  },
+  {
+    "slug": "purdue",
+    "name": "Purdue",
+    "conference": "Big Ten",
+    "budgetMin": 16.0,
+    "budgetMax": 20.0,
+    "budgetMid": 18.0,
+    "record2025": {
+      "wins": 2,
+      "losses": 10,
+      "confWins": 0,
+      "confLosses": 9
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.016,
+      "winsAboveExpected2025": -4.016,
+      "dollarsPerWin2025MidM": 9.0,
+      "dollarsPerWin2026MidM": 18.0
+    },
+    "recruiting": {
+      "rank2025": 99,
+      "points2025": 147.08,
+      "rankAvg2022_2025": 58.5,
+      "pointsAvg2022_2025": 187.64
+    },
+    "ratings": {
+      "spPlus2025": -6.1,
+      "spRank2025": 90,
+      "spPlus2026": -1.2,
+      "spRank2026": 77,
+      "fpi2025": -4.748,
+      "fpiRank2025": 64,
+      "fpi2026": -0.444,
+      "fpiRank2026": 62
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 51,
+        "avgRating": 0.8539,
+        "starPoints": 147.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 2
+      },
+      "2026": {
+        "transfersIn": 29,
+        "avgRating": 0.8579,
+        "starPoints": 85.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 22
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Purdue University",
+      "url": "https://knightnewhousedata.org/fbs/big-ten/purdue-university",
+      "fy": 2025,
+      "totalRevM": 150.536,
+      "totalExpM": 149.651,
+      "ticketSalesM": 23.576,
+      "donationsM": 27.693,
+      "mediaConferenceM": 77.716,
+      "footballSpendingM": 37.193,
+      "coachesCompM": 28.043,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.924,
+      "rosterAsPctOfFootballSpend": 48.4,
+      "rosterAsPctOfTotalRev": 11.96
+    },
+    "cfbdTeam": "Purdue",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $18.0M"
+  },
+  {
+    "slug": "stanford",
+    "name": "Stanford",
+    "conference": "ACC",
+    "budgetMin": 16.0,
+    "budgetMax": 20.0,
+    "budgetMid": 18.0,
+    "record2025": {
+      "wins": 4,
+      "losses": 8,
+      "confWins": 3,
+      "confLosses": 5
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 6.016,
+      "winsAboveExpected2025": -2.016,
+      "dollarsPerWin2025MidM": 4.5,
+      "dollarsPerWin2026MidM": 18.0
+    },
+    "recruiting": {
+      "rank2025": 56,
+      "points2025": 196.58,
+      "rankAvg2022_2025": 37.75,
+      "pointsAvg2022_2025": 211.11
+    },
+    "ratings": {
+      "spPlus2025": -11.8,
+      "spRank2025": 112,
+      "spPlus2026": -3.9,
+      "spRank2026": 82,
+      "fpi2025": -3.652,
+      "fpiRank2025": 62,
+      "fpi2026": -4.906,
+      "fpiRank2026": 67
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 17,
+        "avgRating": 0.8524,
+        "starPoints": 51.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 42
+      },
+      "2026": {
+        "transfersIn": 6,
+        "avgRating": 0.8517,
+        "starPoints": 18.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 68
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Stanford",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $18.0M"
+  },
+  {
+    "slug": "wake-forest",
+    "name": "Wake Forest",
+    "conference": "ACC",
+    "budgetMin": 16.0,
+    "budgetMax": 20.0,
+    "budgetMid": 18.0,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 4,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 6.016,
+      "winsAboveExpected2025": 2.984,
+      "dollarsPerWin2025MidM": 2.0,
+      "dollarsPerWin2026MidM": 9.0
+    },
+    "recruiting": {
+      "rank2025": 63,
+      "points2025": 189.05,
+      "rankAvg2022_2025": 59.75,
+      "pointsAvg2022_2025": 185.74
+    },
+    "ratings": {
+      "spPlus2025": 5.7,
+      "spRank2025": 52,
+      "spPlus2026": 3.4,
+      "spRank2026": 62,
+      "fpi2025": 2.069,
+      "fpiRank2025": 52,
+      "fpi2026": 4.105,
+      "fpiRank2026": 51
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 33,
+        "avgRating": 0.8544,
+        "starPoints": 97.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 8
+      },
+      "2026": {
+        "transfersIn": 24,
+        "avgRating": 0.8538,
+        "starPoints": 72.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 28
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Wake Forest",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $18.0M"
+  },
+  {
+    "slug": "ucf",
+    "name": "UCF",
+    "conference": "Big 12",
+    "budgetMin": 15.0,
+    "budgetMax": 20.0,
+    "budgetMid": 17.5,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 2,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 5.94,
+      "winsAboveExpected2025": -0.94,
+      "dollarsPerWin2025MidM": 3.5,
+      "dollarsPerWin2026MidM": 17.5
+    },
+    "recruiting": {
+      "rank2025": 79,
+      "points2025": 171.17,
+      "rankAvg2022_2025": 54.25,
+      "pointsAvg2022_2025": 191.84
+    },
+    "ratings": {
+      "spPlus2025": -1.2,
+      "spRank2025": 76,
+      "spPlus2026": 5.6,
+      "spRank2026": 53,
+      "fpi2025": -0.768,
+      "fpiRank2025": 56,
+      "fpi2026": 4.697,
+      "fpiRank2026": 47
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 38,
+        "avgRating": 0.855,
+        "starPoints": 107.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 5
+      },
+      "2026": {
+        "transfersIn": 32,
+        "avgRating": 0.8504,
+        "starPoints": 90.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 18
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Central Florida",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-central-florida",
+      "fy": 2025,
+      "totalRevM": 108.885,
+      "totalExpM": 103.615,
+      "ticketSalesM": 8.372,
+      "donationsM": 27.907,
+      "mediaConferenceM": 20.866,
+      "footballSpendingM": 38.695,
+      "coachesCompM": 19.235,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.227,
+      "rosterAsPctOfFootballSpend": 45.23,
+      "rosterAsPctOfTotalRev": 16.07
+    },
+    "cfbdTeam": "UCF",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $17.5M"
+  },
+  {
+    "slug": "houston",
+    "name": "Houston",
+    "conference": "Big 12",
+    "budgetMin": 15.0,
+    "budgetMax": 19.0,
+    "budgetMid": 17.0,
+    "record2025": {
+      "wins": 10,
+      "losses": 3,
+      "confWins": 6,
+      "confLosses": 3
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 5.864,
+      "winsAboveExpected2025": 4.136,
+      "dollarsPerWin2025MidM": 1.7,
+      "dollarsPerWin2026MidM": 8.5
+    },
+    "recruiting": {
+      "rank2025": 52,
+      "points2025": 198.73,
+      "rankAvg2022_2025": 54.25,
+      "pointsAvg2022_2025": 190.58
+    },
+    "ratings": {
+      "spPlus2025": 7.4,
+      "spRank2025": 40,
+      "spPlus2026": 11.6,
+      "spRank2026": 31,
+      "fpi2025": 4.408,
+      "fpiRank2025": 45,
+      "fpi2026": 9.181,
+      "fpiRank2026": 33
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 28,
+        "avgRating": 0.8604,
+        "starPoints": 77.0,
+        "stars4": 2,
+        "stars5": 0,
+        "rankInP4": 19
+      },
+      "2026": {
+        "transfersIn": 18,
+        "avgRating": 0.8587,
+        "starPoints": 51.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 50
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Houston",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-houston",
+      "fy": 2025,
+      "totalRevM": 92.759,
+      "totalExpM": 98.865,
+      "ticketSalesM": 7.635,
+      "donationsM": 15.624,
+      "mediaConferenceM": 18.478,
+      "footballSpendingM": 26.413,
+      "coachesCompM": 21.244,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 1.5,
+      "rosterAsPctOfFootballSpend": 64.36,
+      "rosterAsPctOfTotalRev": 18.33
+    },
+    "cfbdTeam": "Houston",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $17.0M"
+  },
+  {
+    "slug": "oklahoma-st",
+    "name": "Oklahoma St.",
+    "conference": "Big 12",
+    "budgetMin": 15.0,
+    "budgetMax": 19.0,
+    "budgetMid": 17.0,
+    "record2025": {
+      "wins": 1,
+      "losses": 11,
+      "confWins": 0,
+      "confLosses": 9
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 5.864,
+      "winsAboveExpected2025": -4.864,
+      "dollarsPerWin2025MidM": 17.0,
+      "dollarsPerWin2026MidM": 17.0
+    },
+    "recruiting": {
+      "rank2025": 53,
+      "points2025": 198.62,
+      "rankAvg2022_2025": 48.0,
+      "pointsAvg2022_2025": 199.79
+    },
+    "ratings": {
+      "spPlus2025": -15.1,
+      "spRank2025": 121,
+      "spPlus2026": 6.7,
+      "spRank2026": 50,
+      "fpi2025": -12.121,
+      "fpiRank2025": 68,
+      "fpi2026": 2.991,
+      "fpiRank2026": 53
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 40,
+        "avgRating": 0.8572,
+        "starPoints": 108.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 4
+      },
+      "2026": {
+        "transfersIn": 55,
+        "avgRating": 0.8614,
+        "starPoints": 159.0,
+        "stars4": 4,
+        "stars5": 1,
+        "rankInP4": 1
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Oklahoma State University",
+      "url": "https://knightnewhousedata.org/fbs/big-12/oklahoma-state-university",
+      "fy": 2025,
+      "totalRevM": 150.779,
+      "totalExpM": 156.061,
+      "ticketSalesM": 11.78,
+      "donationsM": 78.078,
+      "mediaConferenceM": 47.515,
+      "footballSpendingM": 32.831,
+      "coachesCompM": 29.588,
+      "nilRevShareLine44M": 16.002,
+      "recruitingExpM": 2.453,
+      "rosterAsPctOfFootballSpend": 51.78,
+      "rosterAsPctOfTotalRev": 11.27
+    },
+    "cfbdTeam": "Oklahoma State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $17.0M"
+  },
+  {
+    "slug": "kansas",
+    "name": "Kansas",
+    "conference": "Big 12",
+    "budgetMin": 15.0,
+    "budgetMax": 17.0,
+    "budgetMid": 16.0,
+    "record2025": {
+      "wins": 5,
+      "losses": 7,
+      "confWins": 3,
+      "confLosses": 6
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 5.711,
+      "winsAboveExpected2025": -0.711,
+      "dollarsPerWin2025MidM": 3.2,
+      "dollarsPerWin2026MidM": 16.0
+    },
+    "recruiting": {
+      "rank2025": 72,
+      "points2025": 178.35,
+      "rankAvg2022_2025": 76.0,
+      "pointsAvg2022_2025": 164.38
+    },
+    "ratings": {
+      "spPlus2025": 4.1,
+      "spRank2025": 58,
+      "spPlus2026": 4.7,
+      "spRank2026": 55,
+      "fpi2025": 4.37,
+      "fpiRank2025": 46,
+      "fpi2026": 0.861,
+      "fpiRank2026": 60
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 27,
+        "avgRating": 0.854,
+        "starPoints": 78.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 18
+      },
+      "2026": {
+        "transfersIn": 31,
+        "avgRating": 0.8562,
+        "starPoints": 92.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 17
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Kansas",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-kansas",
+      "fy": 2025,
+      "totalRevM": 143.856,
+      "totalExpM": 148.361,
+      "ticketSalesM": 26.751,
+      "donationsM": 43.525,
+      "mediaConferenceM": 48.054,
+      "footballSpendingM": 34.516,
+      "coachesCompM": 33.07,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.441,
+      "rosterAsPctOfFootballSpend": 46.35,
+      "rosterAsPctOfTotalRev": 11.12
+    },
+    "cfbdTeam": "Kansas",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $16.0M"
+  },
+  {
+    "slug": "arizona",
+    "name": "Arizona",
+    "conference": "Big 12",
+    "budgetMin": 13.0,
+    "budgetMax": 18.0,
+    "budgetMid": 15.5,
+    "record2025": {
+      "wins": 9,
+      "losses": 4,
+      "confWins": 7,
+      "confLosses": 3
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 5.634,
+      "winsAboveExpected2025": 3.366,
+      "dollarsPerWin2025MidM": 1.7222,
+      "dollarsPerWin2026MidM": 15.5
+    },
+    "recruiting": {
+      "rank2025": 50,
+      "points2025": 200.65,
+      "rankAvg2022_2025": 49.25,
+      "pointsAvg2022_2025": 198.01
+    },
+    "ratings": {
+      "spPlus2025": 12.0,
+      "spRank2025": 28,
+      "spPlus2026": 10.3,
+      "spRank2026": 34,
+      "fpi2025": 10.097,
+      "fpiRank2025": 27,
+      "fpi2026": 6.02,
+      "fpiRank2026": 42
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 30,
+        "avgRating": 0.8545,
+        "starPoints": 89.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 13
+      },
+      "2026": {
+        "transfersIn": 22,
+        "avgRating": 0.8586,
+        "starPoints": 64.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 33
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Arizona",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-arizona",
+      "fy": 2025,
+      "totalRevM": 143.291,
+      "totalExpM": 142.908,
+      "ticketSalesM": 23.137,
+      "donationsM": 33.978,
+      "mediaConferenceM": 37.837,
+      "footballSpendingM": 39.898,
+      "coachesCompM": 29.406,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 3.4,
+      "rosterAsPctOfFootballSpend": 38.85,
+      "rosterAsPctOfTotalRev": 10.82
+    },
+    "cfbdTeam": "Arizona",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $15.5M"
+  },
+  {
+    "slug": "cincinnati",
+    "name": "Cincinnati",
+    "conference": "Big 12",
+    "budgetMin": 14.0,
+    "budgetMax": 16.0,
+    "budgetMid": 15.0,
+    "record2025": {
+      "wins": 7,
+      "losses": 6,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 5.558,
+      "winsAboveExpected2025": 1.442,
+      "dollarsPerWin2025MidM": 2.1429,
+      "dollarsPerWin2026MidM": 7.5
+    },
+    "recruiting": {
+      "rank2025": 61,
+      "points2025": 189.52,
+      "rankAvg2022_2025": 57.25,
+      "pointsAvg2022_2025": 188.01
+    },
+    "ratings": {
+      "spPlus2025": 4.5,
+      "spRank2025": 56,
+      "spPlus2026": 7.6,
+      "spRank2026": 45,
+      "fpi2025": 3.683,
+      "fpiRank2025": 47,
+      "fpi2026": 8.641,
+      "fpiRank2026": 34
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 20,
+        "avgRating": 0.8553,
+        "starPoints": 60.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 32
+      },
+      "2026": {
+        "transfersIn": 23,
+        "avgRating": 0.8585,
+        "starPoints": 66.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 32
+      }
+    },
+    "knightNewhouse": {
+      "institution": "University of Cincinnati",
+      "url": "https://knightnewhousedata.org/fbs/big-12/university-cincinnati",
+      "fy": 2025,
+      "totalRevM": 118.516,
+      "totalExpM": 119.327,
+      "ticketSalesM": 12.79,
+      "donationsM": 17.663,
+      "mediaConferenceM": 20.634,
+      "footballSpendingM": 30.2,
+      "coachesCompM": 18.69,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 2.0,
+      "rosterAsPctOfFootballSpend": 49.67,
+      "rosterAsPctOfTotalRev": 12.66
+    },
+    "cfbdTeam": "Cincinnati",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $15.0M"
+  },
+  {
+    "slug": "iowa-state",
+    "name": "Iowa State",
+    "conference": "Big 12",
+    "budgetMin": 13.0,
+    "budgetMax": 17.0,
+    "budgetMid": 15.0,
+    "record2025": {
+      "wins": 8,
+      "losses": 4,
+      "confWins": 5,
+      "confLosses": 4
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 5.558,
+      "winsAboveExpected2025": 2.442,
+      "dollarsPerWin2025MidM": 1.875,
+      "dollarsPerWin2026MidM": 15.0
+    },
+    "recruiting": {
+      "rank2025": 54,
+      "points2025": 197.45,
+      "rankAvg2022_2025": 47.0,
+      "pointsAvg2022_2025": 199.74
+    },
+    "ratings": {
+      "spPlus2025": 9.9,
+      "spRank2025": 33,
+      "spPlus2026": 3.5,
+      "spRank2026": 60,
+      "fpi2025": 8.627,
+      "fpiRank2025": 33,
+      "fpi2026": 0.762,
+      "fpiRank2026": 61
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 8,
+        "avgRating": 0.8637,
+        "starPoints": 25.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 64
+      },
+      "2026": {
+        "transfersIn": 48,
+        "avgRating": 0.8514,
+        "starPoints": 140.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 3
+      }
+    },
+    "knightNewhouse": {
+      "institution": "Iowa State University",
+      "url": "https://knightnewhousedata.org/fbs/big-12/iowa-state-university",
+      "fy": 2025,
+      "totalRevM": 117.99,
+      "totalExpM": 117.984,
+      "ticketSalesM": 23.693,
+      "donationsM": 29.36,
+      "mediaConferenceM": 47.339,
+      "footballSpendingM": 33.29,
+      "coachesCompM": 24.32,
+      "nilRevShareLine44M": 0.0,
+      "recruitingExpM": 1.457,
+      "rosterAsPctOfFootballSpend": 45.06,
+      "rosterAsPctOfTotalRev": 12.71
+    },
+    "cfbdTeam": "Iowa State",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $15.0M"
+  },
+  {
+    "slug": "duke",
+    "name": "Duke",
+    "conference": "ACC",
+    "budgetMin": 12.0,
+    "budgetMax": 15.0,
+    "budgetMid": 13.5,
+    "record2025": {
+      "wins": 9,
+      "losses": 5,
+      "confWins": 6,
+      "confLosses": 2
+    },
+    "record2026": {
+      "wins": 2,
+      "losses": 0
+    },
+    "moneyball": {
+      "expectedWins2025": 5.329,
+      "winsAboveExpected2025": 3.671,
+      "dollarsPerWin2025MidM": 1.5,
+      "dollarsPerWin2026MidM": 6.75
+    },
+    "recruiting": {
+      "rank2025": 30,
+      "points2025": 220.94,
+      "rankAvg2022_2025": 49.75,
+      "pointsAvg2022_2025": 195.86
+    },
+    "ratings": {
+      "spPlus2025": 6.6,
+      "spRank2025": 44,
+      "spPlus2026": 6.9,
+      "spRank2026": 48,
+      "fpi2025": 6.398,
+      "fpiRank2025": 40,
+      "fpi2026": 6.584,
+      "fpiRank2026": 39
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 9,
+        "avgRating": 0.8578,
+        "starPoints": 28.0,
+        "stars4": 1,
+        "stars5": 0,
+        "rankInP4": 62
+      },
+      "2026": {
+        "transfersIn": 19,
+        "avgRating": 0.8563,
+        "starPoints": 57.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 41
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Duke",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $13.5M"
+  },
+  {
+    "slug": "boston-college",
+    "name": "Boston College",
+    "conference": "ACC",
+    "budgetMin": 8.0,
+    "budgetMax": 13.0,
+    "budgetMid": 10.5,
+    "record2025": {
+      "wins": 2,
+      "losses": 10,
+      "confWins": 1,
+      "confLosses": 7
+    },
+    "record2026": {
+      "wins": 1,
+      "losses": 1
+    },
+    "moneyball": {
+      "expectedWins2025": 4.87,
+      "winsAboveExpected2025": -2.87,
+      "dollarsPerWin2025MidM": 5.25,
+      "dollarsPerWin2026MidM": 10.5
+    },
+    "recruiting": {
+      "rank2025": 59,
+      "points2025": 195.09,
+      "rankAvg2022_2025": 63.75,
+      "pointsAvg2022_2025": 184.04
+    },
+    "ratings": {
+      "spPlus2025": -8.5,
+      "spRank2025": 97,
+      "spPlus2026": -3.3,
+      "spRank2026": 81,
+      "fpi2025": -5.231,
+      "fpiRank2025": 65,
+      "fpi2026": -3.875,
+      "fpiRank2026": 66
+    },
+    "portal": {
+      "2025": {
+        "transfersIn": 15,
+        "avgRating": 0.8521,
+        "starPoints": 45.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 50
+      },
+      "2026": {
+        "transfersIn": 26,
+        "avgRating": 0.8528,
+        "starPoints": 77.0,
+        "stars4": 0,
+        "stars5": 0,
+        "rankInP4": 23
+      }
+    },
+    "knightNewhouse": null,
+    "cfbdTeam": "Boston College",
+    "notes": "2026 early season (~2 games as of mid-Sep); sources: FDB 2025/2026 standings; Athletic NIL mid $10.5M"
+  }
+]
