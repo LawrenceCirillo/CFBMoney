@@ -8,7 +8,13 @@ import PickProgram from "@/components/build/PickProgram";
 import Season from "@/components/build/Season";
 import SeasonMode from "@/components/build/SeasonMode";
 import { getTeam } from "@/lib/data";
-import { emptyAllocation, GAME_BUDGET_M, type Allocation } from "@/lib/simulator";
+import {
+  allocationFromPlaysheet,
+  distributeAllocationToSlots,
+  emptyAllocation,
+  GAME_BUDGET_M,
+  type Playsheet,
+} from "@/lib/simulator";
 
 type Step = "build" | "program" | "season";
 
@@ -31,7 +37,9 @@ function BuildPageInner() {
   const reduceMotion = useReducedMotion();
   const requestedProgram = searchParams.get("program");
   const [step, setStep] = useState<Step>("build");
-  const [alloc, setAlloc] = useState<Allocation>(() => emptyAllocation());
+  const [pos, setPos] = useState<Playsheet>(() =>
+    distributeAllocationToSlots(emptyAllocation())
+  );
   const [budgetM, setBudgetM] = useState(GAME_BUDGET_M);
   const [programSlug, setProgramSlug] = useState(
     () => (requestedProgram && getTeam(requestedProgram) ? requestedProgram : "texas")
@@ -39,6 +47,7 @@ function BuildPageInner() {
   const [seasonId, setSeasonId] = useState(0);
   const [mode, setMode] = useState<"season" | "quick">("season");
   const program = getTeam(programSlug)!;
+  const alloc = allocationFromPlaysheet(pos);
 
   const stepIndex = STEPS.findIndex((s) => s.key === step);
 
@@ -97,8 +106,8 @@ function BuildPageInner() {
           >
             {step === "build" && (
               <BuildRoster
-                alloc={alloc}
-                setAlloc={setAlloc}
+                pos={pos}
+                setPos={setPos}
                 budgetM={budgetM}
                 setBudgetM={setBudgetM}
                 onNext={() => setStep("program")}

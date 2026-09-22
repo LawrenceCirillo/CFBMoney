@@ -11,9 +11,12 @@ import {
   mulberry32,
   optimalAllocation,
   cappedOptimalAllocation,
+  allocationFromPlaysheet,
   clampGameBudget,
   clampPlaysheetToBudget,
   distributeAllocationToSlots,
+  emptyAllocation,
+  emptyPlaysheet,
   GAME_BUDGET_MAX_M,
   GAME_BUDGET_MIN_M,
   MARKET_CAPS,
@@ -21,6 +24,7 @@ import {
   PLAYSHEET_SLOTS,
   POSITION_GROUPS,
   ratingsFromAllocation,
+  setPlaysheetPosition,
   simulateGame,
   summarizeSeason,
   archetype,
@@ -135,6 +139,69 @@ console.log("market caps");
   for (const p of PLAYSHEET_SLOTS) {
     assert(shrunk[p.key] <= p.cap + 1e-9, `shrunk ${p.key} within market cap`, shrunk[p.key]);
   }
+}
+
+// ---------- parent-owned playsheet transitions ----------
+console.log("playsheet transitions");
+{
+  const initial = distributeAllocationToSlots(emptyAllocation());
+  assert(
+    Object.keys(initial).length === PLAYSHEET_SLOTS.length &&
+      PLAYSHEET_SLOTS.every((slot) => initial[slot.key] === 0),
+    "initial playsheet includes every starter and ST"
+  );
+
+  let uneven = initial;
+  for (const [key, value] of [
+    ["LT", 2.5], ["LG", 0.1], ["RT", 0.7],
+    ["TE", 0.2], ["XWR", 2.4], ["ZWR", 0.1], ["SLOT", 0.3],
+    ["ST", 0.4],
+  ] as const) {
+    uneven = setPlaysheetPosition(uneven, 30, key, value);
+  }
+  const groups = allocationFromPlaysheet(uneven);
+  const expectedGroups: Allocation = { QB: 0, RB: 0, WR: 3, OL: 3.3, DL: 0, LB: 0, DB: 0, ST: 0.4 };
+  assert(POSITION_GROUPS.every((group) => groups[group.key] === expectedGroups[group.key]),
+    "uneven slot spends produce exact group totals", groups);
+  assert(
+    JSON.stringify(ratingsFromAllocation(withDepth(groups, 30))) ===
+      JSON.stringify(ratingsFromAllocation(withDepth(expectedGroups, 30))),
+    "unchanged playsheet produces unchanged simulated ratings"
+  );
+  assert(distributeAllocationToSlots(groups).LT !== uneven.LT,
+    "re-distributing group totals would lose the custom tackle amount");
+  assert(distributeAllocationToSlots(groups).XWR !== uneven.XWR,
+    "re-distributing group totals would lose the custom receiver amount");
+
+  // Build -> Program -> Build keeps the parent-owned object; only the step changes.
+  let buildState = { step: "build", pos: uneven };
+  buildState = { ...buildState, step: "program" };
+  const programGroups = allocationFromPlaysheet(buildState.pos);
+  buildState = { ...buildState, step: "build" };
+  assert(PLAYSHEET_SLOTS.every((slot) => buildState.pos[slot.key] === uneven[slot.key]),
+    "pure step round trip retains every slot including ST");
+  assert(JSON.stringify(allocationFromPlaysheet(buildState.pos)) === JSON.stringify(programGroups),
+    "pure step round trip retains derived group totals");
+
+  const optimized = distributeAllocationToSlots(cappedOptimalAllocation(30));
+  const optimalGroups = cappedOptimalAllocation(30);
+  assert(POSITION_GROUPS.every((group) =>
+    allocationFromPlaysheet(optimized)[group.key] === optimalGroups[group.key]),
+    "Optimize keeps simulator group totals");
+  const raised = setPlaysheetPosition(optimized, 30, "LT", 2.5);
+  const raisedDimes = PLAYSHEET_SLOTS.reduce((sum, slot) => sum + Math.round(raised[slot.key] * 10), 0);
+  assert(raised !== optimized && raised.LT === 2.5 && raisedDimes === 300,
+    "position slider reaches market cap without exceeding a full book", raisedDimes);
+
+  const reduced = clampPlaysheetToBudget(raised, 10);
+  const reducedDimes = PLAYSHEET_SLOTS.reduce((sum, slot) => sum + Math.round(reduced[slot.key] * 10), 0);
+  assert(reducedDimes === 100 && reduced.LT <= raised.LT,
+    "budget reduction shrinks the playsheet in tenths", reducedDimes);
+  assert(PLAYSHEET_SLOTS.every((slot) => reduced[slot.key] <= slot.cap),
+    "budget reduction respects every slot cap");
+  const reset = emptyPlaysheet();
+  assert(PLAYSHEET_SLOTS.every((slot) => reset[slot.key] === 0),
+    "Reset clears every slot including ST");
 }
 
 // ---------- storylines ----------

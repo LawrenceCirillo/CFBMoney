@@ -90,7 +90,7 @@ const PREMIUM_CAP = 2.5;
 const STARTER_CAP = 1.5;
 const ST_CAP = 2;
 
-export const PLAYSHEET_SLOTS: PlaysheetSlot[] = [
+export const PLAYSHEET_SLOTS = [
   { key: "LT", group: "OL", cap: PREMIUM_CAP },
   { key: "LG", group: "OL", cap: STARTER_CAP },
   { key: "C", group: "OL", cap: STARTER_CAP },
@@ -114,7 +114,25 @@ export const PLAYSHEET_SLOTS: PlaysheetSlot[] = [
   { key: "SS", group: "DB", cap: STARTER_CAP },
   { key: "FS", group: "DB", cap: STARTER_CAP },
   { key: "ST", group: "ST", cap: ST_CAP },
-];
+] as const satisfies readonly PlaysheetSlot[];
+
+export type PlaysheetKey = (typeof PLAYSHEET_SLOTS)[number]["key"];
+export type Playsheet = Record<PlaysheetKey, number>;
+
+export function emptyPlaysheet(): Playsheet {
+  const slots = {} as Playsheet;
+  for (const slot of PLAYSHEET_SLOTS) slots[slot.key] = 0;
+  return slots;
+}
+
+/** Collapse the individual starter amounts into the groups used by the simulator. */
+export function allocationFromPlaysheet(pos: Playsheet): Allocation {
+  const dimes = emptyAllocation();
+  for (const slot of PLAYSHEET_SLOTS) dimes[slot.group] += Math.round(pos[slot.key] * 10);
+  const alloc = emptyAllocation();
+  for (const group of POSITION_GROUPS) alloc[group.key] = dimes[group.key] / 10;
+  return alloc;
+}
 
 export const MARKET_CAPS: Allocation = (() => {
   const caps = emptyAllocation();
@@ -364,9 +382,8 @@ export function cappedOptimalAllocation(budgetM: number): Allocation {
  * Split a group allocation across playsheet slots: even water-fill, then extra
  * dimes go to higher-cap (premium) slots. Never exceeds per-slot market caps.
  */
-export function distributeAllocationToSlots(alloc: Allocation): Record<string, number> {
-  const next: Record<string, number> = {};
-  for (const slot of PLAYSHEET_SLOTS) next[slot.key] = 0;
+export function distributeAllocationToSlots(alloc: Allocation): Playsheet {
+  const next = emptyPlaysheet();
   for (const g of POSITION_GROUPS) {
     const members = PLAYSHEET_SLOTS.filter((s) => s.group === g.key).map((s) => ({
       key: s.key,
@@ -396,9 +413,9 @@ export function distributeAllocationToSlots(alloc: Allocation): Record<string, n
  * exceed the program book. Leftover becomes depth.
  */
 export function clampPlaysheetToBudget(
-  pos: Record<string, number>,
+  pos: Playsheet,
   budgetM: number
-): Record<string, number> {
+): Playsheet {
   const budget = clampGameBudget(budgetM);
   const budgetD = Math.round(budget * 10);
   const dimes: Record<string, number> = {};
@@ -408,7 +425,7 @@ export function clampPlaysheetToBudget(
   }
   const total = PLAYSHEET_SLOTS.reduce((s, p) => s + dimes[p.key], 0);
   if (total <= budgetD) {
-    const next: Record<string, number> = {};
+    const next = emptyPlaysheet();
     for (const slot of PLAYSHEET_SLOTS) next[slot.key] = dimes[slot.key] / 10;
     return next;
   }
@@ -420,8 +437,7 @@ export function clampPlaysheetToBudget(
   });
   let leftover = budgetD - parts.reduce((s, p) => s + p.floor, 0);
   parts.sort((a, b) => b.frac - a.frac || a.k.localeCompare(b.k));
-  const next: Record<string, number> = {};
-  for (const slot of PLAYSHEET_SLOTS) next[slot.key] = 0;
+  const next = emptyPlaysheet();
   for (const p of parts) next[p.k] = p.floor;
   for (const p of parts) {
     if (leftover <= 0) break;
@@ -429,6 +445,60 @@ export function clampPlaysheetToBudget(
     leftover -= 1;
   }
   for (const slot of PLAYSHEET_SLOTS) next[slot.key] = next[slot.key] / 10;
+  return next;
+}
+
+/** Change one starter amount in tenths, drawing any shortfall from other slots. */
+export function setPlaysheetPosition(
+  pos: Playsheet,
+  budgetM: number,
+  key: PlaysheetKey,
+  valueM: number
+): Playsheet {
+  const toDimes = (m: number) => Math.round(m * 10);
+  const cap = toDimes(slotMarketCap(key));
+  const cur = toDimes(pos[key]);
+  const desired = Math.max(0, Math.min(cap, toDimes(valueM)));
+  if (desired === cur) return pos;
+
+  const dimes = emptyPlaysheet();
+  for (const slot of PLAYSHEET_SLOTS) dimes[slot.key] = toDimes(pos[slot.key]);
+
+  if (desired < cur) {
+    dimes[key] = desired;
+  } else {
+    const budgetD = toDimes(clampGameBudget(budgetM));
+    const total = PLAYSHEET_SLOTS.reduce((sum, slot) => sum + dimes[slot.key], 0);
+    const free = Math.max(0, budgetD - total);
+    const need = desired - cur;
+    const take = Math.max(0, need - free);
+    const donors = PLAYSHEET_SLOTS.map((slot) => slot.key)
+      .filter((donor) => donor !== key && dimes[donor] > 0);
+    const donorTotal = donors.reduce((sum, donor) => sum + dimes[donor], 0);
+    const target = Math.min(take, donorTotal);
+    const parts = donors.map((donor) => {
+      const exact = (target * dimes[donor]) / donorTotal;
+      const floor = Math.floor(exact);
+      return { donor, frac: exact - floor, steal: floor };
+    });
+    let leftover = target - parts.reduce((sum, part) => sum + part.steal, 0);
+    parts.sort((a, b) => b.frac - a.frac || a.donor.localeCompare(b.donor));
+    for (const part of parts) {
+      if (leftover <= 0) break;
+      part.steal += 1;
+      leftover -= 1;
+    }
+    let stolen = 0;
+    for (const part of parts) {
+      const actual = Math.min(part.steal, dimes[part.donor]);
+      dimes[part.donor] -= actual;
+      stolen += actual;
+    }
+    dimes[key] = cur + Math.min(need, free + stolen);
+  }
+
+  const next = emptyPlaysheet();
+  for (const slot of PLAYSHEET_SLOTS) next[slot.key] = dimes[slot.key] / 10;
   return next;
 }
 

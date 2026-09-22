@@ -5,31 +5,34 @@ import {
   POSITION_GROUPS,
   GAME_BUDGET_MIN_M,
   GAME_BUDGET_MAX_M,
-  emptyAllocation,
+  allocationFromPlaysheet,
   cappedOptimalAllocation,
   clampGameBudget,
   clampPlaysheetToBudget,
   distributeAllocationToSlots,
+  emptyPlaysheet,
   ratingsFromAllocation,
+  setPlaysheetPosition,
   slotMarketCap,
   withDepth,
-  type Allocation,
   type PositionKey,
+  type Playsheet,
+  type PlaysheetKey,
 } from "@/lib/simulator";
 import { fmtM, fmtMoney1 } from "@/lib/format";
 import { data } from "@/lib/data";
 import { bookStanding } from "@/lib/spend-rank";
 
 interface Props {
-  alloc: Allocation;
-  setAlloc: (a: Allocation) => void;
+  pos: Playsheet;
+  setPos: (p: Playsheet) => void;
   budgetM: number;
   setBudgetM: (n: number) => void;
   onNext: () => void;
 }
 
 interface FieldPosition {
-  key: string;
+  key: PlaysheetKey;
   label: string;
   short: string;
   group: PositionKey;
@@ -72,7 +75,7 @@ const POSITIONS: FieldPosition[] = [
 const FIELD = POSITIONS.filter((p) => p.side !== "st");
 const toDimes = (m: number) => Math.round(m * 10);
 const fromDimes = (d: number) => d / 10;
-const totalDimes = (p: Record<string, number>) =>
+const totalDimes = (p: Playsheet) =>
   POSITIONS.reduce((s, q) => s + toDimes(p[q.key] ?? 0), 0);
 
 /** Left-to-right, then top-to-bottom on the sheet — not definition order (TE sits before X in POSITIONS). */
@@ -83,56 +86,15 @@ function membersOfGroup(group: PositionKey): FieldPosition[] {
   });
 }
 
-function nextKeyInGroup(group: PositionKey, current: string): string | undefined {
+function nextKeyInGroup(group: PositionKey, current: PlaysheetKey): PlaysheetKey | undefined {
   const members = membersOfGroup(group);
   if (members.length === 0) return undefined;
   const idx = members.findIndex((p) => p.key === current);
   return members[idx === -1 ? 0 : (idx + 1) % members.length].key;
 }
 
-function groupAlloc(p: Record<string, number>): Allocation {
-  const a = emptyAllocation();
-  for (const q of POSITIONS) a[q.group] += toDimes(p[q.key] ?? 0);
-  for (const g of POSITION_GROUPS) a[g.key] = fromDimes(a[g.key]);
-  return a;
-}
-
-/** Hamilton / largest-remainder steal. Returns dimes actually taken. */
-function stealDimes(
-  dimes: Record<string, number>,
-  exclude: string,
-  take: number
-): number {
-  const donors = POSITIONS.map((p) => p.key).filter((k) => k !== exclude && dimes[k] > 0);
-  const donorTotal = donors.reduce((s, k) => s + dimes[k], 0);
-  if (take <= 0 || donorTotal <= 0) return 0;
-  const target = Math.min(take, donorTotal);
-  const parts = donors.map((k) => {
-    const exact = (target * dimes[k]) / donorTotal;
-    const floor = Math.floor(exact);
-    return { k, frac: exact - floor, steal: floor };
-  });
-  let leftover = target - parts.reduce((s, p) => s + p.steal, 0);
-  parts.sort((a, b) => b.frac - a.frac || a.k.localeCompare(b.k));
-  for (const p of parts) {
-    if (leftover <= 0) break;
-    p.steal += 1;
-    leftover -= 1;
-  }
-  let stolen = 0;
-  for (const p of parts) {
-    const actual = Math.min(p.steal, dimes[p.k]);
-    dimes[p.k] -= actual;
-    stolen += actual;
-  }
-  return stolen;
-}
-
-export default function BuildRoster({ alloc, setAlloc, budgetM, setBudgetM, onNext }: Props) {
-  const [pos, setPos] = useState<Record<string, number>>(() =>
-    distributeAllocationToSlots(alloc)
-  );
-  const [selected, setSelected] = useState<string>("QB");
+export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }: Props) {
+  const [selected, setSelected] = useState<PlaysheetKey>("QB");
 
   const budget = clampGameBudget(budgetM);
   const budgetD = Math.round(budget * 10);
@@ -140,7 +102,7 @@ export default function BuildRoster({ alloc, setAlloc, budgetM, setBudgetM, onNe
   const remainingD = budgetD - spentD;
   const spent = fromDimes(spentD);
   const depth = fromDimes(remainingD);
-  const groups = useMemo(() => groupAlloc(pos), [pos]);
+  const groups = useMemo(() => allocationFromPlaysheet(pos), [pos]);
   const simAlloc = useMemo(() => withDepth(groups, budget), [groups, budget]);
   const ratings = useMemo(() => ratingsFromAllocation(simAlloc), [simAlloc]);
   const standing = useMemo(() => bookStanding(budget, data.teams), [budget]);
@@ -148,38 +110,15 @@ export default function BuildRoster({ alloc, setAlloc, budgetM, setBudgetM, onNe
   const selCap = slotMarketCap(sel.key);
   const selVal = pos[sel.key] ?? 0;
 
-  const commit = (next: Record<string, number>) => {
-    setPos(next);
-    setAlloc(groupAlloc(next));
-  };
+  const commit = (next: Playsheet) => setPos(next);
 
   /**
    * The budget mechanic: a slider can always grow up to its market cap.
    * Money beyond the unspent remainder is pulled from the other positions
    * (largest-remainder, integer dimes). The chosen book is never breached.
    */
-  const setPosition = (key: string, v: number) => {
-    const cap = toDimes(slotMarketCap(key));
-    const cur = toDimes(pos[key] ?? 0);
-    const desired = Math.max(0, Math.min(cap, toDimes(v)));
-    if (desired === cur) return;
-
-    const dimes: Record<string, number> = {};
-    for (const p of POSITIONS) dimes[p.key] = toDimes(pos[p.key] ?? 0);
-
-    if (desired < cur) {
-      dimes[key] = desired;
-    } else {
-      const total = POSITIONS.reduce((s, p) => s + dimes[p.key], 0);
-      const free = Math.max(0, budgetD - total);
-      const need = desired - cur;
-      const stolen = stealDimes(dimes, key, Math.max(0, need - free));
-      dimes[key] = cur + Math.min(need, free + stolen);
-    }
-
-    const next: Record<string, number> = {};
-    for (const p of POSITIONS) next[p.key] = fromDimes(dimes[p.key]);
-    commit(next);
+  const setPosition = (key: PlaysheetKey, v: number) => {
+    commit(setPlaysheetPosition(pos, budget, key, v));
   };
 
   const changeBudget = (raw: number) => {
@@ -193,9 +132,7 @@ export default function BuildRoster({ alloc, setAlloc, budgetM, setBudgetM, onNe
   const optimize = () =>
     commit(distributeAllocationToSlots(cappedOptimalAllocation(budget)));
   const reset = () => {
-    const z: Record<string, number> = {};
-    for (const p of POSITIONS) z[p.key] = 0;
-    commit(z);
+    commit(emptyPlaysheet());
   };
 
   const groupStrip = (className: string) => (
