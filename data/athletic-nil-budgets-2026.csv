@@ -1,0 +1,69 @@
+team,preseason_rank,spend_rank,budget_low_m,budget_high_m,budget_mid_m,rank_minus_spend_gap
+Ohio State,6,1,49,54,51.5,-5
+Oregon,21,2,48,54,51.0,-19
+Texas,1,3,45,55,50.0,2
+LSU,7,4,47,50,48.5,-3
+Texas A&M,9,5,45,50,47.5,-4
+Miami,5,6,44,50,47.0,1
+Notre Dame,3,7,41,48,44.5,4
+Ole Miss,8,8,39,45,42.0,0
+Tennessee,15,8,41,43,42.0,-7
+Alabama,10,10,38,42,40.0,0
+Texas Tech,13,10,38,42,40.0,-3
+USC,12,12,37,40,38.5,0
+Indiana,4,13,36,40,38.0,9
+Michigan,19,13,36,40,38.0,-6
+Florida,,15,31,41,36.0,
+South Carolina,,16,32,35,33.5,
+Auburn,,17,31,35,33.0,
+Nebraska,,17,31,35,33.0,
+Georgia,2,19,31,34,32.5,17
+Oklahoma,24,20,28,34,31.0,-4
+Clemson,,21,29,32,30.5,
+Penn State,14,21,29,32,30.5,7
+Wisconsin,,23,27,31,29.0,
+Missouri,20,24,27,30,28.5,4
+UCLA,,25,26,30,28.0,
+Mississippi State,,26,25,30,27.5,
+Virginia Tech,,26,25,30,27.5,
+Florida State,,28,23,30,26.5,
+Vanderbilt,,28,25,28,26.5,
+Georgia Tech,,30,23,26,24.5,
+Kentucky,,30,23,26,24.5,
+NC State,,32,22,26,24.0,
+Arkansas,,33,22,25,23.5,
+Louisville,23,33,22,25,23.5,10
+TCU,,33,22,25,23.5,
+Maryland,,36,21,25,23.0,
+Michigan State,,36,21,25,23.0,
+Northwestern,,36,21,25,23.0,
+Washington,,36,21,25,23.0,
+BYU,11,40,20,25,22.5,29
+North Carolina,,40,20,25,22.5,
+California,,42,20,24,22.0,
+Virginia,25,42,20,24,22.0,17
+SMU,16,42,21,23,22.0,26
+Baylor,,45,20,23,21.5,
+Rutgers,,45,20,23,21.5,
+Arizona State,,47,19,23,21.0,
+Illinois,,47,19,23,21.0,
+Kansas State,,49,19,22,20.5,
+Minnesota,,50,18,22,20.0,
+Utah,17,50,18,22,20.0,33
+West Virginia,,50,18,22,20.0,
+Syracuse,,53,17,22,19.5,
+Colorado,,53,18,21,19.5,
+Iowa,18,55,17,21,19.0,37
+Pitt,,56,16,20,18.0,
+Purdue,,56,16,20,18.0,
+Stanford,,56,16,20,18.0,
+Wake Forest,,56,16,20,18.0,
+UCF,,60,15,20,17.5,
+Houston,22,61,15,19,17.0,39
+Oklahoma State,,61,15,19,17.0,
+Kansas,,63,15,17,16.0,
+Arizona,,64,13,18,15.5,
+Iowa State,,65,13,17,15.0,
+Cincinnati,,65,14,16,15.0,
+Duke,,67,12,15,13.5,
+Boston College,,68,8,13,10.5,

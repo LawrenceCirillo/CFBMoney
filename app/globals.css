@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --color-ink: #ffffff;
+  --color-panel: #f4f4f5;
+  --color-line: #e4e4e7;
+  --color-edge: #f1f1f3;
+  --color-fog: #71717a;
+  --color-paper: #0a0a0c;
+  --color-up: #16a34a;
+  --color-down: #dc2626;
+  --color-accent: #059669;
+  /* chart ink — referenced by SVG components via var() */
+  --chart-grid: #e4e4e7;
+  --chart-faint: #f4f4f5;
+  --chart-text: #71717a;
+  --chart-dim: #a1a1aa;
+  --chart-paper: #0a0a0c;
+  --chart-track: #e4e4e7;
+}
+
+/* Hover styles only on devices that actually hover. */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@utility transition-ui {
+  transition-property: color, background-color, border-color, opacity, box-shadow, scale;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease-out);
+}
+
+/* Dark mode: a separate palette, not an invert. */
+.dark {
+  --color-ink: #0a0a0c;
+  --color-panel: #121215;
+  --color-line: #232329;
+  --color-edge: #232329;
+  --color-fog: #a1a1aa;
+  --color-paper: #f4f4f5;
+  --color-up: #22c55e;
+  --color-down: #ef4444;
+  --color-accent: #10b981;
+  --chart-grid: #232329;
+  --chart-faint: #1c1c21;
+  --chart-text: #a1a1aa;
+  --chart-dim: #71717a;
+  --chart-paper: #ffffff;
+  --chart-track: #2a2a31;
+  color-scheme: dark;
+}
+
+html {
+  background: var(--color-ink);
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: auto;
+  overflow-wrap: break-word;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* Buttons default to the arrow; make clickable surfaces feel clickable. */
+a,
+button:not(:disabled),
+summary,
+select,
+label[for],
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:not(:disabled):not(.no-press):active {
+  scale: 0.97;
+  transition-property: scale;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 2px;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3,
+[id] {
+  scroll-margin-top: 6.5rem;
+}
+
+.score-ticker-window {
+  mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+}
+
+.score-ticker-track {
+  animation: score-ticker 150s linear infinite;
+}
+
+@keyframes score-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .score-ticker:hover .score-ticker-track {
+    animation-play-state: paused;
+  }
+}
+
+.score-ticker a:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .score-ticker-track {
+    animation: none !important;
+  }
+
+  .score-ticker-window {
+    overflow-x: auto;
+    mask-image: none;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  z-index: 100;
+  transform: translateY(-120%);
+  border-radius: 9999px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  transform: translateY(0.75rem);
+}
+
+/* Disable color tweening while the theme class flips. */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d8 transparent;
+}
+.dark * {
+  scrollbar-color: #3a3a42 transparent;
+}
+
+/* range sliders for the Build game */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: #e4e4e7;
+  outline: none;
+  cursor: pointer;
+}
+.dark input[type="range"] {
+  background: #2a2a31;
+}
+input[type="range"]:focus-visible {
+  outline: none;
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 3px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: #0a0a0c;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px #d4d4d8;
+  cursor: pointer;
+}
+.dark input[type="range"]::-webkit-slider-thumb {
+  background: #f4f4f5;
+  border-color: #0a0a0c;
+  box-shadow: 0 0 0 1px #3a3a42;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: #0a0a0c;
+  border: 3px solid #ffffff;
+  cursor: pointer;
+}
+.dark input[type="range"]::-moz-range-thumb {
+  background: #f4f4f5;
+  border-color: #0a0a0c;
+}

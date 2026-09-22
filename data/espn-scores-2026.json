@@ -1,0 +1,971 @@
+{
+  "source": "ESPN",
+  "url": "https://www.espn.com/college-football/scoreboard",
+  "as_of": "2026-09-22",
+  "week": 3,
+  "label": "Week 3",
+  "range": "Sep 14–20",
+  "note": "Final scores for the 68 programs in the latest completed week. A game is listed once.",
+  "games": [
+    {
+      "id": "401856693",
+      "date": "2026-09-20T00:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "UTSA",
+        "name": "UTSA",
+        "score": 6,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "texas",
+        "abbr": "TEX",
+        "name": "Texas",
+        "score": 30,
+        "winner": true,
+        "rank": 1
+      }
+    },
+    {
+      "id": "401856686",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": "georgia",
+        "abbr": "UGA",
+        "name": "Georgia",
+        "score": 45,
+        "winner": true,
+        "rank": 2
+      },
+      "home": {
+        "slug": "arkansas",
+        "abbr": "ARK",
+        "name": "Arkansas",
+        "score": 17,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858453",
+      "date": "2026-09-19T23:30Z",
+      "away": {
+        "slug": "michigan-state",
+        "abbr": "MSU",
+        "name": "Michigan State",
+        "score": 10,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "notre-dame",
+        "abbr": "ND",
+        "name": "Notre Dame",
+        "score": 27,
+        "winner": true,
+        "rank": 3
+      }
+    },
+    {
+      "id": "401858449",
+      "date": "2026-09-19T20:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "WKU",
+        "name": "Western KY",
+        "score": 0,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "indiana",
+        "abbr": "IU",
+        "name": "Indiana",
+        "score": 38,
+        "winner": true,
+        "rank": 4
+      }
+    },
+    {
+      "id": "401858226",
+      "date": "2026-09-18T23:30Z",
+      "away": {
+        "slug": "miami",
+        "abbr": "MIA",
+        "name": "Miami",
+        "score": 33,
+        "winner": true,
+        "rank": 5
+      },
+      "home": {
+        "slug": "wake-forest",
+        "abbr": "WAKE",
+        "name": "Wake Forest",
+        "score": 20,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858454",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "KENT",
+        "name": "Kent State",
+        "score": 3,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "ohio-state",
+        "abbr": "OSU",
+        "name": "Ohio State",
+        "score": 59,
+        "winner": true,
+        "rank": 6
+      }
+    },
+    {
+      "id": "401856688",
+      "date": "2026-09-19T23:30Z",
+      "away": {
+        "slug": "lsu",
+        "abbr": "LSU",
+        "name": "LSU",
+        "score": 24,
+        "winner": false,
+        "rank": 7
+      },
+      "home": {
+        "slug": "ole-miss",
+        "abbr": "MISS",
+        "name": "Ole Miss",
+        "score": 32,
+        "winner": true,
+        "rank": 8
+      }
+    },
+    {
+      "id": "401856694",
+      "date": "2026-09-19T19:40Z",
+      "away": {
+        "slug": "kentucky",
+        "abbr": "UK",
+        "name": "Kentucky",
+        "score": 31,
+        "winner": true,
+        "rank": null
+      },
+      "home": {
+        "slug": "texas-am",
+        "abbr": "TAMU",
+        "name": "Texas A&M",
+        "score": 21,
+        "winner": false,
+        "rank": 9
+      }
+    },
+    {
+      "id": "401856685",
+      "date": "2026-09-19T21:15Z",
+      "away": {
+        "slug": "florida-state",
+        "abbr": "FSU",
+        "name": "Florida State",
+        "score": 36,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "alabama",
+        "abbr": "ALA",
+        "name": "Alabama",
+        "score": 50,
+        "winner": true,
+        "rank": 10
+      }
+    },
+    {
+      "id": "401856795",
+      "date": "2026-09-20T00:15Z",
+      "away": {
+        "slug": "byu",
+        "abbr": "BYU",
+        "name": "BYU",
+        "score": 41,
+        "winner": true,
+        "rank": 11
+      },
+      "home": {
+        "slug": null,
+        "abbr": "CSU",
+        "name": "Colorado St",
+        "score": 23,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858457",
+      "date": "2026-09-19T19:30Z",
+      "away": {
+        "slug": "usc",
+        "abbr": "USC",
+        "name": "USC",
+        "score": 42,
+        "winner": true,
+        "rank": 12
+      },
+      "home": {
+        "slug": "rutgers",
+        "abbr": "RUT",
+        "name": "Rutgers",
+        "score": 35,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856811",
+      "date": "2026-09-19T00:00Z",
+      "away": {
+        "slug": "houston",
+        "abbr": "HOU",
+        "name": "Houston",
+        "score": 26,
+        "winner": false,
+        "rank": 22
+      },
+      "home": {
+        "slug": "texas-tech",
+        "abbr": "TTU",
+        "name": "Texas Tech",
+        "score": 28,
+        "winner": true,
+        "rank": 13
+      }
+    },
+    {
+      "id": "401858456",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "BUFF",
+        "name": "Buffalo",
+        "score": 13,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "penn-state",
+        "abbr": "PSU",
+        "name": "Penn State",
+        "score": 55,
+        "winner": true,
+        "rank": 14
+      }
+    },
+    {
+      "id": "401856692",
+      "date": "2026-09-19T23:45Z",
+      "away": {
+        "slug": null,
+        "abbr": "KENN",
+        "name": "Kennesaw St",
+        "score": 9,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "tennessee",
+        "abbr": "TENN",
+        "name": "Tennessee",
+        "score": 42,
+        "winner": true,
+        "rank": 15
+      }
+    },
+    {
+      "id": "401858230",
+      "date": "2026-09-19T19:30Z",
+      "away": {
+        "slug": "smu",
+        "abbr": "SMU",
+        "name": "SMU",
+        "score": 31,
+        "winner": false,
+        "rank": 16
+      },
+      "home": {
+        "slug": "louisville",
+        "abbr": "LOU",
+        "name": "Louisville",
+        "score": 41,
+        "winner": true,
+        "rank": 23
+      }
+    },
+    {
+      "id": "401856801",
+      "date": "2026-09-19T19:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "USU",
+        "name": "Utah State",
+        "score": 0,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "utah",
+        "abbr": "UTAH",
+        "name": "Utah",
+        "score": 33,
+        "winner": true,
+        "rank": 17
+      }
+    },
+    {
+      "id": "401858471",
+      "date": "2026-09-19T20:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "UNI",
+        "name": "Northern Iowa",
+        "score": 0,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "iowa",
+        "abbr": "IOWA",
+        "name": "Iowa",
+        "score": 55,
+        "winner": true,
+        "rank": 18
+      }
+    },
+    {
+      "id": "401858450",
+      "date": "2026-09-19T19:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "UTEP",
+        "name": "UTEP",
+        "score": 17,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "michigan",
+        "abbr": "MICH",
+        "name": "Michigan",
+        "score": 52,
+        "winner": true,
+        "rank": 19
+      }
+    },
+    {
+      "id": "401856689",
+      "date": "2026-09-19T23:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "TROY",
+        "name": "Troy",
+        "score": 17,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "missouri",
+        "abbr": "MIZ",
+        "name": "Missouri",
+        "score": 27,
+        "winner": true,
+        "rank": 20
+      }
+    },
+    {
+      "id": "401858455",
+      "date": "2026-09-19T02:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "PRST",
+        "name": "Portland St",
+        "score": 0,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "oregon",
+        "abbr": "ORE",
+        "name": "Oregon",
+        "score": 84,
+        "winner": true,
+        "rank": 21
+      }
+    },
+    {
+      "id": "401856690",
+      "date": "2026-09-19T23:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "UNM",
+        "name": "New Mexico",
+        "score": 6,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "oklahoma",
+        "abbr": "OU",
+        "name": "Oklahoma",
+        "score": 14,
+        "winner": true,
+        "rank": 24
+      }
+    },
+    {
+      "id": "401856802",
+      "date": "2026-09-19T23:30Z",
+      "away": {
+        "slug": "west-virginia",
+        "abbr": "WVU",
+        "name": "West Virginia",
+        "score": 38,
+        "winner": true,
+        "rank": null
+      },
+      "home": {
+        "slug": "virginia",
+        "abbr": "UVA",
+        "name": "Virginia",
+        "score": 27,
+        "winner": false,
+        "rank": 25
+      }
+    },
+    {
+      "id": "401858225",
+      "date": "2026-09-17T23:30Z",
+      "away": {
+        "slug": "syracuse",
+        "abbr": "SYR",
+        "name": "Syracuse",
+        "score": 13,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "pitt",
+        "abbr": "PITT",
+        "name": "Pitt",
+        "score": 27,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856792",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "TULN",
+        "name": "Tulane",
+        "score": 20,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "kansas-state",
+        "abbr": "KSU",
+        "name": "Kansas State",
+        "score": 31,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856798",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "BGSU",
+        "name": "Bowling Green",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "iowa-state",
+        "abbr": "ISU",
+        "name": "Iowa State",
+        "score": 55,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856812",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": "arizona-state",
+        "abbr": "ASU",
+        "name": "Arizona State",
+        "score": 24,
+        "winner": true,
+        "rank": null
+      },
+      "home": {
+        "slug": "kansas",
+        "abbr": "KU",
+        "name": "Kansas",
+        "score": 17,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858228",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "MER",
+        "name": "Mercer",
+        "score": 11,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "georgia-tech",
+        "abbr": "GT",
+        "name": "Georgia Tech",
+        "score": 44,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858229",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": "north-carolina",
+        "abbr": "UNC",
+        "name": "North Carolina",
+        "score": 20,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "clemson",
+        "abbr": "CLEM",
+        "name": "Clemson",
+        "score": 28,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858451",
+      "date": "2026-09-19T16:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "AKR",
+        "name": "Akron",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "minnesota",
+        "abbr": "MINN",
+        "name": "Minnesota",
+        "score": 41,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858460",
+      "date": "2026-09-19T16:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "EMU",
+        "name": "E Michigan",
+        "score": 10,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "wisconsin",
+        "abbr": "WIS",
+        "name": "Wisconsin",
+        "score": 54,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856695",
+      "date": "2026-09-19T16:45Z",
+      "away": {
+        "slug": "nc-state",
+        "abbr": "NCSU",
+        "name": "NC State",
+        "score": 31,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "vanderbilt",
+        "abbr": "VAN",
+        "name": "Vanderbilt",
+        "score": 35,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858227",
+      "date": "2026-09-19T18:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "ME",
+        "name": "Maine",
+        "score": 16,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "boston-college",
+        "abbr": "BC",
+        "name": "Boston College",
+        "score": 22,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858448",
+      "date": "2026-09-19T18:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "SIU",
+        "name": "S Illinois",
+        "score": 10,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "illinois",
+        "abbr": "ILL",
+        "name": "Illinois",
+        "score": 48,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856797",
+      "date": "2026-09-19T19:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "M-OH",
+        "name": "Miami OH",
+        "score": 31,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "cincinnati",
+        "abbr": "CIN",
+        "name": "Cincinnati",
+        "score": 35,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858233",
+      "date": "2026-09-19T19:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "WAG",
+        "name": "Wagner",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "california",
+        "abbr": "CAL",
+        "name": "California",
+        "score": 49,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858231",
+      "date": "2026-09-19T20:00Z",
+      "away": {
+        "slug": "stanford",
+        "abbr": "STAN",
+        "name": "Stanford",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "duke",
+        "abbr": "DUKE",
+        "name": "Duke",
+        "score": 35,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401867804",
+      "date": "2026-09-19T20:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "LT",
+        "name": "Louisiana Tech",
+        "score": 19,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "baylor",
+        "abbr": "BAY",
+        "name": "Baylor",
+        "score": 36,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856691",
+      "date": "2026-09-19T21:35Z",
+      "away": {
+        "slug": "mississippi-state",
+        "abbr": "MSST",
+        "name": "Mississippi State",
+        "score": 41,
+        "winner": true,
+        "rank": null
+      },
+      "home": {
+        "slug": "south-carolina",
+        "abbr": "SCAR",
+        "name": "South Carolina",
+        "score": 34,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856687",
+      "date": "2026-09-19T23:00Z",
+      "away": {
+        "slug": "florida",
+        "abbr": "FLA",
+        "name": "Florida",
+        "score": 44,
+        "winner": true,
+        "rank": null
+      },
+      "home": {
+        "slug": "auburn",
+        "abbr": "AUB",
+        "name": "Auburn",
+        "score": 39,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856800",
+      "date": "2026-09-19T23:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "GAST",
+        "name": "Georgia St",
+        "score": 30,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "ucf",
+        "abbr": "UCF",
+        "name": "UCF",
+        "score": 44,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856803",
+      "date": "2026-09-19T23:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "MUR",
+        "name": "Murray St",
+        "score": 0,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "oklahoma-state",
+        "abbr": "OKST",
+        "name": "Oklahoma State",
+        "score": 59,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858452",
+      "date": "2026-09-19T23:15Z",
+      "away": {
+        "slug": null,
+        "abbr": "UND",
+        "name": "North Dakota",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "nebraska",
+        "abbr": "NEB",
+        "name": "Nebraska",
+        "score": 34,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858459",
+      "date": "2026-09-19T23:15Z",
+      "away": {
+        "slug": null,
+        "abbr": "EWU",
+        "name": "E Washington",
+        "score": 16,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "washington",
+        "abbr": "WASH",
+        "name": "Washington",
+        "score": 48,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856796",
+      "date": "2026-09-19T23:30Z",
+      "away": {
+        "slug": "colorado",
+        "abbr": "COLO",
+        "name": "Colorado",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "northwestern",
+        "abbr": "NW",
+        "name": "Northwestern",
+        "score": 41,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858232",
+      "date": "2026-09-19T23:30Z",
+      "away": {
+        "slug": "virginia-tech",
+        "abbr": "VT",
+        "name": "Virginia Tech",
+        "score": 35,
+        "winner": true,
+        "rank": null
+      },
+      "home": {
+        "slug": "maryland",
+        "abbr": "MD",
+        "name": "Maryland",
+        "score": 26,
+        "winner": false,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856799",
+      "date": "2026-09-20T00:00Z",
+      "away": {
+        "slug": null,
+        "abbr": "ARST",
+        "name": "Arkansas St",
+        "score": 7,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "tcu",
+        "abbr": "TCU",
+        "name": "TCU",
+        "score": 31,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401856793",
+      "date": "2026-09-20T02:30Z",
+      "away": {
+        "slug": null,
+        "abbr": "NIU",
+        "name": "N Illinois",
+        "score": 17,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "arizona",
+        "abbr": "ARIZ",
+        "name": "Arizona",
+        "score": 42,
+        "winner": true,
+        "rank": null
+      }
+    },
+    {
+      "id": "401858458",
+      "date": "2026-09-20T03:00Z",
+      "away": {
+        "slug": "purdue",
+        "abbr": "PUR",
+        "name": "Purdue",
+        "score": 38,
+        "winner": false,
+        "rank": null
+      },
+      "home": {
+        "slug": "ucla",
+        "abbr": "UCLA",
+        "name": "UCLA",
+        "score": 52,
+        "winner": true,
+        "rank": null
+      }
+    }
+  ]
+}

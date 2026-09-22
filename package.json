@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "framer-motion": "^12.23.0",
+    "nanoid": "^6.0.1",
+    "next": "^15.5.0",
+    "pg": "^8.23.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^20.19.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "drizzle-kit": "^0.31.10",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "pg-mem": "^3.0.14",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.0"
+  },
+  "name": "cfb-money",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "build-data": "node scripts/build-data.mjs",
+    "dev": "next dev",
+    "prebuild": "npm run build-data",
+    "start": "next start",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "test:db": "tsx scripts/test-db.ts"
+  },
+  "version": "0.1.0"
+}

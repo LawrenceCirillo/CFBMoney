@@ -1,0 +1,280 @@
+{
+  "source": "ESPN FPI",
+  "url": "https://www.espn.com/college-football/fpi",
+  "as_of": "2026-09-22",
+  "note": "Ranks among FBS. 1 is the hardest schedule. Played is games already played, from the view of an average Top 25 team. Remaining is games left, from the view of an average FBS team.",
+  "teams": {
+    "2": {
+      "played": 48,
+      "remaining": 8
+    },
+    "8": {
+      "played": 2,
+      "remaining": 14
+    },
+    "9": {
+      "played": 24,
+      "remaining": 53
+    },
+    "12": {
+      "played": 52,
+      "remaining": 52
+    },
+    "24": {
+      "played": 7,
+      "remaining": 36
+    },
+    "25": {
+      "played": 79,
+      "remaining": 61
+    },
+    "26": {
+      "played": 101,
+      "remaining": 39
+    },
+    "30": {
+      "played": 108,
+      "remaining": 9
+    },
+    "38": {
+      "played": 46,
+      "remaining": 43
+    },
+    "52": {
+      "played": 6,
+      "remaining": 35
+    },
+    "57": {
+      "played": 61,
+      "remaining": 7
+    },
+    "59": {
+      "played": 54,
+      "remaining": 34
+    },
+    "61": {
+      "played": 120,
+      "remaining": 21
+    },
+    "66": {
+      "played": 68,
+      "remaining": 40
+    },
+    "77": {
+      "played": 117,
+      "remaining": 22
+    },
+    "84": {
+      "played": 135,
+      "remaining": 31
+    },
+    "87": {
+      "played": 93,
+      "remaining": 54
+    },
+    "96": {
+      "played": 4,
+      "remaining": 18
+    },
+    "97": {
+      "played": 16,
+      "remaining": 66
+    },
+    "99": {
+      "played": 27,
+      "remaining": 15
+    },
+    "103": {
+      "played": 88,
+      "remaining": 20
+    },
+    "120": {
+      "played": 85,
+      "remaining": 28
+    },
+    "127": {
+      "played": 14,
+      "remaining": 44
+    },
+    "130": {
+      "played": 62,
+      "remaining": 17
+    },
+    "135": {
+      "played": 89,
+      "remaining": 27
+    },
+    "142": {
+      "played": 112,
+      "remaining": 2
+    },
+    "145": {
+      "played": 19,
+      "remaining": 11
+    },
+    "150": {
+      "played": 75,
+      "remaining": 58
+    },
+    "152": {
+      "played": 44,
+      "remaining": 68
+    },
+    "153": {
+      "played": 55,
+      "remaining": 30
+    },
+    "154": {
+      "played": 29,
+      "remaining": 62
+    },
+    "158": {
+      "played": 138,
+      "remaining": 23
+    },
+    "164": {
+      "played": 73,
+      "remaining": 29
+    },
+    "183": {
+      "played": 59,
+      "remaining": 45
+    },
+    "194": {
+      "played": 15,
+      "remaining": 16
+    },
+    "197": {
+      "played": 50,
+      "remaining": 55
+    },
+    "201": {
+      "played": 38,
+      "remaining": 1
+    },
+    "213": {
+      "played": 125,
+      "remaining": 57
+    },
+    "221": {
+      "played": 99,
+      "remaining": 49
+    },
+    "228": {
+      "played": 17,
+      "remaining": 51
+    },
+    "238": {
+      "played": 116,
+      "remaining": 3
+    },
+    "239": {
+      "played": 58,
+      "remaining": 50
+    },
+    "245": {
+      "played": 90,
+      "remaining": 6
+    },
+    "248": {
+      "played": 42,
+      "remaining": 56
+    },
+    "251": {
+      "played": 21,
+      "remaining": 5
+    },
+    "252": {
+      "played": 102,
+      "remaining": 38
+    },
+    "254": {
+      "played": 130,
+      "remaining": 59
+    },
+    "258": {
+      "played": 100,
+      "remaining": 60
+    },
+    "259": {
+      "played": 94,
+      "remaining": 48
+    },
+    "264": {
+      "played": 136,
+      "remaining": 19
+    },
+    "275": {
+      "played": 20,
+      "remaining": 47
+    },
+    "277": {
+      "played": 77,
+      "remaining": 42
+    },
+    "333": {
+      "played": 51,
+      "remaining": 13
+    },
+    "344": {
+      "played": 41,
+      "remaining": 10
+    },
+    "356": {
+      "played": 103,
+      "remaining": 26
+    },
+    "2116": {
+      "played": 64,
+      "remaining": 63
+    },
+    "2132": {
+      "played": 134,
+      "remaining": 33
+    },
+    "2294": {
+      "played": 119,
+      "remaining": 32
+    },
+    "2305": {
+      "played": 80,
+      "remaining": 41
+    },
+    "2306": {
+      "played": 126,
+      "remaining": 65
+    },
+    "2390": {
+      "played": 92,
+      "remaining": 46
+    },
+    "2483": {
+      "played": 67,
+      "remaining": 25
+    },
+    "2509": {
+      "played": 65,
+      "remaining": 24
+    },
+    "2567": {
+      "played": 26,
+      "remaining": 64
+    },
+    "2579": {
+      "played": 86,
+      "remaining": 4
+    },
+    "2628": {
+      "played": 111,
+      "remaining": 37
+    },
+    "2633": {
+      "played": 104,
+      "remaining": 12
+    },
+    "2641": {
+      "played": 76,
+      "remaining": 67
+    }
+  }
+}
