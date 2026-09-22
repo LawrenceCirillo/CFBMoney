@@ -24,6 +24,7 @@ import { data } from "../lib/data";
 import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3100";
+const gmName = process.env.E2E_GM_NAME ?? "E2E Coach";
 let failures = 0;
 function assert(cond: boolean, label: string, extra?: unknown) {
   if (cond) console.log(`  ok   ${label}`);
@@ -51,7 +52,7 @@ async function main() {
   const tags = archetype(alloc);
 
   const payload: SeasonPayload = {
-    gmName: "E2E Coach",
+    gmName,
     programSlug: program.slug,
     programName: program.name,
     programColor: program.color,
@@ -112,7 +113,7 @@ async function main() {
     shareHtml.includes(`${summary.wins}–${summary.losses}`),
     "share page shows record"
   );
-  assert(shareHtml.includes("E2E Coach"), "share page shows GM name");
+  assert(shareHtml.includes(gmName), "share page shows GM name");
   // React SSR splits text/expression with comment nodes, so match loosely.
   assert(/Wk\s*(<!-- -->)?\s*1/.test(shareHtml), "share page shows game log");
 
@@ -131,7 +132,7 @@ async function main() {
   const lb = await fetch(`${BASE}/leaderboard`);
   const lbHtml = await lb.text();
   assert(lb.status === 200, `GET /leaderboard -> 200 (got ${lb.status})`);
-  assert(lbHtml.includes("E2E Coach"), "leaderboard lists the published season");
+  assert(lbHtml.includes(gmName), "leaderboard lists the published season");
   assert(lbHtml.includes(`/s/${id}`), "leaderboard links to the share page");
 
   const lbOver = await fetch(`${BASE}/leaderboard?sort=overachieve`);
