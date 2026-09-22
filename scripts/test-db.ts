@@ -8,9 +8,17 @@
  * Run with: npx tsx scripts/test-db.ts
  */
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { drizzle } from "drizzle-orm/node-postgres";
 import EmbeddedPostgres from "embedded-postgres";
+import { mkdtempSync, realpathSync } from "node:fs";
+import { createServer } from "node:net";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { Pool } from "pg";
 import { setDb, resetDb, dbEnabled } from "../db/client";
 import { createSeason, getSeason, getLeaderboard, countSeasons } from "../db/seasons";
+import * as schema from "../db/schema";
 import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 
 let failures = 0;
@@ -57,32 +65,49 @@ function makePayload(over: Partial<SeasonPayload> = {}): SeasonPayload {
   };
 }
 
+async function availablePort(): Promise<number> {
+  const server = createServer();
+  await new Promise<void>((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const address = server.address();
+  await new Promise<void>((resolve) => server.close(() => resolve()));
+  if (!address || typeof address === "string") throw new Error("could not reserve a test port");
+  return address.port;
+}
+
 async function main() {
   console.log("db: real Postgres");
-  // TEST_DATABASE_URL: use an already-running server (e.g. the /tmp instance
-  // in this sandbox). Otherwise boot embedded Postgres (needs non-root).
+  // TEST_DATABASE_URL: use an already-running test server. Otherwise boot a
+  // disposable Postgres cluster under the OS temp directory.
   if (process.env.TEST_DATABASE_URL) {
     process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
   } else {
-    // Runs as a dedicated system user because postgres binaries refuse root.
+    const databaseDir = realpathSync(mkdtempSync(join(tmpdir(), "cfb-money-test-")));
+    if (realpathSync(join(databaseDir, "..")) !== realpathSync(tmpdir())) {
+      throw new Error("test database directory is outside the OS temp directory");
+    }
+    const port = await availablePort();
     const pg = new EmbeddedPostgres({
-      databaseDir: "/tmp/cfb-pgdata",
-      port: 54339,
+      databaseDir,
+      port,
       user: "cfbtest",
       password: "cfbtest",
       persistent: false,
-      createPostgresUser: true,
+      createPostgresUser: typeof process.getuid === "function" && process.getuid() === 0,
     });
     await pg.initialise();
     await pg.start();
-    process.env.DATABASE_URL = "postgres://cfbtest:cfbtest@localhost:54339/postgres";
+    process.env.DATABASE_URL = `postgres://cfbtest:cfbtest@localhost:${port}/postgres`;
     (globalThis as { __pg?: unknown }).__pg = pg;
   }
-  // Point the app's data layer at the instance.
-  const { getDb } = await import("../db/client");
-  const db = getDb();
+  // This integration test uses node-postgres even when the app's Neon HTTP
+  // driver is installed, so its migrator and database types agree.
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
+  const db = drizzle(pool, { schema });
   setDb(db);
-  await migrate(db, { migrationsFolder: new URL("../db/migrations", import.meta.url).pathname });
+  await migrate(db, { migrationsFolder: fileURLToPath(new URL("../db/migrations", import.meta.url)) });
 
   assert(dbEnabled(), "dbEnabled() true with DATABASE_URL");
 
@@ -188,6 +213,7 @@ async function main() {
   assert(SeasonPayloadSchema.safeParse(makePayload()).success, "accepts a valid payload");
 
   resetDb();
+  await pool.end();
   delete process.env.DATABASE_URL;
   const pg = (globalThis as { __pg?: { stop: () => Promise<void> } }).__pg;
   if (pg) await pg.stop();
@@ -199,7 +225,9 @@ async function main() {
   console.log("\nAll db tests passed.");
 }
 
-main().catch((e) => {
+main().catch(async (e) => {
   console.error("test crashed:", e);
+  const pg = (globalThis as { __pg?: { stop: () => Promise<void> } }).__pg;
+  if (pg) await pg.stop().catch(() => undefined);
   process.exit(1);
 });

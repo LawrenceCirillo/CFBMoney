@@ -63,22 +63,26 @@ The data layer (`db/`) uses Drizzle ORM against any Postgres. Without
 `DATABASE_URL` the app still builds and runs — publishing is disabled and the
 leaderboard/share pages explain how to connect.
 
-### Setup (Neon, ~2 minutes)
+### Setup (Neon)
 
-1. Create a free Postgres database at [neon.tech](https://neon.tech) and copy the
-   connection string.
-2. `DATABASE_URL="postgres://..." npm run db:migrate` — applies `db/migrations/`.
-3. Set `DATABASE_URL` as an environment variable where you deploy (Vercel →
-   Project Settings → Environment Variables) and redeploy.
+1. Create or select a Neon database and copy both connection strings: the pooled
+   URL (`-pooler` in the hostname) and the direct URL.
+2. Put them in the git-ignored `.env.local` as `DATABASE_URL` (pooled, for app
+   traffic) and `DATABASE_URL_UNPOOLED` (direct, for migrations).
+3. Run `npm run db:migrate`. Drizzle Kit loads `.env.local` and uses the direct
+   URL. If the migration has already been applied, no schema change is needed.
+4. Set `DATABASE_URL` to the pooled URL in the deployed app's server-side
+   environment, redeploy, then publish one completed season and open its recap
+   and leaderboard entry.
 
-Local dev alternative: run Postgres locally (e.g. `brew install postgresql` or
-Docker) and put `DATABASE_URL=postgres://localhost:5432/cfb_money` in `.env.local`.
+Local dev alternative: run Postgres locally or in Docker and put its connection
+string in `.env.local` as `DATABASE_URL`.
 
 ### DB scripts
 
 ```bash
 npm run db:generate  # regenerate migrations after editing db/schema.ts
-npm run db:migrate   # apply migrations to DATABASE_URL
+npm run db:migrate   # apply migrations via DATABASE_URL_UNPOOLED when set
 npm run test:db      # end-to-end data-layer tests (needs TEST_DATABASE_URL or non-root)
 ```
 
