@@ -75,6 +75,10 @@ leaderboard/share pages explain how to connect.
    environment, redeploy, then publish one completed season and open its recap
    and leaderboard entry.
 
+The Vercel `cfb-money` project is linked to this repository's `main` branch.
+Pushing to `main` starts a production deployment; the project framework preset
+must be Next.js so Vercel serves the generated routes.
+
 Local dev alternative: run Postgres locally or in Docker and put its connection
 string in `.env.local` as `DATABASE_URL`.
 
