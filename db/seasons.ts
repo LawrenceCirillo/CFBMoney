@@ -1,8 +1,9 @@
-import { desc, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb } from "./client";
 import { seasons, type NewSeason, type Season } from "./schema";
 import type { SeasonPayload } from "../lib/season-payload";
+import { replaySeason } from "../lib/season-replay";
 
 export type { Season };
 
@@ -26,30 +27,47 @@ export type LeaderboardRow = Pick<
 
 export type LeaderboardSort = "wins" | "overachieve";
 
-/** Insert a validated season payload; returns the new share id. */
+/** Replay and insert a validated season input; no caller-supplied result is stored. */
 export async function createSeason(payload: SeasonPayload): Promise<string> {
   const db = getDb();
+  const replay = replaySeason(payload);
+  if (!replay.complete) throw new Error("Season replay did not finish");
   const id = nanoid(10);
   const row: NewSeason = {
     id,
     gmName: payload.gmName?.trim() ? payload.gmName.trim() : null,
     programSlug: payload.programSlug,
-    programName: payload.programName,
-    programColor: payload.programColor,
+    programName: replay.program.name,
+    programColor: replay.program.color,
     budgetM: payload.budgetM,
-    alloc: payload.alloc,
+    alloc: replay.fullAlloc,
     seed: payload.seed,
-    wins: payload.wins,
-    losses: payload.losses,
-    expectedWins: payload.expectedWins,
-    avgMargin: payload.avgMargin,
-    off: payload.off,
-    def: payload.def,
-    st: payload.st,
-    tags: payload.tags,
-    bestWin: payload.bestWin,
-    worstLoss: payload.worstLoss,
-    games: payload.games,
+    mode: payload.mode,
+    simVersion: payload.simVersion,
+    dataFingerprint: payload.dataFingerprint,
+    verified: true,
+    wins: replay.summary.wins,
+    losses: replay.summary.losses,
+    expectedWins: replay.summary.expectedWins,
+    avgMargin: replay.summary.avgMargin,
+    off: replay.ratings.off,
+    def: replay.ratings.def,
+    st: replay.ratings.st,
+    tags: replay.tags,
+    bestWin: replay.summary.bestWin ?? null,
+    worstLoss: replay.summary.worstLoss ?? null,
+    games: replay.games.map((g) => ({
+      week: g.week,
+      oppName: g.opponent.name,
+      oppSlug: g.opponent.slug,
+      oppColor: g.opponent.color,
+      isHome: g.isHome,
+      winProb: g.winProb,
+      scoreFor: g.result!.scoreFor,
+      scoreAgainst: g.result!.scoreAgainst,
+      won: g.result!.won,
+      stage: g.stage,
+    })),
   };
   await db.insert(seasons).values(row);
   return id;
@@ -89,14 +107,20 @@ export async function getLeaderboard(
     sort === "overachieve"
       ? [desc(overachieve), desc(seasons.wins), desc(seasons.avgMargin)]
       : [desc(seasons.wins), desc(overachieve), desc(seasons.avgMargin)];
-  return db.select(leaderboardCols).from(seasons).orderBy(...order).limit(limit);
+  return db.select(leaderboardCols).from(seasons).where(eq(seasons.verified, true)).orderBy(...order).limit(limit);
 }
 
-/** Total number of published seasons. */
-export async function countSeasons(): Promise<number> {
+/** Older, unranked rows remain available by share link and in an archive. */
+export async function getLegacyArchive(limit = 50, offset = 0): Promise<LeaderboardRow[]> {
+  return getDb().select(leaderboardCols).from(seasons)
+    .where(eq(seasons.verified, false)).orderBy(desc(seasons.createdAt)).limit(limit).offset(offset);
+}
+
+/** Count verified seasons by default; pass false for legacy rows. */
+export async function countSeasons(verified = true): Promise<number> {
   const db = getDb();
   const rows = await db
     .select({ n: sql<number>`count(*)::int` })
-    .from(seasons);
+    .from(seasons).where(eq(seasons.verified, verified));
   return rows[0]?.n ?? 0;
 }

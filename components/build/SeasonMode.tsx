@@ -7,9 +7,7 @@ import type { TeamBudget } from "@/lib/types";
 import {
   archetype,
   groupRanks,
-  mulberry32,
   ratingsFromAllocation,
-  simulateGame,
   summarizeSeason,
   withDepth,
   type Allocation,
@@ -19,15 +17,13 @@ import {
 import { expectedWins as modeledExpectedWins, fieldRatings } from "@/lib/moneyball";
 import {
   PLAYOFF_CUT,
-  buildSeasonGames,
-  nextPostseasonGame,
-  postseasonOpener,
   postseasonOutcome,
   preseasonExpectedWins,
   projectedRank,
   storylineFor,
   type PostseasonStage,
 } from "@/lib/season-mode";
+import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
 import { fmtMoney1 } from "@/lib/format";
 import PublishPanel from "./PublishPanel";
 import TeamMark from "@/components/TeamMark";
@@ -58,11 +54,7 @@ function projection(games: ScheduledGame[]): number {
 }
 
 function rankOf(games: ScheduledGame[], fieldProj: number[]): number {
-  return projectedRank(projection(games), fieldProj);
-}
-
-function initGames(seed: number, userR: Ratings, program: TeamBudget): ScheduledGame[] {
-  return buildSeasonGames(seed, userR, program, data.teams);
+  return projectedRank(projection(games.filter((g) => !g.stage || !!g.result)), fieldProj);
 }
 
 function probPill(p: number) {
@@ -131,13 +123,12 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   );
 
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const rngRef = useRef<(() => number) | null>(null);
-  if (rngRef.current === null) rngRef.current = mulberry32((seed ^ 0x9e3779b9) >>> 0);
+  const input: ReplayInput = { mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc };
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [games, setGames] = useState<ScheduledGame[]>(() => initGames(seed, userR, program));
+  const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
   const [rankHistory, setRankHistory] = useState<number[]>(() => [
-    rankOf(initGames(seed, userR, program), fieldProj),
+    rankOf(replaySeason(input, 0).games, fieldProj),
   ]);
   // index into games[] of the matchup featured in the big card
   const [featured, setFeatured] = useState(0);
@@ -162,14 +153,11 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   const tags = useMemo(() => archetype(alloc), [alloc]);
   const qbDna = dna.find((d) => d.key === "QB")!;
 
-  const ctx = { program, teams: data.teams, userR, field, rng: () => rngRef.current!() };
-
   const newSeason = () => {
     if (revealTimer.current) clearTimeout(revealTimer.current);
     const s = Math.floor(Math.random() * 2 ** 31);
-    rngRef.current = mulberry32((s ^ 0x9e3779b9) >>> 0);
     setSeed(s);
-    const g = initGames(s, userR, program);
+    const g = replaySeason({ ...input, seed: s }, 0).games;
     setGames(g);
     setRankHistory([rankOf(g, fieldProj)]);
     setFeatured(0);
@@ -184,25 +172,8 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
     if (!g || g.result) return;
     setRevealing(true);
     revealTimer.current = setTimeout(() => {
-      const result = simulateGame(userR, g.oppRatings, g.isHome, rngRef.current!);
-      const next = [...games];
-      next[featured] = { ...g, result };
-
-      // Rank snapshot from results so far — before any unplayed postseason
-      // game is appended and pollutes the projection.
+      const next = replaySeason(input, played + 1).games;
       const snapshot = rankOf(next, fieldProj);
-
-      // Schedule what's next.
-      const used = new Set(next.map((x) => x.opponent.slug));
-      const regularComplete = next.filter((x) => !x.stage).every((x) => x.result);
-      if (!g.stage && regularComplete && !next.some((x) => x.stage)) {
-        // Regular season just ended — seed the postseason.
-        next.push(postseasonOpener(snapshot, used, ctx));
-      } else if (g.stage && result.won) {
-        const nxt = nextPostseasonGame(g.stage, used, ctx);
-        if (nxt) next.push(nxt);
-      }
-
       setGames(next);
       setRankHistory((h) => [...h, snapshot]);
       setRevealing(false);
@@ -218,30 +189,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   const simToEnd = () => {
     if (revealing) return;
     if (revealTimer.current) clearTimeout(revealTimer.current);
-    let next = games.map((g) =>
-      g.result ? g : { ...g, result: simulateGame(userR, g.oppRatings, g.isHome, rngRef.current!) }
-    );
-    // Append postseason stages as they unlock.
-    for (;;) {
-      const regularComplete = next.filter((x) => !x.stage).every((x) => x.result);
-      if (!regularComplete) break;
-      const used = new Set(next.map((x) => x.opponent.slug));
-      const last = next[next.length - 1];
-      if (!next.some((x) => x.stage)) {
-        const opener = postseasonOpener(rankOf(next, fieldProj), used, ctx);
-        opener.result = simulateGame(userR, opener.oppRatings, opener.isHome, rngRef.current!);
-        next = [...next, opener];
-        continue;
-      }
-      if (last.stage && last.result && last.result.won) {
-        const nxt = nextPostseasonGame(last.stage, used, ctx);
-        if (!nxt) break;
-        nxt.result = simulateGame(userR, nxt.oppRatings, nxt.isHome, rngRef.current!);
-        next = [...next, nxt];
-        continue;
-      }
-      break;
-    }
+    const next = replaySeason(input).games;
     setGames(next);
     setRankHistory((h) => [...h, rankOf(next, fieldProj)]);
     setFeatured(next.length - 1);
@@ -607,12 +555,12 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
           </div>
 
           <PublishPanel
+            mode="season"
             games={games}
             program={program}
             alloc={alloc}
             budgetM={budgetM}
             seed={seed}
-            userR={userR}
           />
 
           <div className="mt-8 flex flex-wrap gap-3">

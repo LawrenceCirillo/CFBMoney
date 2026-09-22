@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getLeaderboard, countSeasons, type LeaderboardSort } from "@/db/seasons";
+import { getLeaderboard, getLegacyArchive, countSeasons, type LeaderboardSort } from "@/db/seasons";
 import { dbEnabled } from "@/db/client";
 import { fmtMoney1 } from "@/lib/format";
 import { getTeam } from "@/lib/data";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: "The best fan-built roster seasons, ranked by wins and overachievement.",
 };
 
-type Props = { searchParams: Promise<{ sort?: string }> };
+type Props = { searchParams: Promise<{ sort?: string; archivePage?: string }> };
 
 const SORTS: { key: LeaderboardSort; label: string }[] = [
   { key: "wins", label: "Most wins" },
@@ -30,6 +30,9 @@ function medal(rank: number) {
 export default async function LeaderboardPage({ searchParams }: Props) {
   const sp = await searchParams;
   const sort: LeaderboardSort = sp.sort === "overachieve" ? "overachieve" : "wins";
+  const pageNumber = Number(sp.archivePage);
+  const archivePage = Number.isSafeInteger(pageNumber) && pageNumber > 1 && pageNumber <= 1_000_000 ? pageNumber : 1;
+  const archivePageSize = 50;
 
   if (!dbEnabled()) {
     return (
@@ -56,9 +59,11 @@ export default async function LeaderboardPage({ searchParams }: Props) {
     );
   }
 
-  const [rows, total] = await Promise.all([
+  const [rows, total, legacyRows, legacyTotal] = await Promise.all([
     getLeaderboard(sort).catch(() => []),
     countSeasons().catch(() => 0),
+    getLegacyArchive(archivePageSize, (archivePage - 1) * archivePageSize).catch(() => []),
+    countSeasons(false).catch(() => 0),
   ]);
 
   return (
@@ -66,14 +71,14 @@ export default async function LeaderboardPage({ searchParams }: Props) {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-semibold text-fog">
-            {total} season{total === 1 ? "" : "s"} published
+            {total} verified season{total === 1 ? "" : "s"} published
           </p>
           <h1 className="font-display mt-1 text-4xl font-black text-paper sm:text-5xl">
             Leaderboard
           </h1>
           <p className="mt-2 max-w-xl text-sm text-fog">
-            Every row is a fan-built roster, simulated week by week. Click any season
-            for the full game log.
+            Ranked results are replayed by the server from the published roster and seed.
+            Click any season for the full game log.
           </p>
         </div>
         <div className="flex gap-2">
@@ -95,10 +100,11 @@ export default async function LeaderboardPage({ searchParams }: Props) {
 
       {rows.length === 0 ? (
         <div className="mt-12 rounded-3xl border border-dashed border-edge p-12 text-center">
-          <p className="font-display text-2xl font-bold text-paper">No seasons yet</p>
+          <p className="font-display text-2xl font-bold text-paper">No verified seasons yet</p>
           <p className="mx-auto mt-2 max-w-md text-pretty text-sm text-fog">
-            Published seasons will show up here. Build a roster and publish one to
-            get started.
+            {legacyTotal > 0
+              ? `${legacyTotal} earlier season${legacyTotal === 1 ? " is" : "s are"} available in the unranked archive below.`
+              : "Build a roster and publish a season to get started."}
           </p>
           <Link
             href="/build"
@@ -192,6 +198,37 @@ export default async function LeaderboardPage({ searchParams }: Props) {
             </tbody>
           </table>
         </div>
+      )}
+
+      {legacyTotal > 0 && (
+        <section className="mt-12 border-t border-line pt-8" aria-labelledby="legacy-heading">
+          <h2 id="legacy-heading" className="font-display text-2xl font-bold text-paper">Earlier seasons · unranked archive</h2>
+          <p className="mt-2 text-sm text-fog">
+            {legacyTotal} season{legacyTotal === 1 ? "" : "s"} published before server replay.
+            Their recaps remain available, but their results are unverified and do not receive ranks.
+          </p>
+          <ul className="mt-5 space-y-2">
+            {legacyRows.map((row) => (
+              <li key={row.id}>
+                <Link href={`/s/${row.id}`} className="flex flex-wrap justify-between gap-2 rounded-xl border border-edge px-4 py-3 text-sm text-paper hover:border-fog">
+                  <span>{row.gmName || "Anonymous"} · {row.programName}</span>
+                  <span className="tabular-nums text-fog">{row.wins}–{row.losses} · unverified</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {legacyTotal > archivePageSize && (
+            <nav className="mt-5 flex items-center gap-4 text-sm" aria-label="Archive pages">
+              {archivePage > 1 && (
+                <Link href={`/leaderboard?sort=${sort}&archivePage=${archivePage - 1}`} className="text-paper underline">Previous</Link>
+              )}
+              <span className="text-fog">Page {archivePage} of {Math.ceil(legacyTotal / archivePageSize)}</span>
+              {archivePage * archivePageSize < legacyTotal && (
+                <Link href={`/leaderboard?sort=${sort}&archivePage=${archivePage + 1}`} className="text-paper underline">Next</Link>
+              )}
+            </nav>
+          )}
+        </section>
       )}
 
       <div className="mt-8 text-center">

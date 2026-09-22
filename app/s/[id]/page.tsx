@@ -19,9 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const s = await getSeason(id).catch(() => null);
     if (s) {
       const gm = s.gmName ? ` by ${s.gmName}` : "";
-      title = `${s.wins}–${s.losses} ${s.programName}${gm} · CFB Money`;
+      title = `${s.verified ? "Verified" : "Unverified legacy"} ${s.wins}–${s.losses} ${s.programName}${gm} · CFB Money`;
       description =
-        `A $${s.budgetM}M ${s.programName} roster sim: ${s.wins}–${s.losses} ` +
+        `${s.verified ? "Server-replayed" : "Unverified legacy"} $${s.budgetM}M ${s.programName} roster sim: ${s.wins}–${s.losses} ` +
         `(${s.expectedWins.toFixed(1)} expected). ` +
         (s.bestWin
           ? `Best win: ${s.bestWin.opponent} ${s.bestWin.scoreFor}–${s.bestWin.scoreAgainst}.`
@@ -88,8 +88,17 @@ export default async function ShareSeasonPage({ params }: Props) {
         <div className="h-2" style={{ background: season.programColor }} />
         <div className="p-6 sm:p-10">
           <p className="text-xs font-semibold text-fog">
-            CFB Money · Simulated season
+            CFB Money · {season.verified ? "Verified simulated season" : "Legacy simulated season · unverified"}
           </p>
+          {season.verified ? (
+            <p className="mt-2 text-xs text-emerald-400">
+              Server replayed · {season.mode === "season" ? "Season mode" : "Quick sim"} · model v{season.simVersion} · data {season.dataFingerprint}
+            </p>
+          ) : (
+            <p className="mt-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-300">
+              Unverified legacy result. This season was published before server replay and is excluded from ranked leaderboards.
+            </p>
+          )}
           <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
             <div className="flex items-center gap-3">
               <TeamMark

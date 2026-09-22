@@ -5,6 +5,7 @@ import {
   real,
   timestamp,
   jsonb,
+  boolean,
   index,
 } from "drizzle-orm/pg-core";
 
@@ -61,6 +62,11 @@ export const seasons = pgTable(
     budgetM: real("budget_m").notNull(),
     alloc: jsonb("alloc").$type<StoredAlloc>().notNull(),
     seed: integer("seed").notNull(),
+    /** Null metadata identifies seasons published before server replay. */
+    mode: text("mode", { enum: ["quick", "season"] }),
+    simVersion: integer("sim_version"),
+    dataFingerprint: text("data_fingerprint"),
+    verified: boolean("verified").default(false).notNull(),
     wins: integer("wins").notNull(),
     losses: integer("losses").notNull(),
     expectedWins: real("expected_wins").notNull(),
@@ -74,7 +80,10 @@ export const seasons = pgTable(
     worstLoss: jsonb("worst_loss").$type<StoredBestWin>(),
     games: jsonb("games").$type<StoredGame[]>().notNull(),
   },
-  (t) => [index("seasons_wins_idx").on(t.wins.desc())]
+  (t) => [
+    index("seasons_wins_idx").on(t.wins.desc()),
+    index("seasons_verified_wins_idx").on(t.verified, t.wins.desc()),
+  ]
 );
 
 export type Season = typeof seasons.$inferSelect;

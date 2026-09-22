@@ -1,22 +1,19 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { data } from "@/lib/data";
 import type { TeamBudget } from "@/lib/types";
 import {
   archetype,
   groupRanks,
-  mulberry32,
   ratingsFromAllocation,
-  simulateGame,
   summarizeSeason,
   withDepth,
   type Allocation,
-  type Ratings,
   type ScheduledGame,
 } from "@/lib/simulator";
-import { buildSeasonGames } from "@/lib/season-mode";
+import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
 import { fmtMoney1 } from "@/lib/format";
 import TeamMark from "@/components/TeamMark";
 import PublishPanel from "./PublishPanel";
@@ -26,10 +23,6 @@ interface Props {
   budgetM: number;
   program: TeamBudget;
   onBack: () => void;
-}
-
-function initGames(seed: number, userR: Ratings, program: TeamBudget): ScheduledGame[] {
-  return buildSeasonGames(seed, userR, program, data.teams);
 }
 
 function probPill(p: number) {
@@ -50,10 +43,9 @@ function probPill(p: number) {
 export default function Season({ alloc, budgetM, program, onBack }: Props) {
   const userR = useMemo(() => ratingsFromAllocation(withDepth(alloc, budgetM)), [alloc, budgetM]);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const [games, setGames] = useState<ScheduledGame[]>(() => initGames(seed, userR, program));
+  const input: ReplayInput = { mode: "quick", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc };
+  const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
   const [copied, setCopied] = useState(false);
-  const rngRef = useRef<(() => number) | null>(null);
-  if (rngRef.current === null) rngRef.current = mulberry32((seed ^ 0x12345) >>> 0);
 
   const summary = useMemo(() => summarizeSeason(games), [games]);
   const played = games.filter((g) => g.result).length;
@@ -64,29 +56,13 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
 
   const newSeason = () => {
     const s = Math.floor(Math.random() * 2 ** 31);
-    rngRef.current = mulberry32((s ^ 0x12345) >>> 0);
     setSeed(s);
-    setGames(initGames(s, userR, program));
+    setGames(replaySeason({ ...input, seed: s }, 0).games);
     setCopied(false);
   };
 
-  const playOne = (list: ScheduledGame[]): ScheduledGame[] => {
-    const i = list.findIndex((g) => !g.result);
-    if (i === -1) return list;
-    const g = list[i];
-    const result = simulateGame(userR, g.oppRatings, g.isHome, rngRef.current!);
-    const next = [...list];
-    next[i] = { ...g, result };
-    return next;
-  };
-
-  const simWeek = () => setGames((prev) => playOne(prev));
-  const simSeason = () =>
-    setGames((prev) => {
-      let next = prev;
-      while (next.some((g) => !g.result)) next = playOne(next);
-      return next;
-    });
+  const simWeek = () => setGames(replaySeason(input, played + 1).games);
+  const simSeason = () => setGames(replaySeason(input).games);
 
   const copySummary = async () => {    const s = summary;
     const text =
@@ -323,12 +299,12 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
           </div>
 
           <PublishPanel
+            mode="quick"
             games={games}
             program={program}
             alloc={alloc}
             budgetM={budgetM}
             seed={seed}
-            userR={userR}
           />
 
           <div className="mt-8 flex flex-wrap gap-3">

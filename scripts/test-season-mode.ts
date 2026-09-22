@@ -1,7 +1,7 @@
 /**
  * Deterministic tests for season mode (lite): storylines, projected rank,
  * postseason scheduling, outcomes, and full headless season runs whose
- * payloads must validate against SeasonPayloadSchema.
+ * canonical replay parity and publish-input validation.
  *
  * Run with: npx tsx scripts/test-season-mode.ts
  */
@@ -27,7 +27,6 @@ import {
   setPlaysheetPosition,
   simulateGame,
   summarizeSeason,
-  archetype,
   withDepth,
   type Allocation,
   type Ratings,
@@ -46,6 +45,7 @@ import {
   type PostseasonStage,
 } from "../lib/season-mode";
 import { SeasonPayloadSchema } from "../lib/season-payload";
+import { DATA_FINGERPRINT, SIM_VERSION, fingerprintForTeams, replaySeason, type ReplayInput } from "../lib/season-replay";
 
 let failures = 0;
 function assert(cond: boolean, label: string, extra?: unknown) {
@@ -380,41 +380,7 @@ function runSeason(alloc: Allocation, seed: number, label: string) {
     assert(stages.length === 1 && stages[0].stage === "bowl", `${label}: seed ${seedRank} got bowl`);
   }
 
-  // Payload must validate (this is what PublishPanel sends).
   const summary = summarizeSeason(games);
-  const payload = {
-    programSlug: program.slug,
-    programName: program.name,
-    programColor: program.color,
-    budgetM: 30,
-    alloc,
-    seed,
-    wins: summary.wins,
-    losses: summary.losses,
-    expectedWins: summary.expectedWins,
-    avgMargin: summary.avgMargin,
-    off: r.off,
-    def: r.def,
-    st: r.st,
-    tags: archetype(alloc),
-    bestWin: summary.bestWin ?? null,
-    worstLoss: summary.worstLoss ?? null,
-    games: games.map((g) => ({
-      week: g.week,
-      oppName: g.opponent.name,
-      oppSlug: g.opponent.slug,
-      oppColor: g.opponent.color,
-      isHome: g.isHome,
-      winProb: g.winProb,
-      scoreFor: g.result!.scoreFor,
-      scoreAgainst: g.result!.scoreAgainst,
-      won: g.result!.won,
-      stage: g.stage,
-    })),
-  };
-  const valid = SeasonPayloadSchema.safeParse(payload);
-  assert(valid.success, `${label}: payload validates`, valid.success ? "" : valid.error.issues.slice(0, 3));
-
   const outcome = postseasonOutcome(games);
   console.log(`    ${label}: ${summary.wins}-${summary.losses}, seed ${seedRank}, ${outcome ?? "no postseason?"}`);
 }
@@ -489,62 +455,121 @@ console.log("rivalries & buildSeasonGames");
   }
 }
 
-// ---------- bye-week payload & preseason projection ----------
-console.log("bye-week payload & preseason projection");
+// ---------- replay parity and canonical publish input ----------
+console.log("replay parity and publish inputs");
+
+const replayAlloc = cappedOptimalAllocation(30);
+const replayLog = (games: ScheduledGame[]) => JSON.stringify(games.map((g) => [
+  g.week, g.opponent.slug, g.isHome, g.winProb, g.stage ?? null, g.result ?? null,
+]));
+
+/** Characterize the old component's one-at-a-time and fast paths before replacing them. */
+function oldUiRun(
+  mode: "quick" | "season", seed: number, fast: boolean,
+  alloc: Allocation = replayAlloc, budgetM = 30, programChoice: TeamBudget = program
+): ScheduledGame[] {
+  const ratings = ratingsFromAllocation(withDepth(alloc, budgetM));
+  const rng = mulberry32((seed ^ (mode === "quick" ? 0x12345 : 0x9e3779b9)) >>> 0);
+  const games = buildSeasonGames(seed, ratings, programChoice, data.teams);
+  if (mode === "quick") {
+    if (fast) return games.map((g) => ({ ...g, result: simulateGame(ratings, g.oppRatings, g.isHome, rng) }));
+    for (let i = 0; i < games.length; i++) {
+      const g = games[i];
+      games[i] = { ...g, result: simulateGame(ratings, g.oppRatings, g.isHome, rng) };
+    }
+    return games;
+  }
+  const field = fieldRatings();
+  const fieldProj = data.teams.filter((t) => t.slug !== programChoice.slug)
+    .map((t) => modeledExpectedWins(t.budget_mid_m, field));
+  const ctx = { program: programChoice, teams: data.teams, userR: ratings, field, rng };
+  if (fast) {
+    for (let i = 0; i < 12; i++) {
+      const g = games[i];
+      games[i] = { ...g, result: simulateGame(ratings, g.oppRatings, g.isHome, rng) };
+    }
+    const rank = projectedRank(games.filter((g) => g.result?.won).length, fieldProj);
+    games.push(postseasonOpener(rank, new Set(games.map((g) => g.opponent.slug)), ctx));
+    while (true) {
+      const g = games[games.length - 1];
+      g.result = simulateGame(ratings, g.oppRatings, g.isHome, rng);
+      if (!g.result.won) break;
+      const next = nextPostseasonGame(g.stage!, new Set(games.map((x) => x.opponent.slug)), ctx);
+      if (!next) break;
+      games.push(next);
+    }
+    return games;
+  }
+  for (let i = 0; i < games.length; i++) {
+    const g = games[i];
+    const result = simulateGame(ratings, g.oppRatings, g.isHome, rng);
+    games[i] = { ...g, result };
+    if (i === 11) {
+      const rank = projectedRank(games.filter((x) => x.result?.won).length, fieldProj);
+      games.push(postseasonOpener(rank, new Set(games.map((x) => x.opponent.slug)), ctx));
+    } else if (g.stage && result.won) {
+      const next = nextPostseasonGame(g.stage, new Set(games.map((x) => x.opponent.slug)), ctx);
+      if (next) games.push(next);
+    }
+  }
+  return games;
+}
 
 {
-  // A top-4 seed's first-round bye skips week 13: weeks 1-12, then week 14.
-  const mkGame = (week: number, won: boolean, stage?: "qf" | "sf" | "ncg" | "bowl") => ({
-    week,
-    oppName: "Oklahoma",
-    oppSlug: "oklahoma",
-    oppColor: "#841617",
-    isHome: true,
-    winProb: 0.5,
-    scoreFor: won ? 30 : 20,
-    scoreAgainst: won ? 20 : 30,
-    won,
-    ...(stage ? { stage } : {}),
-  });
-  const base = {
-    programSlug: "texas",
-    programName: "Texas",
-    programColor: "#bf5700",
-    budgetM: 30,
-    alloc: cappedOptimalAllocation(30),
-    seed: 24,
-    expectedWins: 7.2,
-    avgMargin: 8.5,
-    off: 67,
-    def: 71,
-    st: 81,
-    tags: ["Balanced"],
-    bestWin: null,
-    worstLoss: null,
+  const playoffProgram = data.teams.find((team) => team.slug === "boston-college")!;
+  const playoffAlloc = cappedOptimalAllocation(55);
+  const input: ReplayInput = {
+    mode: "season", seed: 2, programSlug: playoffProgram.slug, budgetM: 55,
+    alloc: playoffAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
   };
-  const byeGames = [
-    ...Array.from({ length: 10 }, (_, i) => mkGame(i + 1, true)),
-    mkGame(11, false),
-    mkGame(12, false),
-    mkGame(14, false, "sf"),
-  ];
-  const byePayload = { ...base, wins: 10, losses: 3, games: byeGames };
-  assert(SeasonPayloadSchema.safeParse(byePayload).success, "bye-week payload validates");
+  const manual = oldUiRun("season", 2, false, playoffAlloc, 55, playoffProgram);
+  const fast = oldUiRun("season", 2, true, playoffAlloc, 55, playoffProgram);
+  const full = replaySeason(input);
+  assert(full.games.filter((g) => g.stage).map((g) => g.stage).join(",") === "qf,sf,ncg",
+    "playoff fixture reaches quarterfinal, semifinal, and title game");
+  assert(replayLog(manual) === replayLog(fast), "playoff manual and fast paths agree");
+  assert(replayLog(manual) === replayLog(full.games), "playoff shared replay matches old path");
+  for (let n = 0; n <= full.games.length; n++) {
+    const partial = replaySeason(input, n);
+    assert(replayLog(partial.games.filter((g) => g.result)) === replayLog(full.games.slice(0, n)),
+      `playoff step ${n} matches full run`);
+  }
+}
 
-  const bowlGames = [
-    ...Array.from({ length: 8 }, (_, i) => mkGame(i + 1, true)),
-    ...Array.from({ length: 4 }, (_, i) => mkGame(i + 9, false)),
-    mkGame(13, true, "bowl"),
-  ];
-  const bowlPayload = { ...base, wins: 9, losses: 4, games: bowlGames };
-  assert(SeasonPayloadSchema.safeParse(bowlPayload).success, "bowl payload validates");
+for (const mode of ["quick", "season"] as const) {
+  for (const seed of [24, 147, 999, 12345]) {
+    const input: ReplayInput = {
+      mode, seed, programSlug: program.slug, budgetM: 30, alloc: replayAlloc,
+      simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+    };
+    const manual = oldUiRun(mode, seed, false);
+    const fast = oldUiRun(mode, seed, true);
+    const full = replaySeason(input);
+    const label = `${mode}/seed ${seed}`;
+    assert(replayLog(manual) === replayLog(fast), `${label}: old manual and fast paths agree`);
+    assert(replayLog(full.games) === replayLog(manual), `${label}: shared replay preserves old results`);
+    assert(replayLog(replaySeason(input).games) === replayLog(full.games), `${label}: repeat is deterministic`);
+    assert(full.complete, `${label}: full run is complete`);
+    for (let n = 0; n <= full.games.length; n++) {
+      const partial = replaySeason(input, n);
+      const played = partial.games.filter((g) => g.result);
+      assert(replayLog(played) === replayLog(full.games.slice(0, n)), `${label}: step ${n} matches full run`);
+    }
+  }
+}
 
-  const badGames = [
-    ...Array.from({ length: 11 }, (_, i) => mkGame(i + 1, true)),
-    mkGame(13, true, "bowl"), // missing week 12
-  ];
-  const badPayload = { ...base, wins: 12, losses: 0, games: badGames };
-  assert(!SeasonPayloadSchema.safeParse(badPayload).success, "payload with missing week 12 rejected");
+{
+  const base = { mode: "season", seed: 24, programSlug: "texas", budgetM: 30,
+    alloc: replayAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT };
+  assert(SeasonPayloadSchema.safeParse(base).success, "canonical input validates");
+  assert(!SeasonPayloadSchema.safeParse({ ...base, wins: 99 }).success, "forged wins rejected");
+  assert(!SeasonPayloadSchema.safeParse({ ...base, games: [] }).success, "caller game log rejected");
+  assert(!SeasonPayloadSchema.safeParse({ ...base, seed: -1 }).success, "negative seed rejected");
+  assert(!SeasonPayloadSchema.safeParse({ ...base, simVersion: 999 }).success, "unsupported version rejected");
+  const apOnly = data.teams.map((t) => ({ ...t, ap_rank: t.ap_rank == null ? 1 : null }));
+  assert(fingerprintForTeams(apOnly) === DATA_FINGERPRINT, "AP rank does not change fingerprint");
+  const budgetChanged = data.teams.map((t, i) => i === 0 ? { ...t, budget_mid_m: t.budget_mid_m + 1 } : t);
+  assert(fingerprintForTeams(budgetChanged) !== DATA_FINGERPRINT, "model budget changes fingerprint");
 }
 
 {

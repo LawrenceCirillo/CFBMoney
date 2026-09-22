@@ -9,18 +9,8 @@
  *     npx next start -p 3100
  * Run: BASE_URL=http://localhost:3100 npx tsx scripts/test-e2e-share.ts
  */
-import {
-  GAME_BUDGET_M,
-  expectedScore,
-  generateSchedule,
-  mulberry32,
-  optimalAllocation,
-  ratingsFromAllocation,
-  simulateGame,
-  summarizeSeason,
-  archetype,
-} from "../lib/simulator";
-import { data } from "../lib/data";
+import { GAME_BUDGET_M, cappedOptimalAllocation } from "../lib/simulator";
+import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-replay";
 import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3100";
@@ -35,52 +25,19 @@ function assert(cond: boolean, label: string, extra?: unknown) {
 }
 
 async function main() {
-  // --- build a season exactly like the client does ---
-  const program = data.teams.find((t) => t.slug === "texas")!;
-  const alloc = optimalAllocation(GAME_BUDGET_M);
-  const userR = ratingsFromAllocation(alloc);
+  // --- publish the canonical input exactly like the client does ---
   const seed = 987654321;
-  const rng = mulberry32((seed ^ 0x12345) >>> 0);
-  const games = generateSchedule(program, data.teams, seed).map((g) => ({
-    ...g,
-    winProb: expectedScore(userR, g.oppRatings, g.isHome).winProb,
-  }));
-  for (const g of games) {
-    g.result = simulateGame(userR, g.oppRatings, g.isHome, rng);
-  }
-  const summary = summarizeSeason(games);
-  const tags = archetype(alloc);
-
   const payload: SeasonPayload = {
     gmName,
-    programSlug: program.slug,
-    programName: program.name,
-    programColor: program.color,
+    mode: "quick",
+    simVersion: SIM_VERSION,
+    dataFingerprint: DATA_FINGERPRINT,
+    programSlug: "texas",
     budgetM: GAME_BUDGET_M,
-    alloc,
+    alloc: cappedOptimalAllocation(GAME_BUDGET_M),
     seed,
-    wins: summary.wins,
-    losses: summary.losses,
-    expectedWins: summary.expectedWins,
-    avgMargin: summary.avgMargin,
-    off: userR.off,
-    def: userR.def,
-    st: userR.st,
-    tags,
-    bestWin: summary.bestWin ?? null,
-    worstLoss: summary.worstLoss ?? null,
-    games: games.map((g) => ({
-      week: g.week,
-      oppName: g.opponent.name,
-      oppSlug: g.opponent.slug,
-      oppColor: g.opponent.color,
-      isHome: g.isHome,
-      winProb: g.winProb,
-      scoreFor: g.result!.scoreFor,
-      scoreAgainst: g.result!.scoreAgainst,
-      won: g.result!.won,
-    })),
   };
+  const summary = replaySeason(payload).summary;
   const v = SeasonPayloadSchema.safeParse(payload);
   assert(v.success, "simulator-produced payload validates");
 

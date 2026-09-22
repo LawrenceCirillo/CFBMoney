@@ -1,24 +1,21 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { TeamBudget } from "@/lib/types";
 import {
-  archetype,
-  summarizeSeason,
-  withDepth,
   type Allocation,
-  type Ratings,
   type ScheduledGame,
 } from "@/lib/simulator";
 import { SeasonPayloadSchema, type SeasonPayload } from "@/lib/season-payload";
+import { DATA_FINGERPRINT, SIM_VERSION, type ReplayMode } from "@/lib/season-replay";
 
 interface Props {
+  mode: ReplayMode;
   games: ScheduledGame[];
   program: TeamBudget;
   alloc: Allocation;
   budgetM: number;
   seed: number;
-  userR: Ratings;
 }
 
 /**
@@ -26,15 +23,12 @@ interface Props {
  * Builds the payload from the finished season, validates it client-side,
  * then POSTs to /api/seasons.
  */
-export default function PublishPanel({ games, program, alloc, budgetM, seed, userR }: Props) {
+export default function PublishPanel({ mode, games, program, alloc, budgetM, seed }: Props) {
   const [gmName, setGmName] = useState("");
   const [publishState, setPublishState] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
-
-  const summary = useMemo(() => summarizeSeason(games), [games]);
-  const tags = useMemo(() => archetype(alloc), [alloc]);
 
   const publish = async () => {
     if (publishState === "saving" || publishState === "done") return;
@@ -48,34 +42,13 @@ export default function PublishPanel({ games, program, alloc, budgetM, seed, use
 
     const payload: SeasonPayload = {
       gmName: gmName.trim() || undefined,
+      mode,
+      simVersion: SIM_VERSION,
+      dataFingerprint: DATA_FINGERPRINT,
       programSlug: program.slug,
-      programName: program.name,
-      programColor: program.color,
       budgetM,
-      alloc: withDepth(alloc, budgetM),
+      alloc,
       seed,
-      wins: summary.wins,
-      losses: summary.losses,
-      expectedWins: summary.expectedWins,
-      avgMargin: summary.avgMargin,
-      off: userR.off,
-      def: userR.def,
-      st: userR.st,
-      tags,
-      bestWin: summary.bestWin ?? null,
-      worstLoss: summary.worstLoss ?? null,
-      games: games.map((g) => ({
-        week: g.week,
-        oppName: g.opponent.name,
-        oppSlug: g.opponent.slug,
-        oppColor: g.opponent.color,
-        isHome: g.isHome,
-        winProb: g.winProb,
-        scoreFor: g.result!.scoreFor,
-        scoreAgainst: g.result!.scoreAgainst,
-        won: g.result!.won,
-        stage: g.stage,
-      })),
     };
 
     const valid = SeasonPayloadSchema.safeParse(payload);
@@ -93,7 +66,7 @@ export default function PublishPanel({ games, program, alloc, budgetM, seed, use
         body: JSON.stringify(valid.data),
       });
       const body = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(body?.error || `Publish failed (${res.status})`);
+      if (!res.ok) throw new Error(res.status === 409 ? "This season uses older data. Reload the page and simulate again." : body?.error || `Publish failed (${res.status})`);
       setShareUrl(`${window.location.origin}/s/${body.id}`);
       setPublishState("done");
     } catch (e) {
