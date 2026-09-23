@@ -42,10 +42,10 @@ export default function Moneyball() {
         What does a win cost?
       </h1>
       <p className="mt-4 max-w-2xl text-fog">
-        Every 2026 roster budget, run through the same math that powers the Build
-        simulator: dollars buy talent with diminishing returns, talent becomes
-        ratings, ratings become expected wins against an average field. A win has
-        a price — and it isn&rsquo;t linear. All figures below are modeled, not predicted.
+        Each estimated 2026 roster budget midpoint runs through the same model
+        that powers the Build simulator. The model assumes spending raises talent
+        with diminishing returns, then converts ratings into expected wins against
+        an average field. These are modeled comparisons, not observed costs or wins.
       </p>
 
       <Link
@@ -72,22 +72,22 @@ export default function Moneyball() {
       <div className="mt-8 grid grid-cols-2 gap-px bg-edge lg:grid-cols-4">
         {[
           {
-            label: "Most efficient dollar",
+            label: "Modeled sweet spot",
             value: fmtM(Math.round(sweet.budget)),
             sub: `${fmtMoney2(sweet.costPerWin)} per expected win`,
           },
           {
-            label: "Cheapest win",
+            label: "Lowest modeled $/win",
             value: fmtMoney2(cheapest.costPerWin),
             sub: cheapest.team.name,
           },
           {
-            label: "Priciest win",
+            label: "Highest modeled $/win",
             value: fmtMoney2(priciest.costPerWin),
             sub: priciest.team.name,
           },
           {
-            label: "The 12th win",
+            label: "12th expected win",
             value: fmtMoney1(twelfth.priceM),
             sub: "marginal, modeled",
           },
@@ -101,26 +101,26 @@ export default function Moneyball() {
       </div>
 
       <SectionHead kicker="The cost curve" title="Diminishing returns, drawn">
-        Drag the slider. This is the sport&rsquo;s production function: steep where
-        money is scarce, flat where it isn&rsquo;t. The green dot is the sweet spot —
-        the budget where each expected win costs the least.
+        Drag the slider. This is the model&rsquo;s assumed spending-to-rating curve:
+        steep at smaller budgets and flatter at larger ones. The green dot marks
+        the budget with the lowest modeled cost per expected win.
       </SectionHead>
       <div className="mt-6 rounded-xl border border-edge bg-panel/30 p-2 sm:p-4">
         <CostCurveChart />
       </div>
 
       <SectionHead kicker="Marginal cost" title="The price of each win">
-        What the next expected win costs, from the 5th to the 12th. Early wins are
-        cheap. The last ones cost more than most entire rosters.
+        The additional modeled budget needed for each expected win, from the 5th
+        to the 12th. These are differences along the curve, not observed payments.
       </SectionHead>
       <div className="mt-6 rounded-xl border border-edge bg-panel/30 p-4 sm:p-6">
         <WinPriceLadder prices={prices} />
       </div>
 
-      <SectionHead kicker="Efficiency leaderboard" title="Who buys wins cheapest?">
-        All 68 programs ranked by modeled dollars per expected win. Proximity to
-        the {fmtM(Math.round(sweet.budget))} sweet spot wins: too poor and you don&rsquo;t
-        win enough; too rich and diminishing returns eat you alive.
+      <SectionHead kicker="Efficiency leaderboard" title="Which budgets look most efficient in the model?">
+        All {data.totals.teams} programs ranked by modeled dollars per expected win.
+        This measures each budget midpoint against the same assumed curve, not
+        actual program spending or results.
       </SectionHead>
       <div className="mt-6">
         <EfficiencyTable rows={eff} />
@@ -128,9 +128,9 @@ export default function Moneyball() {
 
       <SectionHead kicker="Market vs money" title={`What the polls think — through Week ${data.poll.week}`}>
         Budget against the AP Top 25 published {fmtPollDate(data.poll.as_of)}, after Week {data.poll.week}. Top-left is
-        the promised land — ranked high, spending low. Bottom-right is where athletic
-        directors get fired. Value gap = spots ranked better (+) or worse (−) than
-        the budget suggests, right now.
+        a higher AP position with a lower estimated budget midpoint. Value gap is
+        the difference between spend rank and current AP rank, not a measure of
+        actual financial return.
       </SectionHead>
       <div className="mt-6 rounded-xl border border-edge bg-panel/30 p-2 sm:p-4">
         <Scatterplot teams={ranked} />
@@ -163,15 +163,15 @@ export default function Moneyball() {
 
       <div className="mt-16 border-t border-line pt-6 pb-4">
         <p className="text-xs leading-relaxed text-fog">
-          Methodology — Expected wins are modeled, not predicted. Each budget is
-          converted to ratings with the simulator&rsquo;s diminishing-returns talent
-          curve (constants in <span className="tnum">lib/simulator.ts</span>, calibrated in{" "}
-          <span className="tnum">scripts/calibrate.mjs</span>), then to win probability
-          against the average 68-team field on a neutral field, times 12 games.
-          Budgets are The Athletic&rsquo;s estimated 2026 roster ranges. AP ranks are
-          the Top 25 through Week {data.poll.week} (poll published {fmtPollDate(data.poll.as_of)}, 2026). Preseason
-          ranks are kept on each team page for comparison.
+          Methodology — Expected wins are modeled, not observed. Estimated budget
+          midpoints become ratings through an assumed diminishing-returns curve,
+          then win probability against the average {data.totals.teams}-program field,
+          times 12 games. Budget ranges come from The Athletic; AP ranks are through
+          Week {data.poll.week} (published {fmtPollDate(data.poll.as_of)}, {data.season}).
         </p>
+        <Link href="/methodology" className="mt-3 inline-block text-sm font-semibold underline underline-offset-4 hover:text-paper">
+          Read full methodology →
+        </Link>
       </div>
     </div>
   );
