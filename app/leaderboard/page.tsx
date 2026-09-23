@@ -60,11 +60,14 @@ export default async function LeaderboardPage({ searchParams }: Props) {
   }
 
   const [rows, total, legacyRows, legacyTotal] = await Promise.all([
-    getLeaderboard(sort).catch(() => []),
-    countSeasons().catch(() => 0),
-    getLegacyArchive(archivePageSize, (archivePage - 1) * archivePageSize).catch(() => []),
-    countSeasons(false).catch(() => 0),
-  ]);
+    getLeaderboard(sort),
+    countSeasons(),
+    getLegacyArchive(archivePageSize, (archivePage - 1) * archivePageSize),
+    countSeasons(false),
+  ]).catch(() => {
+    // Keep driver details and connection strings out of the rendered error.
+    throw new Error("Leaderboard data unavailable");
+  });
 
   return (
     <div className="mx-auto max-w-5xl py-10 sm:py-14">
@@ -98,7 +101,7 @@ export default async function LeaderboardPage({ searchParams }: Props) {
         </div>
       </div>
 
-      {rows.length === 0 ? (
+      {rows.length === 0 && total === 0 ? (
         <div className="mt-12 rounded-3xl border border-dashed border-edge p-12 text-center">
           <p className="font-display text-2xl font-bold text-paper">No verified seasons yet</p>
           <p className="mx-auto mt-2 max-w-md text-pretty text-sm text-fog">

@@ -66,7 +66,10 @@ export default async function ShareSeasonPage({ params }: Props) {
     );
   }
 
-  const season = await getSeason(id).catch(() => null);
+  const season = await getSeason(id).catch(() => {
+    // Next logs this sanitized error once and renders the route error boundary.
+    throw new Error("Season data unavailable");
+  });
   if (!season) notFound();
 
   // The honest exam: regular-season wins vs the roster's preseason projection.
