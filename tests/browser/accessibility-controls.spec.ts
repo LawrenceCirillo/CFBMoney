@@ -97,6 +97,10 @@ test("program selector keeps 68 options out of the Tab sequence", async ({ page 
   await page.keyboard.press("Enter");
   await expect(first).toBeFocused();
   await expect(first).toContainText("Oregon");
+  await expect(page).toHaveURL(/\/compare\/oregon-vs-ohio-state$/);
+  await expect(page).toHaveTitle("Oregon vs Ohio State · CFB Money");
+  await page.reload();
+  await expect(page.getByRole("button", { name: /First program/ })).toContainText("Oregon");
 });
 
 test("ticker can be paused and pauses when score links have focus", async ({ page }) => {

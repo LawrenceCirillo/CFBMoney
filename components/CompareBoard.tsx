@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import ProgramSelect from "@/components/ProgramSelect";
 import TeamMark from "@/components/TeamMark";
 import { comparePath } from "@/lib/compare";
@@ -9,7 +8,6 @@ import { data } from "@/lib/data";
 import { fmtGap, fmtPollDate, fmtPollRank, fmtRange } from "@/lib/format";
 
 export default function CompareBoard({ initialA, initialB }: { initialA: string; initialB: string }) {
-  const router = useRouter();
   const [a, setA] = useState(initialA);
   const [b, setB] = useState(initialB);
   const [copied, setCopied] = useState(false);
@@ -21,6 +19,10 @@ export default function CompareBoard({ initialA, initialB }: { initialA: string;
 
   const A = data.teams.find((t) => t.slug === a) ?? data.teams[0];
   const B = data.teams.find((t) => t.slug === b) ?? data.teams[1];
+
+  useEffect(() => {
+    document.title = `${A.name} vs ${B.name} · CFB Money`;
+  }, [A.name, B.name]);
 
   const rows = [
     { label: "Roster budget", fa: fmtRange(A.budget_low_m, A.budget_high_m), fb: fmtRange(B.budget_low_m, B.budget_high_m) },
@@ -37,7 +39,7 @@ export default function CompareBoard({ initialA, initialB }: { initialA: string;
     setA(nextA);
     setB(nextB);
     setCopied(false);
-    router.replace(comparePath(nextA, nextB), { scroll: false });
+    window.history.replaceState(null, "", comparePath(nextA, nextB));
   }
 
   async function copyLink() {
