@@ -65,6 +65,47 @@
   color-scheme: dark;
 }
 
+/* Keep dark school marks legible without a visible disc behind every logo. */
+.dark .team-mark-image {
+  filter: drop-shadow(1px 0 0 rgb(255 255 255 / 50%))
+    drop-shadow(-1px 0 0 rgb(255 255 255 / 50%))
+    drop-shadow(0 1px 0 rgb(255 255 255 / 50%))
+    drop-shadow(0 -1px 0 rgb(255 255 255 / 50%));
+}
+
+/* The ticker swaps between dark and light surfaces with the theme. */
+.score-ticker-mark {
+  filter: drop-shadow(1px 0 0 rgb(255 255 255 / 65%))
+    drop-shadow(-1px 0 0 rgb(255 255 255 / 65%))
+    drop-shadow(0 1px 0 rgb(255 255 255 / 65%))
+    drop-shadow(0 -1px 0 rgb(255 255 255 / 65%));
+}
+
+.dark .score-ticker-mark {
+  filter: drop-shadow(1px 0 0 rgb(10 10 12 / 45%))
+    drop-shadow(-1px 0 0 rgb(10 10 12 / 45%))
+    drop-shadow(0 1px 0 rgb(10 10 12 / 45%))
+    drop-shadow(0 -1px 0 rgb(10 10 12 / 45%));
+}
+
+.team-search-results {
+  animation: team-search-results-in 160ms var(--ease-out) 60ms both;
+  transform-origin: top right;
+}
+
+.team-search-input:focus-visible {
+  outline: none;
+}
+
+@keyframes team-search-results-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-search-results { animation: none; }
+}
+
 html {
   background: var(--color-ink);
   color-scheme: light;
@@ -99,6 +140,15 @@ label[for],
 
 button:disabled {
   cursor: not-allowed;
+}
+
+/* Touch browsers can zoom the page when a text field is smaller than 16px. */
+@media (any-pointer: coarse) {
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: max(1rem, 1em);
+  }
 }
 
 button:not(:disabled):not(.no-press):active {

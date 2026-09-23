@@ -3,7 +3,7 @@ export function logoSrc(slug: string): string {
   return `/marks/${slug}.webp`;
 }
 
-/** A fixed light disc keeps dark school marks readable in both themes. */
+/** White backing for compact marks in the scatterplot. */
 export function markDisc(_hex: string): string {
-  return "#f5f1e9";
+  return "#ffffff";
 }
