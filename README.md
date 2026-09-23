@@ -7,7 +7,8 @@ who gets the most out of it, head-to-head comparisons, and a build-your-own-rost
 
 ```bash
 npm install
-npm run build-data   # CSV + metadata -> public/data/cfb-2026.json
+npm run validate-data # check all committed 2026 source snapshots
+npm run build-data    # validated CSV + metadata -> public/data/cfb-2026.json
 npm run dev          # http://localhost:3000
 ```
 
@@ -20,8 +21,12 @@ data/
   teams.json                    # source of truth: slug, name, abbr, conference, color, espn_id
   athletic-nil-budgets-2026.csv # Athletic budget ranges (Sept 2026)
   ap-poll-2026.csv              # AP Top 25 by week; the latest week is the current ballot
+  espn-fpi-sos-2026.json        # dated FPI schedule-strength ranks for 68 programs
+  espn-scores-2026.json         # latest fully completed regular-season week
+  espn-season-2026.json         # dated team totals and rosters
         |
-        v  scripts/build-data.mjs  (validates, derives, merges, caches logos)
+        v  scripts/validate-data.mjs checks every source
+        v  scripts/build-data.mjs derives spending metrics and caches logos
         |
 public/data/cfb-2026.json       # generated, committed, imported by lib/data.ts
 public/logos/{slug}.png         # ESPN dark NCAA marks, cached locally
@@ -29,14 +34,63 @@ public/logos/{slug}.png         # ESPN dark NCAA marks, cached locally
 
 Rules:
 
-- **Raw sources live in `data/`, never edited by hand after import.** Budgets and
-  the AP ballot are separate files so spend rank and poll rank cannot get mixed.
-  Replace a source and re-run `npm run build-data`. The UI never changes.
+- **Source snapshots live in `data/`.** Budgets and the AP ballot are separate
+  files so spend rank and poll rank cannot get mixed. Update AP and FPI from
+  their published sources; the two ESPN fetch scripts write score and season
+  snapshots only after coverage checks pass. Run the validator before building.
 - **All derived metrics are computed in `scripts/build-data.mjs`**, not in components:
   midpoints, competition spend ranks, value gap vs the current AP ballot. When
   final win totals arrive, add a `results` source and compute $/win + expected-wins
   regression in the same script.
 - The generated JSON is committed so deploys are deterministic.
+- Unchanged inputs produce the same generated JSON. Source dates live on the
+  individual snapshots; the generated file has no clock-based timestamp.
+
+### Reviewed weekly refresh
+
+Keep this process human-reviewed during 2026. [AP Top 25](https://apnews.com/hub/ap-top-25-college-football-poll),
+[ESPN FPI](https://www.espn.com/college-football/fpi),
+[ESPN scoreboard](https://www.espn.com/college-football/scoreboard), and
+[ESPN teams](https://www.espn.com/college-football/teams) are the sources.
+The budget estimate file comes from [The Athletic](https://www.nytimes.com/athletic/interactive/college-football-nil-spending-budgets/)
+and is not changed by a weekly sports-data refresh.
+
+1. Confirm the latest AP poll is published. Add its 25 rows to
+   `data/ap-poll-2026.csv`, update `# as_of:` and `# note:`, and verify names
+   and ranks against the AP source. Do not infer or silently replace a ballot.
+2. Capture current ESPN FPI played/remaining schedule-strength ranks in
+   `data/espn-fpi-sos-2026.json`. Update its `as_of` and note, keep
+   `season: 2026`, and retain one
+   entry for every tracked ESPN team ID. This source is curated manually.
+3. Run `npm run fetch:scores`. The script selects the most recent
+   regular-season week whose ESPN calendar end has passed, reads scheduled
+   events as well as finals, and refuses to overwrite the snapshot if a
+   tracked event is unfinished or malformed. It reports final games,
+   participating programs, and byes.
+4. Run `npm run fetch:season`. It requires valid totals and rosters for all
+   68 programs before writing and stamps the actual successful fetch date.
+5. Run `npm run validate-data`, then `npm run build-data`. The validator
+   checks all source coverage, dates, scores, rosters, and AP ranks. It reports
+   normal publication skew between AP and ESPN dates.
+6. Review `git diff -- data/ public/data/cfb-2026.json`: source dates,
+   poll changes, score week/game/bye counts, roster changes, FPI coverage, and
+   derived spending ranks. Cross-check byes and known games against the
+   published ESPN schedule. Update the snapshot-date line below. Run `npm run test:spend`,
+   `npx tsc --noEmit --incremental false`, and `npm run build`. Re-run
+   `npm run build-data` and confirm the generated file has no further diff.
+7. Merge and deploy only the reviewed snapshot. Check the public spending,
+   team, and leaderboard pages after deploy. If ESPN changes its event shape
+   or omits a known game, keep the last committed snapshot. If a bad snapshot
+   is deployed, revert its data commit and redeploy the last known-good data.
+
+The score snapshot is the latest completed week, while AP and ESPN may
+publish on different days. A program with no scheduled event in that week is
+a bye, not an incomplete fetch. Fetch dates use UTC. No automated weekly
+publication is enabled.
+
+Snapshot dates at this implementation: AP Week 3 published 2026-09-20; FPI
+captured 2026-09-22; Week 3 scores and rosters fetched 2026-09-23. The score
+fetch found 48 final games, 68 participating programs, and no byes.
 
 ## Project structure
 

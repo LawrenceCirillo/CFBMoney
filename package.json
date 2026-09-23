@@ -29,6 +29,10 @@
   "scripts": {
     "build": "next build",
     "build-data": "node scripts/build-data.mjs",
+    "validate-data": "node scripts/validate-data.mjs",
+    "fetch:scores": "node scripts/fetch-espn-scores.mjs",
+    "fetch:season": "node scripts/fetch-espn-season.mjs",
+    "test:spend": "tsx scripts/test-spend-rank.ts",
     "dev": "next dev",
     "prebuild": "npm run build-data",
     "start": "next start",

@@ -13,8 +13,11 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateData } from "./validate-data.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const validation = validateData(root);
+console.log(`cfb-money: validated AP Week ${validation.pollWeek}, score Week ${validation.scoreWeek} (${validation.byeTeams} byes)`);
 
 function parseCSV(text) {
   const lines = text.trim().split("\n").filter((line) => line && !line.startsWith("#"));
@@ -164,7 +167,6 @@ const totalMid = teams.reduce((s, t) => s + t.budget_mid_m, 0);
 
 const out = {
   season: 2026,
-  generated_at: new Date().toISOString(),
   source: {
     name: "The Athletic",
     url: "https://www.nytimes.com/athletic/interactive/college-football-nil-spending-budgets/",

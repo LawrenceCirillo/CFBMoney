@@ -1,0 +1,16 @@
+{
+  "poll": { "week": 3, "as_of": "2026-09-20" },
+  "fpi_as_of": "2026-09-22",
+  "teams": {
+    "texas": { "ap_rank": 1, "preseason_rank": 5, "spend_rank": 3, "value_gap": 2, "sos_played_rank": 21, "sos_remaining_rank": 5 },
+    "georgia": { "ap_rank": 2, "spend_rank": 19, "value_gap": 17, "sos_played_rank": 120, "sos_remaining_rank": 21 },
+    "oregon": { "ap_rank": 20, "spend_rank": 2, "value_gap": -18 },
+    "houston": { "ap_rank": 25 },
+    "iowa": { "ap_rank": 17, "value_gap": 38 },
+    "texas-am": { "ap_rank": 23, "value_gap": -18 },
+    "florida": { "ap_rank": 21 },
+    "virginia": { "ap_rank": null },
+    "oklahoma": { "ap_rank": null },
+    "washington": { "ap_rank": null, "preseason_rank": 17 }
+  }
+}

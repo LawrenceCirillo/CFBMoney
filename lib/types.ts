@@ -31,7 +31,6 @@ export interface CfbPoll {
 
 export interface CfbData {
   season: number;
-  generated_at: string;
   source: { name: string; url: string; note: string };
   poll: CfbPoll;
   fpi: { name: string; as_of: string; note: string };

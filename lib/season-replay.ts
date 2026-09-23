@@ -35,7 +35,7 @@ export interface ReplayInput {
 
 /**
  * Fingerprint only attributes that affect the model or the stored game log.
- * AP ranks and generated_at intentionally do not change a replay.
+ * AP ranks and snapshot dates intentionally do not change a replay.
  */
 export function fingerprintForTeams(teams: TeamBudget[]): string {
   const material = JSON.stringify([

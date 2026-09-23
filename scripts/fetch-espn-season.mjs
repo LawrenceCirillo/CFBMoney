@@ -4,7 +4,7 @@
 //   node scripts/fetch-espn-season.mjs
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -53,7 +53,8 @@ function rosterOf(payload) {
       players.push({
         name: athlete.displayName,
         jersey: athlete.jersey ?? "",
-        pos: athlete.position?.abbreviation ?? "",
+        // ESPN alternates between PK and K for the same kicker roster slot.
+        pos: athlete.position?.abbreviation === "PK" ? "K" : athlete.position?.abbreviation ?? "",
         year: athlete.experience?.abbreviation ?? "",
         side,
       });
@@ -91,28 +92,60 @@ async function pull(team) {
   return season;
 }
 
-const out = {};
-const queue = [...teams];
-const workers = Array.from({ length: 4 }, async () => {
-  while (queue.length) {
-    const team = queue.shift();
-    out[team.slug] = await pull(team);
-    console.log(`${team.slug} ${out[team.slug].record} roster ${out[team.slug].roster.length}`);
-  }
-});
-await Promise.all(workers);
-
-if (Object.keys(out).length !== teams.length) {
-  throw new Error(`expected ${teams.length} teams, wrote ${Object.keys(out).length}`);
+export function makeSeasonFile(snapshotTeams, fetchedAt = new Date()) {
+  const asOf = fetchedAt.toISOString().slice(0, 10);
+  const dateLabel = new Intl.DateTimeFormat("en-US", {
+    month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
+  }).format(fetchedAt);
+  return {
+    source: "ESPN",
+    url: "https://www.espn.com/college-football/teams",
+    as_of: asOf,
+    season: 2026,
+    note: `2026 regular-season rosters and team totals through games played as of ${dateLabel}.`,
+    teams: Object.fromEntries(Object.entries(snapshotTeams).sort(([a], [b]) => a.localeCompare(b))),
+  };
 }
 
-const file = {
-  source: "ESPN",
-  url: "https://www.espn.com/college-football/teams",
-  as_of: "2026-09-22",
-  season: 2026,
-  note: "2026 regular-season rosters and team totals through games played as of Sept. 22.",
-  teams: out,
-};
-writeFileSync(join(root, "data/espn-season-2026.json"), JSON.stringify(file) + "\n");
-console.log(`wrote data/espn-season-2026.json (${teams.length} teams)`);
+function serializeSeasonFile(file) {
+  const { teams: snapshotTeams, ...metadata } = file;
+  const header = Object.entries(metadata)
+    .map(([key, value]) => `  ${JSON.stringify(key)}: ${JSON.stringify(value)},`)
+    .join("\n");
+  const rows = Object.entries(snapshotTeams).map(([slug, team]) => {
+    const { roster, ...stats } = team;
+    const fields = Object.entries(stats)
+      .map(([key, value]) => `      ${JSON.stringify(key)}: ${JSON.stringify(value)},`);
+    fields.push(`      "roster": ${JSON.stringify(roster)}`);
+    return `    ${JSON.stringify(slug)}: {\n${fields.join("\n")}\n    }`;
+  });
+  return `{\n${header}\n  "teams": {\n${rows.join(",\n")}\n  }\n}\n`;
+}
+
+export function writeSeasonFile(path, file) {
+  writeFileSync(path, serializeSeasonFile(file));
+}
+
+async function main() {
+  const out = {};
+  const queue = [...teams];
+  const workers = Array.from({ length: 4 }, async () => {
+    while (queue.length) {
+      const team = queue.shift();
+      out[team.slug] = await pull(team);
+      console.log(`${team.slug} ${out[team.slug].record} roster ${out[team.slug].roster.length}`);
+    }
+  });
+  await Promise.all(workers);
+  if (Object.keys(out).length !== teams.length) {
+    throw new Error(`expected ${teams.length} teams, wrote ${Object.keys(out).length}`);
+  }
+  // Date the snapshot only after every ESPN request and coverage check succeeded.
+  const file = makeSeasonFile(out);
+  writeSeasonFile(join(root, "data/espn-season-2026.json"), file);
+  console.log(`wrote data/espn-season-2026.json (${teams.length} teams, as of ${file.as_of})`);
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  await main();
+}

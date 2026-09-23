@@ -1,15 +1,17 @@
 {
   "source": "ESPN",
   "url": "https://www.espn.com/college-football/scoreboard",
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-23",
+  "season": 2026,
   "week": 3,
   "label": "Week 3",
   "range": "Sep 14–20",
-  "note": "Final scores for the 68 programs in the latest completed week. A game is listed once.",
+  "note": "Final scores for 68 of 68 tracked programs in Week 3; 0 byes. A game is listed once.",
   "games": [
     {
       "id": "401856693",
       "date": "2026-09-20T00:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "UTSA",
@@ -30,6 +32,7 @@
     {
       "id": "401856686",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": "georgia",
         "abbr": "UGA",
@@ -50,6 +53,7 @@
     {
       "id": "401858453",
       "date": "2026-09-19T23:30Z",
+      "final": true,
       "away": {
         "slug": "michigan-state",
         "abbr": "MSU",
@@ -70,6 +74,7 @@
     {
       "id": "401858449",
       "date": "2026-09-19T20:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "WKU",
@@ -90,6 +95,7 @@
     {
       "id": "401858226",
       "date": "2026-09-18T23:30Z",
+      "final": true,
       "away": {
         "slug": "miami",
         "abbr": "MIA",
@@ -110,6 +116,7 @@
     {
       "id": "401858454",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "KENT",
@@ -130,6 +137,7 @@
     {
       "id": "401856688",
       "date": "2026-09-19T23:30Z",
+      "final": true,
       "away": {
         "slug": "lsu",
         "abbr": "LSU",
@@ -150,6 +158,7 @@
     {
       "id": "401856694",
       "date": "2026-09-19T19:40Z",
+      "final": true,
       "away": {
         "slug": "kentucky",
         "abbr": "UK",
@@ -170,6 +179,7 @@
     {
       "id": "401856685",
       "date": "2026-09-19T21:15Z",
+      "final": true,
       "away": {
         "slug": "florida-state",
         "abbr": "FSU",
@@ -190,6 +200,7 @@
     {
       "id": "401856795",
       "date": "2026-09-20T00:15Z",
+      "final": true,
       "away": {
         "slug": "byu",
         "abbr": "BYU",
@@ -210,6 +221,7 @@
     {
       "id": "401858457",
       "date": "2026-09-19T19:30Z",
+      "final": true,
       "away": {
         "slug": "usc",
         "abbr": "USC",
@@ -230,6 +242,7 @@
     {
       "id": "401856811",
       "date": "2026-09-19T00:00Z",
+      "final": true,
       "away": {
         "slug": "houston",
         "abbr": "HOU",
@@ -250,6 +263,7 @@
     {
       "id": "401858456",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "BUFF",
@@ -270,6 +284,7 @@
     {
       "id": "401856692",
       "date": "2026-09-19T23:45Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "KENN",
@@ -290,6 +305,7 @@
     {
       "id": "401858230",
       "date": "2026-09-19T19:30Z",
+      "final": true,
       "away": {
         "slug": "smu",
         "abbr": "SMU",
@@ -310,6 +326,7 @@
     {
       "id": "401856801",
       "date": "2026-09-19T19:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "USU",
@@ -330,6 +347,7 @@
     {
       "id": "401858471",
       "date": "2026-09-19T20:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "UNI",
@@ -350,6 +368,7 @@
     {
       "id": "401858450",
       "date": "2026-09-19T19:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "UTEP",
@@ -370,6 +389,7 @@
     {
       "id": "401856689",
       "date": "2026-09-19T23:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "TROY",
@@ -390,6 +410,7 @@
     {
       "id": "401858455",
       "date": "2026-09-19T02:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "PRST",
@@ -410,6 +431,7 @@
     {
       "id": "401856690",
       "date": "2026-09-19T23:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "UNM",
@@ -430,6 +452,7 @@
     {
       "id": "401856802",
       "date": "2026-09-19T23:30Z",
+      "final": true,
       "away": {
         "slug": "west-virginia",
         "abbr": "WVU",
@@ -450,6 +473,7 @@
     {
       "id": "401858225",
       "date": "2026-09-17T23:30Z",
+      "final": true,
       "away": {
         "slug": "syracuse",
         "abbr": "SYR",
@@ -470,6 +494,7 @@
     {
       "id": "401856792",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "TULN",
@@ -490,6 +515,7 @@
     {
       "id": "401856798",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "BGSU",
@@ -510,6 +536,7 @@
     {
       "id": "401856812",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": "arizona-state",
         "abbr": "ASU",
@@ -530,6 +557,7 @@
     {
       "id": "401858228",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "MER",
@@ -550,6 +578,7 @@
     {
       "id": "401858229",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": "north-carolina",
         "abbr": "UNC",
@@ -570,6 +599,7 @@
     {
       "id": "401858451",
       "date": "2026-09-19T16:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "AKR",
@@ -590,6 +620,7 @@
     {
       "id": "401858460",
       "date": "2026-09-19T16:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "EMU",
@@ -610,6 +641,7 @@
     {
       "id": "401856695",
       "date": "2026-09-19T16:45Z",
+      "final": true,
       "away": {
         "slug": "nc-state",
         "abbr": "NCSU",
@@ -630,6 +662,7 @@
     {
       "id": "401858227",
       "date": "2026-09-19T18:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "ME",
@@ -650,6 +683,7 @@
     {
       "id": "401858448",
       "date": "2026-09-19T18:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "SIU",
@@ -670,6 +704,7 @@
     {
       "id": "401856797",
       "date": "2026-09-19T19:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "M-OH",
@@ -690,6 +725,7 @@
     {
       "id": "401858233",
       "date": "2026-09-19T19:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "WAG",
@@ -710,6 +746,7 @@
     {
       "id": "401858231",
       "date": "2026-09-19T20:00Z",
+      "final": true,
       "away": {
         "slug": "stanford",
         "abbr": "STAN",
@@ -730,6 +767,7 @@
     {
       "id": "401867804",
       "date": "2026-09-19T20:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "LT",
@@ -750,6 +788,7 @@
     {
       "id": "401856691",
       "date": "2026-09-19T21:35Z",
+      "final": true,
       "away": {
         "slug": "mississippi-state",
         "abbr": "MSST",
@@ -770,6 +809,7 @@
     {
       "id": "401856687",
       "date": "2026-09-19T23:00Z",
+      "final": true,
       "away": {
         "slug": "florida",
         "abbr": "FLA",
@@ -790,6 +830,7 @@
     {
       "id": "401856800",
       "date": "2026-09-19T23:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "GAST",
@@ -810,6 +851,7 @@
     {
       "id": "401856803",
       "date": "2026-09-19T23:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "MUR",
@@ -830,6 +872,7 @@
     {
       "id": "401858452",
       "date": "2026-09-19T23:15Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "UND",
@@ -850,6 +893,7 @@
     {
       "id": "401858459",
       "date": "2026-09-19T23:15Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "EWU",
@@ -870,6 +914,7 @@
     {
       "id": "401856796",
       "date": "2026-09-19T23:30Z",
+      "final": true,
       "away": {
         "slug": "colorado",
         "abbr": "COLO",
@@ -890,6 +935,7 @@
     {
       "id": "401858232",
       "date": "2026-09-19T23:30Z",
+      "final": true,
       "away": {
         "slug": "virginia-tech",
         "abbr": "VT",
@@ -910,6 +956,7 @@
     {
       "id": "401856799",
       "date": "2026-09-20T00:00Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "ARST",
@@ -930,6 +977,7 @@
     {
       "id": "401856793",
       "date": "2026-09-20T02:30Z",
+      "final": true,
       "away": {
         "slug": null,
         "abbr": "NIU",
@@ -950,6 +998,7 @@
     {
       "id": "401858458",
       "date": "2026-09-20T03:00Z",
+      "final": true,
       "away": {
         "slug": "purdue",
         "abbr": "PUR",

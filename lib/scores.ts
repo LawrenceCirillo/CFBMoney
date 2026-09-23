@@ -12,6 +12,7 @@ export interface ScoreSide {
 export interface ScoreGame {
   id: string;
   date: string;
+  final: true;
   away: ScoreSide;
   home: ScoreSide;
 }
@@ -20,6 +21,7 @@ export interface Scoreboard {
   source: string;
   url: string;
   as_of: string;
+  season: number;
   week: number;
   label: string;
   range: string;

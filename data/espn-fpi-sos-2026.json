@@ -2,6 +2,7 @@
   "source": "ESPN FPI",
   "url": "https://www.espn.com/college-football/fpi",
   "as_of": "2026-09-22",
+  "season": 2026,
   "note": "Ranks among FBS. 1 is the hardest schedule. Played is games already played, from the view of an average Top 25 team. Remaining is games left, from the view of an average FBS team.",
   "teams": {
     "2": {

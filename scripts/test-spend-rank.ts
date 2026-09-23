@@ -1,11 +1,12 @@
 /**
  * Spend ranking: competition ranks, book vs the 68, conference ties,
- * Week 3 AP value gap.
+ * current AP invariants, and a frozen Week 3 historical fixture.
  *
  * Run with: npx tsx scripts/test-spend-rank.ts
  */
 import { data } from "../lib/data";
 import { bookStanding, competitionRank, conferenceSpendRank } from "../lib/spend-rank";
+import week3 from "./fixtures/week3-spend-rank-2026.json";
 
 let failures = 0;
 function assert(cond: boolean, label: string, extra?: unknown) {
@@ -44,46 +45,50 @@ console.log("book vs the 68");
   assert(oleMiss.budget_mid_m === tennessee.budget_mid_m, "same midpoint");
 }
 
-console.log("AP through week 3");
+console.log("current AP and ESPN invariants");
 {
-  assert(data.poll.week === 3, "poll week is 3", data.poll);
-  assert(data.poll.as_of === "2026-09-20", "poll date is Sept. 20", data.poll.as_of);
-  const texas = data.teams.find((t) => t.slug === "texas")!;
-  const georgia = data.teams.find((t) => t.slug === "georgia")!;
-  const oregon = data.teams.find((t) => t.slug === "oregon")!;
-  const houston = data.teams.find((t) => t.slug === "houston")!;
-  const iowa = data.teams.find((t) => t.slug === "iowa")!;
-  const aggies = data.teams.find((t) => t.slug === "texas-am")!;
-  const florida = data.teams.find((t) => t.slug === "florida")!;
-  const virginia = data.teams.find((t) => t.slug === "virginia")!;
-  const oklahoma = data.teams.find((t) => t.slug === "oklahoma")!;
-  const washington = data.teams.find((t) => t.slug === "washington")!;
+  const ranked = data.teams.filter((team) => team.ap_rank != null);
+  assert(Number.isInteger(data.poll.week) && data.poll.week >= 1, "current poll has a week");
+  assert(/^\d{4}-\d{2}-\d{2}$/.test(data.poll.as_of), "current poll has an ISO date");
+  assert(ranked.length === 25, "exactly 25 AP-ranked teams", ranked.length);
+  assert(
+    ranked.map((team) => team.ap_rank).sort((a, b) => a! - b!).every((rank, i) => rank === i + 1),
+    "current AP ranks are unique 1–25"
+  );
+  const mids = data.teams.map((team) => team.budget_mid_m);
+  assert(data.teams.every((team) => team.spend_rank === competitionRank(team.budget_mid_m, mids)),
+    "every spend rank follows the current budget books");
+  assert(data.teams.every((team) => team.value_gap ===
+    (team.ap_rank == null ? null : team.spend_rank - team.ap_rank)),
+    "every current value gap uses the current AP rank");
+  assert(data.teams.every((team) => team.sos_played_rank >= 1 && team.sos_remaining_rank >= 1),
+    "every program has valid ESPN SOS ranks");
+}
 
-  assert(texas.ap_rank === 1, "Texas is AP #1 through week 3", texas.ap_rank);
-  assert(texas.preseason_rank === 5, "Texas was preseason #5", texas.preseason_rank);
-  assert(georgia.ap_rank === 2 && georgia.spend_rank === 19, "Georgia AP 2 / spend 19");
-  assert(georgia.value_gap === 17, "Georgia value +17 through week 3", georgia.value_gap);
-  assert(oregon.ap_rank === 20 && oregon.spend_rank === 2, "Oregon AP 20 / spend 2");
-  assert(oregon.value_gap === -18, "Oregon value −18 through week 3", oregon.value_gap);
-  assert(houston.ap_rank === 25, "Houston AP #25", houston.ap_rank);
-  assert(iowa.ap_rank === 17 && iowa.value_gap === 38, "Iowa is the best value at +38", iowa.value_gap);
-  assert(aggies.ap_rank === 23 && aggies.value_gap === -18, "Texas A&M fell to 23, gap −18", aggies);
-  assert(florida.ap_rank === 21, "Florida entered at 21", florida.ap_rank);
-  assert(virginia.ap_rank == null, "Virginia fell out after week 3");
-  assert(oklahoma.ap_rank == null, "Oklahoma fell out after week 3");
-  assert(washington.ap_rank == null, "Washington stayed out");
-  assert(washington.preseason_rank === 17, "Washington was preseason #17");
-  assert(
-    data.teams.filter((t) => t.ap_rank != null).length === 25,
-    "exactly 25 AP-ranked teams"
-  );
-  assert(data.fpi.as_of === "2026-09-22", "ESPN FPI snapshot is Sept. 22", data.fpi.as_of);
-  assert(texas.sos_played_rank === 21 && texas.sos_remaining_rank === 5, "Texas SOS 21 played / 5 remaining", texas);
-  assert(georgia.sos_played_rank === 120 && georgia.sos_remaining_rank === 21, "Georgia SOS 120 played / 21 remaining", georgia);
-  assert(
-    data.teams.every((t) => t.sos_played_rank >= 1 && t.sos_remaining_rank >= 1),
-    "every program has an ESPN SOS rank"
-  );
+console.log("frozen Week 3 fixture");
+{
+  assert(week3.poll.week === 3 && week3.poll.as_of === "2026-09-20",
+    "Week 3 poll date remains fixed");
+  assert(week3.fpi_as_of === "2026-09-22", "Week 3 FPI date remains fixed");
+  const t = week3.teams;
+  assert(t.texas.ap_rank === 1 && t.texas.preseason_rank === 5, "Texas AP #1, preseason #5");
+  assert(t.texas.sos_played_rank === 21 && t.texas.sos_remaining_rank === 5,
+    "Texas Week 3 SOS is preserved");
+  assert(t.georgia.ap_rank === 2 && t.georgia.spend_rank === 19 &&
+    t.georgia.value_gap === t.georgia.spend_rank - t.georgia.ap_rank,
+    "Georgia Week 3 gap is +17");
+  assert(t.georgia.sos_played_rank === 120 && t.georgia.sos_remaining_rank === 21,
+    "Georgia Week 3 SOS is preserved");
+  assert(t.oregon.ap_rank === 20 && t.oregon.spend_rank === 2 &&
+    t.oregon.value_gap === t.oregon.spend_rank - t.oregon.ap_rank,
+    "Oregon Week 3 gap is −18");
+  assert(t.houston.ap_rank === 25 && t.iowa.ap_rank === 17 && t.iowa.value_gap === 38,
+    "Houston and Iowa Week 3 ranks are preserved");
+  assert(t["texas-am"].ap_rank === 23 && t["texas-am"].value_gap === -18 &&
+    t.florida.ap_rank === 21, "Texas A&M and Florida Week 3 ranks are preserved");
+  assert(t.virginia.ap_rank == null && t.oklahoma.ap_rank == null &&
+    t.washington.ap_rank == null && t.washington.preseason_rank === 17,
+    "Week 3 unranked changes are preserved");
 }
 
 console.log("conference competition rank");
