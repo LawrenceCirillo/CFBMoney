@@ -72,11 +72,27 @@ Rules:
   snapshots only after coverage checks pass. Run the validator before building.
 - **All derived metrics are computed in `scripts/build-data.mjs`**, not in components:
   midpoints, competition spend ranks, value gap vs the current AP ballot. When
-  final win totals arrive, add a `results` source and compute $/win + expected-wins
-  regression in the same script.
+  final win totals arrive, add a `results` source. Any ratio using those results
+  and the current budget midpoints would still use estimated spending; reporting
+  actual dollars per win requires a separate actual-spending source.
 - The generated JSON is committed so deploys are deterministic.
 - Unchanged inputs produce the same generated JSON. Source dates live on the
   individual snapshots; the generated file has no clock-based timestamp.
+
+### Reading the estimates and model
+
+The public `/methodology` page explains the current third-party budget ranges,
+their midpoint and rank calculations, the dated AP and ESPN snapshots, and the
+assumptions behind modeled expected wins. The ranges are estimates of 2026 roster
+budgets, not verified school expenditures. Moneyball's dollars per expected win
+uses those midpoints and a simulated common-opponent model; it does not use
+observed 2026 wins. The page reads the budget source note and current AP/FPI
+week and dates from committed generated data, so a reviewed refresh updates its
+source labels without editing page copy.
+
+An owned budget estimate model and an analysis of actual spending against final
+results remain separate research projects. Neither is implied by publishing the
+current methodology page.
 
 ### Reviewed weekly refresh
 
@@ -130,6 +146,7 @@ fetch found 48 final games, 68 participating programs, and no byes.
 app/
   page.tsx            # Spending — hero, metric switcher, storylines
   moneyball/page.tsx  # Spend-vs-rank scatterplot + value leaderboard
+  methodology/page.tsx # Sources, calculations, model assumptions, and limits
   team/[slug]/page.tsx# Per-school financial profile (statically generated)
   compare/page.tsx    # Head-to-head (v0)
   build/page.tsx      # Roster builder game (v0)
@@ -209,8 +226,10 @@ through the local test service or embedded Postgres as described above.
 
 ## Roadmap
 
-1. Swap Athletic estimates for your own model (methodology page).
-2. Add `results` data source -> $/win, expected-wins regression, true Moneyball.
+1. Research and validate an owned budget estimate model; the public methodology
+   currently describes the third-party ranges used by the app.
+2. Add a final-results source and a separately sourced actual-spending measure
+   before reporting observed dollars per win or testing budget-vs-results relationships.
 3. Build game: ~~outcome simulation~~ ✅ done (see below), ~~shareable season cards~~ ✅
    `/s/[id]` + OG images, ~~leaderboard~~ ✅ Postgres-backed (`/leaderboard`).
 4. Compare: shareable `/compare/[a]-vs-[b]` URLs + OG images.
