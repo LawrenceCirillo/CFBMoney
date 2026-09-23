@@ -1,5 +1,6 @@
 /** Integration checks against a disposable PostgreSQL cluster. */
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { mkdtempSync, realpathSync } from "node:fs";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
@@ -49,7 +50,7 @@ async function main() {
     await pg.initialise();
     await pg.start();
     process.env.DATABASE_URL = `postgres://cfbtest:cfbtest@localhost:${port}/postgres`;
-    pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
+    pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 2 });
     const db = drizzle(pool, { schema });
     setDb(db);
     await migrate(db, { migrationsFolder: fileURLToPath(new URL("../db/migrations", import.meta.url)) });
@@ -57,7 +58,7 @@ async function main() {
     for (const [mode, seed] of [["quick", 24], ["season", 147]] as const) {
       const input = payload(mode, seed);
       const replay = replaySeason(input);
-      const id = await createSeason({ ...input, gmName: " Coach K " });
+      const id = await createSeason({ ...input, gmName: " Coach K " }, randomUUID());
       const row = await getSeason(id);
       assert(row, `${mode} row exists`);
       assert.equal(row.gmName, "Coach K");
@@ -75,6 +76,18 @@ async function main() {
         replay.games.map((g) => [g.week, g.opponent.slug, g.result?.scoreFor, g.result?.scoreAgainst, g.stage ?? null]));
       console.log(`  ok ${mode}: stored result matches canonical replay`);
     }
+
+    const retryKey = randomUUID();
+    const retryInput = payload("quick", 248);
+    const [firstId, secondId] = await Promise.all([
+      createSeason(retryInput, retryKey), createSeason(retryInput, retryKey),
+    ]);
+    assert.equal(firstId, secondId, "concurrent publish attempts return the same id");
+    assert.equal((await getSeason(firstId))?.publishKey, retryKey);
+    assert.equal(await countSeasons(), 3, "concurrent publish attempts insert one row");
+    assert.equal(await createSeason(retryInput, retryKey), firstId, "later retry returns the same id");
+    assert.equal(await countSeasons(), 3);
+    console.log("  ok concurrent and later retries are idempotent");
 
     // A pre-replay row has no replay metadata. The migration's default keeps it
     // readable while preventing an arbitrary legacy score from receiving rank.
@@ -98,12 +111,12 @@ async function main() {
     assert.equal(legacyRow.simVersion, null);
     assert.equal(legacyRow.wins, 99);
     assert.equal((await getLegacyArchive())[0]?.id, "legacy0001");
-    assert.equal(await countSeasons(), 2);
+    assert.equal(await countSeasons(), 3);
     assert.equal(await countSeasons(false), 1);
     const byWins = await getLeaderboard("wins");
     const byOver = await getLeaderboard("overachieve");
-    assert.equal(byWins.length, 2);
-    assert.equal(byOver.length, 2);
+    assert.equal(byWins.length, 3);
+    assert.equal(byOver.length, 3);
     assert(!byWins.some((row) => row.id === "legacy0001"));
     assert(!byOver.some((row) => row.id === "legacy0001"));
     assert(byWins[0].wins >= byWins[1].wins);

@@ -1,5 +1,6 @@
 /** Publish route checks with a disposable PostgreSQL database. */
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { mkdtempSync, realpathSync } from "node:fs";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
@@ -31,11 +32,18 @@ const input = (mode: "quick" | "season", seed: number): SeasonPayload => ({
   programSlug: "texas", budgetM: 30, alloc: cappedOptimalAllocation(30),
 });
 
-async function publish(body: unknown) {
+async function publishRaw(raw: string, key?: string, contentLength?: string) {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (key) headers["Idempotency-Key"] = key;
+  if (contentLength !== undefined) headers["Content-Length"] = contentLength;
   const response = await POST(new Request("http://localhost/api/seasons", {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+    method: "POST", headers, body: raw,
   }));
   return { status: response.status, body: await response.json() as { id?: string; error?: string } };
+}
+
+async function publish(body: unknown, key = randomUUID()) {
+  return publishRaw(JSON.stringify(body), key);
 }
 
 async function main() {
@@ -61,6 +69,7 @@ async function main() {
       assert(response.body.id);
       const row = await getSeason(response.body.id);
       assert(row);
+      assert.equal(row.publishKey !== null, true);
       const replay = replaySeason(request);
       assert.equal(row.verified, true);
       assert.equal(row.wins, replay.summary.wins);
@@ -88,6 +97,27 @@ async function main() {
       console.log(`  ok ${label} rejected`);
     }
     assert.equal(await countSeasons(), 2, "invalid requests insert no row");
+
+    const before = await countSeasons();
+    assert.equal((await publishRaw("{", randomUUID())).status, 400, "malformed JSON rejected");
+    assert.equal((await publishRaw("x".repeat(16 * 1024 + 1), randomUUID())).status, 413,
+      "oversized body without Content-Length rejected");
+    assert.equal((await publishRaw("x".repeat(16 * 1024 + 1), randomUUID(), "1")).status, 413,
+      "false Content-Length cannot bypass streaming cap");
+    assert.equal((await publishRaw("{}", randomUUID(), String(16 * 1024 + 1))).status, 413,
+      "large declared length rejected early");
+    assert.equal((await publishRaw(JSON.stringify(valid))).status, 400,
+      "missing idempotency key rejected");
+    assert.equal(await countSeasons(), before, "bad requests insert no row");
+    console.log("  ok request cap, malformed JSON, and missing key rejected");
+
+    const retryKey = randomUUID();
+    const [first, second] = await Promise.all([publish(valid, retryKey), publish(valid, retryKey)]);
+    assert.equal(first.status, 201);
+    assert.equal(second.status, 201);
+    assert.equal(first.body.id, second.body.id, "concurrent retries share one id");
+    assert.equal(await countSeasons(), before + 1, "concurrent retries insert one row");
+    console.log("  ok concurrent route retries share one saved season");
   } finally {
     resetDb();
     if (pool) await pool.end();

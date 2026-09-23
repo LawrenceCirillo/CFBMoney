@@ -27,14 +27,18 @@ export type LeaderboardRow = Pick<
 
 export type LeaderboardSort = "wins" | "overachieve";
 
-/** Replay and insert a validated season input; no caller-supplied result is stored. */
-export async function createSeason(payload: SeasonPayload): Promise<string> {
+/** Replay and insert a validated season input; retries share the original id. */
+export async function createSeason(payload: SeasonPayload, publishKey: string): Promise<string> {
   const db = getDb();
+  const existing = await db.select({ id: seasons.id }).from(seasons)
+    .where(eq(seasons.publishKey, publishKey)).limit(1);
+  if (existing[0]) return existing[0].id;
   const replay = replaySeason(payload);
   if (!replay.complete) throw new Error("Season replay did not finish");
   const id = nanoid(10);
   const row: NewSeason = {
     id,
+    publishKey,
     gmName: payload.gmName?.trim() ? payload.gmName.trim() : null,
     programSlug: payload.programSlug,
     programName: replay.program.name,
@@ -69,8 +73,14 @@ export async function createSeason(payload: SeasonPayload): Promise<string> {
       stage: g.stage,
     })),
   };
-  await db.insert(seasons).values(row);
-  return id;
+  const inserted = await db.insert(seasons).values(row)
+    .onConflictDoNothing().returning();
+  if (inserted[0]) return inserted[0].id;
+  // A concurrent request committed the same key while this request replayed.
+  const winner = await db.select({ id: seasons.id }).from(seasons)
+    .where(eq(seasons.publishKey, publishKey)).limit(1);
+  if (!winner[0]) throw new Error("Publish key conflict without a saved season");
+  return winner[0].id;
 }
 
 /** Fetch a single season by its share id. */

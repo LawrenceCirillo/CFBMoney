@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { TeamBudget } from "@/lib/types";
 import {
   type Allocation,
@@ -24,6 +24,7 @@ interface Props {
  * then POSTs to /api/seasons.
  */
 export default function PublishPanel({ mode, games, program, alloc, budgetM, seed }: Props) {
+  const attempt = useRef<{ key: string; payload: SeasonPayload } | null>(null);
   const [gmName, setGmName] = useState("");
   const [publishState, setPublishState] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -40,7 +41,7 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, see
       return;
     }
 
-    const payload: SeasonPayload = {
+    const payload: SeasonPayload = attempt.current?.payload ?? {
       gmName: gmName.trim() || undefined,
       mode,
       simVersion: SIM_VERSION,
@@ -58,15 +59,26 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, see
       return;
     }
 
+    if (!attempt.current) attempt.current = { key: crypto.randomUUID(), payload: valid.data };
+
     setPublishState("saving");
     try {
       const res = await fetch("/api/seasons", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(valid.data),
+        headers: { "Content-Type": "application/json", "Idempotency-Key": attempt.current.key },
+        body: JSON.stringify(attempt.current.payload),
       });
       const body = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(res.status === 409 ? "This season uses older data. Reload the page and simulate again." : body?.error || `Publish failed (${res.status})`);
+      if (!res.ok) {
+        const message = res.status === 429
+          ? "Too many publish attempts. Wait a minute, then try again."
+          : res.status === 413
+            ? "This season is too large to publish. Reload and try again."
+            : res.status === 409
+              ? "This season uses older data. Reload the page and simulate again."
+              : body?.error || `Publish failed (${res.status})`;
+        throw new Error(message);
+      }
       setShareUrl(`${window.location.origin}/s/${body.id}`);
       setPublishState("done");
     } catch (e) {
@@ -131,6 +143,7 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, see
               id="gm-name"
               value={gmName}
               onChange={(e) => setGmName(e.target.value.slice(0, 24))}
+              disabled={!!attempt.current}
               placeholder="GM name (optional)"
               autoComplete="nickname"
               className="min-w-0 flex-1 rounded-lg border border-line bg-panel px-3 py-2.5 text-sm text-paper placeholder:text-fog focus:border-paper focus:outline-none"

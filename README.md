@@ -54,10 +54,14 @@ scripts/build-data.mjs
 
 ## Leaderboard + shareable seasons (Postgres)
 
-Publishing a finished season (`POST /api/seasons`) stores it in Postgres and
-returns a share id. Anyone opening `/s/[id]` sees the full recap with an OG
-image for link previews; `/leaderboard` ranks all published seasons by wins or
-by wins-minus-expected.
+Publishing a finished season (`POST /api/seasons`) stores a server-replayed result
+in Postgres and returns a share id. The request must include a UUID v4
+`Idempotency-Key` header. The browser keeps one key and payload for retries of a
+finished run; concurrent retries return the original share id. The route reads
+at most 16 KiB of JSON and returns 413 for a larger body. Anyone opening
+`/s/[id]` sees the full recap with an OG image for link previews;
+`/leaderboard` ranks verified seasons by wins or wins-minus-expected. Seasons
+published before server replay remain in the unranked archive.
 
 The data layer (`db/`) uses Drizzle ORM against any Postgres. Without
 `DATABASE_URL` the app still builds and runs — publishing is disabled and the
@@ -78,6 +82,29 @@ leaderboard/share pages explain how to connect.
 The Vercel `cfb-money` project is linked to this repository's `main` branch.
 Pushing to `main` starts a production deployment; the project framework preset
 must be Next.js so Vercel serves the generated routes.
+
+### Publish rate-limit rollout
+
+The proposed Vercel Firewall rule matches **path exactly `/api/seasons`** AND
+**method `POST`**. Use a fixed 60-second window, **10 requests per client IP**,
+and a **log-only** follow-up action first. Inspect matching traffic and legitimate
+publish volume in the Firewall dashboard before enforcement. The browser handles
+the eventual 429 response with a wait-and-retry message; retries keep the same
+idempotency key. Vercel tracks counters per region, so 10/min is a regional
+threshold rather than a guaranteed global ceiling.
+
+Rollout requires an operator review: publish the log-only rule, inspect live
+matches, then scope 429 enforcement to a preview deployment and verify the
+11th POST in one minute gets 429 while ordinary publishing works. Restore
+production logging for review before enabling 429 in production. Watch 429 and
+5xx rates after each change; return the rule to log-only if legitimate users
+are affected. Do not log request bodies or raw client IPs in application logs.
+
+Vercel [supports rate limiting on all plans](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting):
+Hobby includes one rate rule and 1 million allowed requests monthly; Pro uses
+usage-based pricing listed at $0.50 per million allowed requests. Confirm the
+project's actual plan and current usage in Vercel before enforcement. WAF rules
+are project settings, not part of the Git deployment.
 
 Local dev alternative: run Postgres locally or in Docker and put its connection
 string in `.env.local` as `DATABASE_URL`.

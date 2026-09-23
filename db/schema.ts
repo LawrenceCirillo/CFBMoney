@@ -7,6 +7,7 @@ import {
   jsonb,
   boolean,
   index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 /** One game inside a published season, stored as JSONB on the season row. */
@@ -50,6 +51,8 @@ export const seasons = pgTable(
   {
     /** nanoid(10), URL-friendly share id */
     id: text("id").primaryKey(),
+    /** One UUID per completed publish attempt; null for seasons predating this guard. */
+    publishKey: text("publish_key"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -83,6 +86,7 @@ export const seasons = pgTable(
   (t) => [
     index("seasons_wins_idx").on(t.wins.desc()),
     index("seasons_verified_wins_idx").on(t.verified, t.wins.desc()),
+    uniqueIndex("seasons_publish_key_idx").on(t.publishKey),
   ]
 );
 
