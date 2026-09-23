@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import TeamMark from "@/components/TeamMark";
 import { getTeam } from "@/lib/data";
 import { scoreboard, type ScoreGame, type ScoreSide } from "@/lib/scores";
@@ -52,14 +55,23 @@ function GameRun({ games, hidden }: { games: ScoreGame[]; hidden?: boolean }) {
 }
 
 export default function ScoreTicker() {
+  const [paused, setPaused] = useState(false);
   const games = scoreboard.games;
   if (games.length === 0) return null;
 
   return (
-    <div className="score-ticker flex h-11 border-b border-ink/15 bg-paper text-ink">
+    <div className="score-ticker flex h-11 border-b border-ink/15 bg-paper text-ink" data-paused={paused}>
       <div className="z-10 flex shrink-0 items-center gap-2 border-r border-ink/15 bg-paper px-4">
         <span className="text-xs font-black tracking-tight">{scoreboard.label}</span>
         <span className="hidden text-xs text-ink/55 sm:inline">{scoreboard.range}</span>
+        <button
+          type="button"
+          aria-label={paused ? "Play scores" : "Pause scores"}
+          onClick={() => setPaused((value) => !value)}
+          className="score-ticker-motion -my-px flex min-h-11 items-center rounded px-1 text-xs font-semibold text-ink/70 hover:text-ink focus-visible:text-ink"
+        >
+          {paused ? "Play" : "Pause"}
+        </button>
       </div>
       <div
         className="score-ticker-window min-w-0 flex-1 overflow-hidden"

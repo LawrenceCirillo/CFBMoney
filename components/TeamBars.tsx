@@ -42,7 +42,7 @@ export default function TeamBars({ data }: { data: BarDatum[] }) {
       {data.map((d, i) => {
         const delay = reduceMotion || !arrival.current || i >= FIRST_SCREEN ? 0 : i * 0.05;
         const resultTone =
-          d.won === true ? "text-up" : d.won === false ? "text-down" : "text-fog";
+          d.won === true ? "text-status-success" : d.won === false ? "text-status-loss" : "text-fog";
         return (
         <motion.div
           key={d.slug}

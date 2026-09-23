@@ -175,9 +175,9 @@ export default async function LeaderboardPage({ searchParams }: Props) {
                     <td
                       className={`px-4 py-3.5 text-right font-bold tabular-nums ${
                         diff > 0.5
-                          ? "text-emerald-400"
+                          ? "text-status-success"
                           : diff < -0.5
-                            ? "text-red-400"
+                            ? "text-status-loss"
                             : "text-fog"
                       }`}
                     >

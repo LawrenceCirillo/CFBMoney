@@ -78,6 +78,7 @@ function BuildPageInner() {
             <button
               key={s.key}
               onClick={() => i < stepIndex && setStep(s.key)}
+              aria-current={i === stepIndex ? "step" : undefined}
               disabled={i >= stepIndex}
               className={`flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-ui ${
                 i === stepIndex
@@ -134,6 +135,7 @@ function BuildPageInner() {
                     <button
                       key={m.key}
                       onClick={() => setMode(m.key)}
+                      aria-pressed={mode === m.key}
                       className={`rounded-full px-4 py-2 text-sm font-semibold transition-ui ${
                         mode === m.key
                           ? "bg-panel text-paper"

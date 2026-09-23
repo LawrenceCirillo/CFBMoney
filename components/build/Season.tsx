@@ -29,10 +29,10 @@ function probPill(p: number) {
   const pct = Math.round(p * 100);
   const cls =
     p >= 0.6
-      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+      ? "bg-emerald-500/15 text-status-success border-emerald-500/30"
       : p >= 0.4
-        ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
-        : "bg-red-500/15 text-red-400 border-red-500/30";
+        ? "bg-amber-500/15 text-status-caution border-amber-500/30"
+        : "bg-red-500/15 text-status-loss border-red-500/30";
   return (
     <span className={`rounded-full border px-2.5 py-0.5 text-xs font-bold tabular-nums ${cls}`}>
       {pct}%
@@ -195,13 +195,13 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
                     className="flex items-center gap-3"
                   >
                     {upset && (
-                      <span className="text-[11px] font-semibold text-amber-400">
+                      <span className="text-[11px] font-semibold text-status-caution">
                         Upset
                       </span>
                     )}
                     <span
                       className={`tnum text-lg font-black ${
-                        r.won ? "text-emerald-400" : "text-red-400"
+                        r.won ? "text-status-success" : "text-status-loss"
                       }`}
                     >
                       {r.won ? "W" : "L"} {r.scoreFor}–{r.scoreAgainst}
@@ -245,7 +245,7 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
           <div className="mt-8 grid max-w-xl grid-cols-2 gap-px bg-edge">
             {summary.bestWin && (
               <div className="bg-ink py-5 pr-5">
-                <p className="text-[11px] font-semibold text-up">Best win</p>
+                <p className="text-[11px] font-semibold text-status-success">Best win</p>
                 <p className="mt-2 font-semibold">
                   {summary.bestWin.opponent}{" "}
                   <span className="tnum text-fog">
@@ -256,7 +256,7 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
             )}
             {summary.worstLoss && (
               <div className="bg-ink py-5 pl-5">
-                <p className="text-[11px] font-semibold text-down">Worst loss</p>
+                <p className="text-[11px] font-semibold text-status-loss">Worst loss</p>
                 <p className="mt-2 font-semibold">
                   {summary.worstLoss.opponent}{" "}
                   <span className="tnum text-fog">

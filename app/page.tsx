@@ -21,9 +21,9 @@ type Tone = "up" | "down" | "neutral";
 function toneClass(tone: Tone): string {
   switch (tone) {
     case "up":
-      return "text-up";
+      return "text-status-success";
     case "down":
-      return "text-down";
+      return "text-status-loss";
     case "neutral":
       return "";
     default: {
@@ -133,6 +133,7 @@ export default function Home() {
           <button
             key={m.key}
             onClick={() => setMetric(m.key)}
+            aria-pressed={metric === m.key}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition-ui ${
               metric === m.key ? "bg-panel text-paper" : "text-fog hover:bg-panel hover:text-paper"
             }`}
