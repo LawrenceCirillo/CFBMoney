@@ -1,12 +1,7 @@
 /** Availability states against disposable PostgreSQL plus an injected read failure. */
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { mkdtempSync, realpathSync } from "node:fs";
-import { createServer } from "node:net";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import EmbeddedPostgres from "embedded-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
@@ -21,33 +16,16 @@ import { createSeason } from "../db/seasons";
 import * as schema from "../db/schema";
 import { DATA_FINGERPRINT, SIM_VERSION } from "../lib/season-replay";
 import { cappedOptimalAllocation } from "../lib/simulator";
-
-async function freePort(): Promise<number> {
-  const server = createServer();
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
-  const address = server.address();
-  await new Promise<void>((resolve) => server.close(() => resolve()));
-  if (!address || typeof address === "string") throw new Error("No test port");
-  return address.port;
-}
+import { startTestPostgres } from "./test-postgres";
 
 async function main() {
   // tsx compiles Next's JSX as classic React in this direct test harness.
   (globalThis as { React?: typeof React }).React = React;
-  const databaseDir = realpathSync(mkdtempSync(join(tmpdir(), "cfb-availability-")));
-  if (realpathSync(join(databaseDir, "..")) !== realpathSync(tmpdir())) {
-    throw new Error("Test database directory escaped OS temp");
-  }
-  const port = await freePort();
-  const pg = new EmbeddedPostgres({
-    databaseDir, port, user: "cfbtest", password: "cfbtest", persistent: false,
-  });
+  const testDb = await startTestPostgres("availability");
   const previousUrl = process.env.DATABASE_URL;
   let pool: Pool | undefined;
   try {
-    await pg.initialise();
-    await pg.start();
-    process.env.DATABASE_URL = `postgres://cfbtest:cfbtest@localhost:${port}/postgres`;
+    process.env.DATABASE_URL = testDb.url;
     pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 2 });
     const db = drizzle(pool, { schema });
     setDb(db);
@@ -107,7 +85,7 @@ async function main() {
     if (pool) await pool.end();
     if (previousUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = previousUrl;
-    await pg.stop().catch(() => undefined);
+    await testDb.close();
   }
   console.log("All availability tests passed.");
 }
