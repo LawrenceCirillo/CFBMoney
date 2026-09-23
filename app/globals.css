@@ -12,6 +12,9 @@
   --color-paper: #0a0a0c;
   --color-up: #16a34a;
   --color-down: #dc2626;
+  --color-status-success: #166534;
+  --color-status-loss: #b91c1c;
+  --color-status-caution: #92400e;
   --color-accent: #059669;
   /* chart ink — referenced by SVG components via var() */
   --chart-grid: #e4e4e7;
@@ -49,6 +52,9 @@
   --color-paper: #f4f4f5;
   --color-up: #22c55e;
   --color-down: #ef4444;
+  --color-status-success: #4ade80;
+  --color-status-loss: #f87171;
+  --color-status-caution: #fbbf24;
   --color-accent: #10b981;
   --chart-grid: #232329;
   --chart-faint: #1c1c21;
@@ -126,6 +132,11 @@ h3,
   animation: score-ticker 150s linear infinite;
 }
 
+.score-ticker[data-paused="true"] .score-ticker-track,
+.score-ticker-window:focus-within .score-ticker-track {
+  animation-play-state: paused;
+}
+
 @keyframes score-ticker {
   from {
     transform: translateX(0);
@@ -136,17 +147,21 @@ h3,
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .score-ticker:hover .score-ticker-track {
+  .score-ticker-window:hover .score-ticker-track {
     animation-play-state: paused;
   }
 }
 
-.score-ticker a:focus-visible {
+.score-ticker a:focus-visible,
+.score-ticker button:focus-visible {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .score-ticker-motion {
+    display: none;
+  }
   .score-ticker-track {
     animation: none !important;
   }

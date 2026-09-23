@@ -157,7 +157,7 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, see
             </button>
           </div>
           {publishState === "error" && publishError && (
-            <p className="mt-2 text-sm text-down">{publishError}</p>
+            <p className="mt-2 text-sm text-status-loss">{publishError}</p>
           )}
         </div>
       )}

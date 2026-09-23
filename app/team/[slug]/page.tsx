@@ -23,7 +23,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
   const season = getTeamSeason(team.slug);
 
   const gap = team.value_gap;
-  const gapTone = gap == null || gap === 0 ? "text-paper" : gap > 0 ? "text-up" : "text-down";
+  const gapTone = gap == null || gap === 0 ? "text-paper" : gap > 0 ? "text-status-success" : "text-status-loss";
   const book = [
     { label: "National spend", value: `#${team.spend_rank}`, tone: "text-paper" },
     { label: `In the ${team.conference}`, value: `#${conf.rank} of ${conf.of}`, tone: "text-paper" },

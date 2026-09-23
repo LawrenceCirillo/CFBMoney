@@ -51,6 +51,7 @@ export default function ProgramSelect({
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(value);
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const labelId = useId();
@@ -90,6 +91,11 @@ export default function ProgramSelect({
     setQuery("");
   }
 
+  function closeAndFocusTrigger() {
+    close();
+    triggerRef.current?.focus({ preventScroll: true });
+  }
+
   function openMenu(nextQuery = "") {
     setQuery(nextQuery);
     setActive(value);
@@ -98,7 +104,7 @@ export default function ProgramSelect({
 
   function choose(slug: string) {
     onChange(slug);
-    close();
+    closeAndFocusTrigger();
   }
 
   function move(delta: number) {
@@ -124,7 +130,12 @@ export default function ProgramSelect({
       if (pick) choose(pick.slug);
     } else if (event.key === "Escape") {
       event.preventDefault();
-      close();
+      closeAndFocusTrigger();
+    } else if (event.key === "Tab") {
+      // Let the browser move focus before removing the combobox from the DOM.
+      requestAnimationFrame(() => {
+        if (!rootRef.current?.contains(document.activeElement)) close();
+      });
     }
   }
 
@@ -134,6 +145,7 @@ export default function ProgramSelect({
         {label}
       </span>
       <button
+        ref={triggerRef}
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -182,12 +194,13 @@ export default function ProgramSelect({
               if (listRef.current) listRef.current.scrollTop = 0;
             }}
             onKeyDown={onQueryKey}
-            className="w-full border-b border-edge bg-transparent px-3 py-2.5 text-sm text-paper outline-none placeholder:text-fog"
+            className="w-full border-b border-edge bg-transparent px-3 py-2.5 text-sm text-paper outline-none placeholder:text-fog focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-paper"
           />
           <ul
             ref={listRef}
             id={listId}
             role="listbox"
+            tabIndex={-1}
             aria-labelledby={labelId}
             className="max-h-72 overflow-auto py-1"
           >
@@ -205,6 +218,7 @@ export default function ProgramSelect({
                         <li key={team.slug} role="presentation">
                           <button
                             type="button"
+                            tabIndex={-1}
                             id={`${listId}-${team.slug}`}
                             role="option"
                             data-slug={team.slug}

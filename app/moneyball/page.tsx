@@ -147,7 +147,7 @@ export default function Moneyball() {
             <span className="tnum text-sm text-fog">{String(i + 1).padStart(2, "0")}</span>
             <span
               className={`tnum text-sm font-extrabold ${
-                t.value_gap! > 0 ? "text-up" : t.value_gap! < 0 ? "text-down" : "text-fog"
+                t.value_gap! > 0 ? "text-status-success" : t.value_gap! < 0 ? "text-status-loss" : "text-fog"
               }`}
             >
               {fmtGap(t.value_gap!)}

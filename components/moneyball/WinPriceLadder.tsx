@@ -22,7 +22,7 @@ export default function WinPriceLadder({ prices }: { prices: WinPrice[] }) {
               title={`${fmtMoney1(p.priceM)} marginal`}
             />
           </div>
-          <span className={`tnum w-20 text-right text-sm font-extrabold ${p.win >= 11 ? "text-down" : ""}`}>
+          <span className={`tnum w-20 text-right text-sm font-extrabold ${p.win >= 11 ? "text-status-loss" : ""}`}>
             {fmtMoney1(p.priceM)}
           </span>
         </div>

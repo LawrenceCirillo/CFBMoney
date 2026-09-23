@@ -33,11 +33,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function scoreLine(g: { won: boolean; scoreFor: number; scoreAgainst: number }) {
   return g.won ? (
-    <span className="font-black tabular-nums text-emerald-400">
+    <span className="font-black tabular-nums text-status-success">
       W {g.scoreFor}–{g.scoreAgainst}
     </span>
   ) : (
-    <span className="font-black tabular-nums text-red-400">
+    <span className="font-black tabular-nums text-status-loss">
       L {g.scoreFor}–{g.scoreAgainst}
     </span>
   );
@@ -94,11 +94,11 @@ export default async function ShareSeasonPage({ params }: Props) {
             CFB Money · {season.verified ? "Verified simulated season" : "Legacy simulated season · unverified"}
           </p>
           {season.verified ? (
-            <p className="mt-2 text-xs text-emerald-400">
+            <p className="mt-2 text-xs text-status-success">
               Server replayed · {season.mode === "season" ? "Season mode" : "Quick sim"} · model v{season.simVersion} · data {season.dataFingerprint}
             </p>
           ) : (
-            <p className="mt-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-300">
+            <p className="mt-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-status-caution">
               Unverified legacy result. This season was published before server replay and is excluded from ranked leaderboards.
             </p>
           )}
@@ -174,7 +174,7 @@ export default async function ShareSeasonPage({ params }: Props) {
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {season.bestWin && (
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
-              <p className="text-[11px] font-semibold text-emerald-500">Best win</p>
+              <p className="text-[11px] font-semibold text-status-success">Best win</p>
               <p className="mt-1 font-semibold text-paper">
                 {season.bestWin.opponent}{" "}
                 <span className="tabular-nums text-fog">
@@ -185,7 +185,7 @@ export default async function ShareSeasonPage({ params }: Props) {
           )}
           {season.worstLoss && (
             <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-5">
-              <p className="text-[11px] font-semibold text-red-400">Worst loss</p>
+              <p className="text-[11px] font-semibold text-status-loss">Worst loss</p>
               <p className="mt-1 font-semibold text-paper">
                 {season.worstLoss.opponent}{" "}
                 <span className="tabular-nums text-fog">

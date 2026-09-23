@@ -61,10 +61,10 @@ function probPill(p: number) {
   const pct = Math.round(p * 100);
   const cls =
     p >= 0.6
-      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+      ? "bg-emerald-500/15 text-status-success border-emerald-500/30"
       : p >= 0.4
-        ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
-        : "bg-red-500/15 text-red-400 border-red-500/30";
+        ? "bg-amber-500/15 text-status-caution border-amber-500/30"
+        : "bg-red-500/15 text-status-loss border-red-500/30";
   return (
     <span className={`rounded-full border px-2.5 py-0.5 text-xs font-bold tabular-nums ${cls}`}>
       {pct}%
@@ -221,16 +221,16 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
 
   const statusCard = !done ? (
     postseasonStarted ? (
-      { label: "Postseason", value: "Live", cls: "text-amber-400" }
+      { label: "Postseason", value: "Live", cls: "text-status-caution" }
     ) : rank <= PLAYOFF_CUT ? (
-      { label: "Playoff field", value: "In", cls: "text-emerald-400" }
+      { label: "Playoff field", value: "In", cls: "text-status-success" }
     ) : rank <= 25 ? (
-      { label: "Cut line", value: `#${PLAYOFF_CUT}`, cls: "text-amber-400" }
+      { label: "Cut line", value: `#${PLAYOFF_CUT}`, cls: "text-status-caution" }
     ) : (
       { label: "Cut line", value: `#${PLAYOFF_CUT}`, cls: "text-fog" }
     )
   ) : outcome ? (
-    { label: "Postseason", value: outcome, cls: "text-amber-400" }
+    { label: "Postseason", value: outcome, cls: "text-status-caution" }
   ) : (
     { label: "Postseason", value: "—", cls: "text-fog" }
   );
@@ -289,7 +289,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             {rankDelta !== 0 && (
               <span
                 className={`ml-2 align-middle text-sm font-bold ${
-                  rankDelta > 0 ? "text-up" : "text-down"
+                  rankDelta > 0 ? "text-status-success" : "text-status-loss"
                 }`}
               >
                 {rankDelta > 0 ? "+" : "−"}{Math.abs(rankDelta)}
@@ -359,7 +359,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                     <motion.p
                       animate={{ opacity: [1, 0.35, 1] }}
                       transition={{ repeat: Infinity, duration: 0.9 }}
-                      className="text-xs font-semibold text-amber-400"
+                      className="text-xs font-semibold text-status-caution"
                     >
                       Live
                     </motion.p>
@@ -373,11 +373,11 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                     animate={{ opacity: 1, y: 0 }}
                   >
                     {fgUpset && (
-                      <p className="text-xs font-semibold text-amber-400">Upset</p>
+                      <p className="text-xs font-semibold text-status-caution">Upset</p>
                     )}
                     <p
                       className={`tnum mt-2 text-6xl font-black tracking-tight sm:text-7xl ${
-                        fg.result.won ? "text-up" : "text-down"
+                        fg.result.won ? "text-status-success" : "text-status-loss"
                       }`}
                     >
                       {fg.result.won ? "W" : "L"} {fg.result.scoreFor}–{fg.result.scoreAgainst}
@@ -445,13 +445,13 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                 </div>
                 <div className="flex items-center gap-3">
                   {upset && (
-                    <span className="text-[11px] font-semibold text-amber-400">
+                    <span className="text-[11px] font-semibold text-status-caution">
                       Upset
                     </span>
                   )}
                   <span
                     className={`tnum text-lg font-black ${
-                      r.won ? "text-up" : "text-down"
+                      r.won ? "text-status-success" : "text-status-loss"
                     }`}
                   >
                     {r.won ? "W" : "L"} {r.scoreFor}–{r.scoreAgainst}
@@ -479,7 +479,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             <p
               className={`mt-3 text-3xl font-black tracking-tight sm:text-4xl ${
                 outcome === "National champions" || outcome === "Money Bowl champions"
-                  ? "text-amber-400"
+                  ? "text-status-caution"
                   : "text-paper"
               }`}
             >
@@ -501,7 +501,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
           <div className="mt-8 grid max-w-xl grid-cols-2 gap-px bg-edge">
             {summary.bestWin && (
               <div className="bg-ink py-5 pr-5">
-                <p className="text-[11px] font-semibold text-up">Best win</p>
+                <p className="text-[11px] font-semibold text-status-success">Best win</p>
                 <p className="mt-2 font-semibold">
                   {summary.bestWin.opponent}{" "}
                   <span className="tnum text-fog">
@@ -512,7 +512,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             )}
             {summary.worstLoss && (
               <div className="bg-ink py-5 pl-5">
-                <p className="text-[11px] font-semibold text-down">Worst loss</p>
+                <p className="text-[11px] font-semibold text-status-loss">Worst loss</p>
                 <p className="mt-2 font-semibold">
                   {summary.worstLoss.opponent}{" "}
                   <span className="tnum text-fog">
