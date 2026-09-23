@@ -9,6 +9,7 @@ who gets the most out of it, head-to-head comparisons, and a build-your-own-rost
 npm install
 npm run validate-data # check all committed 2026 source snapshots
 npm run build-data    # validated CSV + metadata -> public/data/cfb-2026.json
+npm run build:marks  # selected source logos -> small marks + ticker atlas
 npm run dev          # http://localhost:3000
 ```
 
@@ -25,7 +26,7 @@ npm run check
 `npm run check` validates the source snapshots, rebuilds generated data, runs
 TypeScript and the spend/season/DB/publish/availability tests, builds the app,
 then runs Chromium Build navigation and a real local publish → share → leaderboard
-smoke test. It finishes by failing if the committed generated JSON changed.
+smoke test. It finishes by failing if committed generated data or marks changed.
 The browser test starts a local app; the share test starts a separate local app
 and creates its own disposable database. Neither test publishes to production.
 Use `npm run test:browser` or `npm run test:share` after `npm run build` to run
@@ -58,10 +59,18 @@ data/
   espn-season-2026.json         # dated team totals and rosters
         |
         v  scripts/validate-data.mjs checks every source
-        v  scripts/build-data.mjs derives spending metrics and caches logos
+        v  scripts/build-data.mjs derives spending metrics and caches ESPN logos
         |
 public/data/cfb-2026.json       # generated, committed, imported by lib/data.ts
-public/logos/{slug}.png         # ESPN dark NCAA marks, cached locally
+public/logos/{slug}.png         # ESPN marks retained as fallback sources
+
+cfblogo/                       # current logos, wordmarks, and historical variants
+data/team-marks.json            # one compact source mark per tracked program
+        |
+        v  scripts/build-marks.mjs rasterizes at display sizes
+        |
+public/marks/{slug}.webp        # 128px marks for the app's lists and team pages
+public/marks/ticker.webp        # one 2x atlas for the shared score ticker
 ```
 
 Rules:
@@ -78,6 +87,11 @@ Rules:
 - The generated JSON is committed so deploys are deterministic.
 - Unchanged inputs produce the same generated JSON. Source dates live on the
   individual snapshots; the generated file has no clock-based timestamp.
+- `data/team-marks.json` selects the current compact mark for each slug. The
+  source folder also keeps wordmarks and older variants for future team pages.
+  The four programs with only a wordmark or university system source use their
+  existing ESPN mark in the compact UI. Update the map when adding or changing
+  a mark, then run `npm run build:marks`; `prebuild` does this automatically.
 
 ### Reading the estimates and model
 

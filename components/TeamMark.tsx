@@ -46,14 +46,16 @@ export default function TeamMark({
       title={name}
     >
       {failed ? (
-        <span className={`${typeSize} font-black tracking-tight text-white`}>{abbr}</span>
+        <span className={`${typeSize} font-black tracking-tight text-black`}>{abbr}</span>
       ) : (
-        // Local static PNG. img (not next/image) so a missing file can fall back to abbr.
+        // Pre-sized static WebP. A missing file falls back to the abbreviation.
         <img
           src={logoSrc(slug)}
           alt=""
           width={px}
           height={px}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-contain p-[14%]"
           onError={() => setFailed(true)}
         />
