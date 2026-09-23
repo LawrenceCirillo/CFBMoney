@@ -21,6 +21,7 @@
     "drizzle-kit": "^0.31.10",
     "embedded-postgres": "^18.4.0-beta.17",
     "pg-mem": "^3.0.14",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4.1.0",
     "tsx": "^4.23.13",
     "typescript": "^5.9.0"
@@ -30,6 +31,7 @@
   "scripts": {
     "build": "next build",
     "build-data": "node scripts/build-data.mjs",
+    "build:marks": "node scripts/build-marks.mjs",
     "validate-data": "node scripts/validate-data.mjs",
     "fetch:scores": "node scripts/fetch-espn-scores.mjs",
     "fetch:season": "node scripts/fetch-espn-season.mjs",
@@ -41,10 +43,10 @@
     "test:availability": "tsx scripts/test-availability.ts",
     "test:browser": "playwright test",
     "test:share": "tsx scripts/test-e2e-share.ts",
-    "check:generated": "git diff --exit-code -- public/data/cfb-2026.json",
+    "check:generated": "git diff --exit-code -- public/data/cfb-2026.json public/marks",
     "check": "npm run validate-data && npm run build-data && npm run typecheck && npm run test:spend && npm run test:methodology && npm run test:season && npm run test:db && npm run test:route && npm run test:availability && npm run build && npm run test:browser && npm run test:share && npm run check:generated",
     "dev": "next dev",
-    "prebuild": "npm run build-data",
+    "prebuild": "npm run build-data && npm run build:marks",
     "start": "next start",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
