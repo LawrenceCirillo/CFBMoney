@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { data, getTeam } from "@/lib/data";
-import { markDisc } from "@/lib/mark";
 import { scoreboard, type ScoreGame, type ScoreSide } from "@/lib/scores";
 
 const spriteColumns = 8;
@@ -13,15 +12,14 @@ const spritePositions = new Map(
   data.teams.map((team) => team.slug).sort().map((slug, index) => [slug, index])
 );
 
-function TickerMark({ slug, color }: { slug: string; color: string }) {
+function TickerMark({ slug }: { slug: string }) {
   const index = spritePositions.get(slug);
   if (index == null) return null;
   return (
     <span
       aria-hidden="true"
-      className="inline-block h-6 w-6 shrink-0 rounded-full"
+      className="score-ticker-mark inline-block h-6 w-6 shrink-0"
       style={{
-        backgroundColor: markDisc(color),
         backgroundImage: 'url("/marks/ticker.webp")',
         backgroundSize: `${spriteColumns * spriteCell}px ${spriteRows * spriteCell}px`,
         backgroundPosition: `-${(index % spriteColumns) * spriteCell}px -${Math.floor(index / spriteColumns) * spriteCell}px`,
@@ -35,9 +33,9 @@ function Side({ side, dim }: { side: ScoreSide; dim: boolean }) {
   const body = (
     <span className={`flex items-center gap-1.5 ${dim ? "opacity-50" : ""}`}>
       {team ? (
-        <TickerMark slug={team.slug} color={team.color} />
+        <TickerMark slug={team.slug} />
       ) : (
-        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/10 text-[8px] font-black tracking-tight">
+        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center text-[8px] font-black tracking-tight text-ink/70">
           {side.abbr.slice(0, 3)}
         </span>
       )}

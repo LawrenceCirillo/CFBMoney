@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { logoSrc, markDisc } from "@/lib/mark";
+import { logoSrc } from "@/lib/mark";
 
 export type MarkSize = "sm" | "md" | "lg" | "xl";
 
@@ -26,7 +26,6 @@ export default function TeamMark({
   slug,
   name,
   abbr,
-  color,
   size = "md",
 }: {
   slug: string;
@@ -41,12 +40,12 @@ export default function TeamMark({
 
   return (
     <span
-      className="relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full"
-      style={{ width: px, height: px, background: markDisc(color) }}
+      className="relative inline-flex shrink-0 items-center justify-center"
+      style={{ width: px, height: px }}
       title={name}
     >
       {failed ? (
-        <span className={`${typeSize} font-black tracking-tight text-black`}>{abbr}</span>
+        <span className={`${typeSize} font-black tracking-tight text-paper`}>{abbr}</span>
       ) : (
         // Pre-sized static WebP. A missing file falls back to the abbreviation.
         <img
@@ -56,7 +55,7 @@ export default function TeamMark({
           height={px}
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-contain p-[14%]"
+          className="team-mark-image h-full w-full object-contain"
           onError={() => setFailed(true)}
         />
       )}

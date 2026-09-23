@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import TeamSearch from "./TeamSearch";
 import ThemeToggle from "./ThemeToggle";
 
 const LINKS = [
@@ -16,6 +17,7 @@ const LINKS = [
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const mobileNav = useRef<HTMLElement>(null);
 
@@ -61,7 +63,7 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 640px)");
+    const desktop = window.matchMedia("(min-width: 1024px)");
     function closeOnDesktop() {
       if (desktop.matches) setMenuOpen(false);
     }
@@ -69,13 +71,17 @@ export default function Navbar() {
     return () => desktop.removeEventListener("change", closeOnDesktop);
   }, []);
 
+  useEffect(() => {
+    setSearchOpen(false);
+  }, [pathname]);
+
   return (
     <header className="relative border-b border-line bg-ink/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center px-4 sm:px-6">
-        <Link href="/" className="shrink-0 text-lg font-black tracking-tight" onClick={() => setMenuOpen(false)}>
+      <div className="mx-auto grid h-14 max-w-6xl grid-cols-[1fr_auto] items-center px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+        <Link href="/" className={`shrink-0 text-lg font-black tracking-tight ${searchOpen ? "hidden sm:block" : ""}`} onClick={() => setMenuOpen(false)}>
           CFB<span className="font-medium text-fog">MONEY</span>
         </Link>
-        <nav aria-label="Primary" className="ml-auto hidden items-center gap-1 sm:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
           {LINKS.map((link) => (
             <Link
               key={link.href}
@@ -87,20 +93,21 @@ export default function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex shrink-0 items-center gap-1 sm:ml-1">
-          <ThemeToggle />
+        <div className={`relative flex shrink-0 items-center gap-1 justify-self-end ${searchOpen ? "w-full sm:w-auto" : ""}`}>
+          <TeamSearch open={searchOpen} onOpenChange={setSearchOpen} onOpen={() => setMenuOpen(false)} />
+          <div className={searchOpen ? "hidden sm:block" : ""}><ThemeToggle /></div>
           <button
             ref={menuButton}
             type="button"
             aria-controls="mobile-primary-navigation"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-md px-2 text-sm font-semibold text-paper transition-ui hover:bg-panel focus-visible:bg-panel sm:hidden"
+            aria-label="Menu"
+            className={`${searchOpen ? "hidden sm:inline-flex" : "inline-flex"} h-10 w-10 items-center justify-center rounded-full text-paper transition-ui hover:bg-panel focus-visible:bg-panel lg:hidden`}
           >
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-5 w-5">
               <path d="M4 7h16M4 12h16M4 17h16" />
             </svg>
-            Menu
           </button>
         </div>
       </div>
@@ -109,7 +116,7 @@ export default function Navbar() {
         ref={mobileNav}
         aria-label="Mobile primary"
         hidden={!menuOpen}
-        className="absolute inset-x-0 top-full border-b border-line bg-ink shadow-xl sm:hidden"
+        className="absolute inset-x-0 top-full border-b border-line bg-ink shadow-xl lg:hidden"
       >
         <div className="mx-auto flex max-w-6xl flex-col px-4 pb-3 pt-1">
           {LINKS.map((link) => (

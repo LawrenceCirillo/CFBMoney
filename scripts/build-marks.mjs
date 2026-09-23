@@ -31,13 +31,22 @@ for (const [index, slug] of slugs.entries()) {
     throw new Error(`Invalid mark source for ${slug}: ${sources[slug]}`);
   }
 
-  const mark = await sharp(source, { density: 144 })
+  // These SVGs share a large transparent export canvas. Trim that canvas
+  // before fitting the artwork into the same mark box as the other teams.
+  const input = sources[slug].endsWith("@logotyp.us.svg")
+    ? await sharp(source, { density: 144 })
+        .trim({ background: "#00000000", threshold: 8 })
+        .png()
+        .toBuffer()
+    : source;
+
+  const mark = await sharp(input, { density: 144 })
     .resize(128, 128, { fit: "contain", background: "#00000000" })
     .webp({ quality: 88, effort: 6 })
     .toFile(join(outputDir, `${slug}.webp`));
   totalBytes += mark.size;
 
-  const tickerMark = await sharp(source, { density: 144 })
+  const tickerMark = await sharp(input, { density: 144 })
     .resize(40, 40, { fit: "contain", background: "#00000000" })
     .png()
     .toBuffer();

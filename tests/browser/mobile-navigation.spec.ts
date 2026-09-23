@@ -16,7 +16,7 @@ for (const width of [320, 375, 390, 640, 768, 1280]) {
     const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
     const menu = page.getByRole("button", { name: "Menu" });
 
-    if (width >= 640) {
+    if (width >= 1024) {
       await expect(menu).toBeHidden();
       for (const route of routes) {
         await expect(desktopNav.getByRole("link", { name: route })).toBeVisible();
