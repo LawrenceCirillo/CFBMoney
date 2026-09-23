@@ -1,0 +1,42 @@
+name: Product checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TEST_DATABASE_URL: postgresql://cfb_test:cfb_test@127.0.0.1:5432/cfb_test
+      NEXT_TELEMETRY_DISABLED: "1"
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: cfb_test
+          POSTGRES_PASSWORD: cfb_test
+          POSTGRES_DB: cfb_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cfb_test -d cfb_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check
+      - name: Generated snapshot is committed
+        run: git diff --exit-code -- public/data/cfb-2026.json

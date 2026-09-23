@@ -14,6 +14,38 @@ npm run dev          # http://localhost:3000
 
 `npm run build` runs the data pipeline automatically via `prebuild`.
 
+### Local verification
+
+```bash
+npm ci
+npx playwright install chromium
+npm run check
+```
+
+`npm run check` validates the source snapshots, rebuilds generated data, runs
+TypeScript and the spend/season/DB/publish/availability tests, builds the app,
+then runs Chromium Build navigation and a real local publish → share → leaderboard
+smoke test. It finishes by failing if the committed generated JSON changed.
+The browser test starts a local app; the share test starts a separate local app
+and creates its own disposable database. Neither test publishes to production.
+Use `npm run test:browser` or `npm run test:share` after `npm run build` to run
+one of those checks separately.
+
+On a machine that can run embedded Postgres as a non-root user, DB tests need
+no configuration. CI uses a local Postgres service instead:
+
+```bash
+TEST_DATABASE_URL=postgresql://cfb_test:cfb_test@127.0.0.1:5432/cfb_test npm run check
+```
+
+In PowerShell, set `$env:TEST_DATABASE_URL` to that URL before running
+`npm run check`.
+
+`TEST_DATABASE_URL` must point to a local database named `cfb_test`. Each DB
+test creates a uniquely named database on that service and drops it afterward.
+`DATABASE_URL` is never used as the test target. The pull request and `main`
+workflow runs this same gate with Node 22, PostgreSQL, and Chromium.
+
 ## How the data flows
 
 ```
@@ -168,12 +200,12 @@ string in `.env.local` as `DATABASE_URL`.
 ```bash
 npm run db:generate  # regenerate migrations after editing db/schema.ts
 npm run db:migrate   # apply migrations via DATABASE_URL_UNPOOLED when set
-npm run test:db      # end-to-end data-layer tests (needs TEST_DATABASE_URL or non-root)
+npm run test:db      # isolated data-layer tests
 ```
 
 `npm run test:db` exercises `createSeason` / `getSeason` / `getLeaderboard` /
-`countSeasons` plus payload validation. With `TEST_DATABASE_URL` set it tests
-against that server; otherwise it boots an embedded Postgres (cannot run as root).
+`countSeasons` plus payload validation. It uses a fresh disposable database
+through the local test service or embedded Postgres as described above.
 
 ## Roadmap
 

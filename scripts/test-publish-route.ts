@@ -1,12 +1,7 @@
 /** Publish route checks with a disposable PostgreSQL database. */
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { mkdtempSync, realpathSync } from "node:fs";
-import { createServer } from "node:net";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import EmbeddedPostgres from "embedded-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
@@ -17,15 +12,7 @@ import * as schema from "../db/schema";
 import { cappedOptimalAllocation } from "../lib/simulator";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-replay";
 import type { SeasonPayload } from "../lib/season-payload";
-
-async function freePort(): Promise<number> {
-  const server = createServer();
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
-  const address = server.address();
-  await new Promise<void>((resolve) => server.close(() => resolve()));
-  if (!address || typeof address === "string") throw new Error("No test port");
-  return address.port;
-}
+import { startTestPostgres } from "./test-postgres";
 
 const input = (mode: "quick" | "season", seed: number): SeasonPayload => ({
   mode, seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
@@ -47,16 +34,11 @@ async function publish(body: unknown, key = randomUUID()) {
 }
 
 async function main() {
-  const databaseDir = realpathSync(mkdtempSync(join(tmpdir(), "cfb-money-route-test-")));
-  if (realpathSync(join(databaseDir, "..")) !== realpathSync(tmpdir())) throw new Error("Unsafe test path");
-  const port = await freePort();
-  const pg = new EmbeddedPostgres({ databaseDir, port, user: "cfbtest", password: "cfbtest", persistent: false });
+  const testDb = await startTestPostgres("route-test");
   const previousUrl = process.env.DATABASE_URL;
   let pool: Pool | undefined;
   try {
-    await pg.initialise();
-    await pg.start();
-    process.env.DATABASE_URL = `postgres://cfbtest:cfbtest@localhost:${port}/postgres`;
+    process.env.DATABASE_URL = testDb.url;
     pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
     const db = drizzle(pool, { schema });
     setDb(db);
@@ -123,7 +105,7 @@ async function main() {
     if (pool) await pool.end();
     if (previousUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = previousUrl;
-    await pg.stop().catch(() => undefined);
+    await testDb.close();
   }
   console.log("All publish route tests passed.");
 }
