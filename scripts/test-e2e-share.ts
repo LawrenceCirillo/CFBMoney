@@ -72,7 +72,19 @@ async function main() {
         gmName: `HTTP ${mode} test`, mode, seed, simVersion: SIM_VERSION,
         dataFingerprint: DATA_FINGERPRINT, programSlug: "texas", budgetM: GAME_BUDGET_M,
         alloc: cappedOptimalAllocation(GAME_BUDGET_M),
+        gameplan: [], autoGameplan: true,
       };
+      if (mode === "season") {
+        const regular = Array.from({ length: 12 }, (_, index) => ({
+          week: index + 1,
+          off: index % 3 === 0 ? "air" as const : index % 3 === 1 ? "ground" as const : "balanced" as const,
+          def: index % 3 === 0 ? "blitz" as const : index % 3 === 1 ? "bracket" as const : "base" as const,
+        }));
+        const provisional = replaySeason({ ...payload, gameplan: regular });
+        payload.gameplan = provisional.games.map((game) => regular.find((pick) => pick.week === game.week) ??
+          { week: game.week, off: "balanced", def: "base" });
+        payload.autoGameplan = false;
+      }
       assert(SeasonPayloadSchema.safeParse(payload).success);
       const replay = replaySeason(payload);
       const key = randomUUID();
@@ -87,6 +99,8 @@ async function main() {
       assert.equal(saved.losses, replay.summary.losses);
       assert.deepEqual(saved.games.map((g) => [g.oppSlug, g.scoreFor, g.scoreAgainst, g.stage ?? null]),
         replay.games.map((g) => [g.opponent.slug, g.result!.scoreFor, g.result!.scoreAgainst, g.stage ?? null]));
+      assert.deepEqual(saved.gameplan, payload.gameplan);
+      assert.deepEqual(saved.games.map((g) => g.gameplan), replay.games.map((g) => g.gameplan));
 
       const share = await fetch(`${base}/s/${posted.body.id}`);
       const html = await share.text();
@@ -94,6 +108,12 @@ async function main() {
       assert(html.includes(`HTTP ${mode} test`));
       assert(html.includes(`${saved.wins}–${saved.losses}`));
       assert(/Wk\s*(<!-- -->)?\s*1/.test(html));
+      if (mode === "season") {
+        assert(html.includes("Gameplan record"));
+        assert(html.includes("Air it out"));
+        assert(html.includes("Blitz heavy"));
+        assert(!html.includes("confidence") && !html.includes("note"));
+      }
       const retry = await publish(base, payload, key);
       assert.equal(retry.status, 201);
       assert.equal(retry.body.id, posted.body.id);
@@ -105,6 +125,7 @@ async function main() {
       gmName: "Rejected", mode: "quick", seed: 42, simVersion: SIM_VERSION,
       dataFingerprint: DATA_FINGERPRINT, programSlug: "texas", budgetM: GAME_BUDGET_M,
       alloc: cappedOptimalAllocation(GAME_BUDGET_M),
+      gameplan: [], autoGameplan: true,
     };
     assert.equal((await publish(base, { ...payload, wins: 99 })).status, 422);
     assert.equal((await publish(base, { ...payload, dataFingerprint: "v1-0000000000000000" })).status, 409);

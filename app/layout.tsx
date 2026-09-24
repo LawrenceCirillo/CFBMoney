@@ -30,8 +30,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <ThemeProvider>
+          <ScoreTicker />
           <div className="sticky top-0 z-50">
-            <ScoreTicker />
             <Navbar />
           </div>
           <main id="content" className="mx-auto max-w-6xl px-4 sm:px-6">

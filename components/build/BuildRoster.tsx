@@ -12,6 +12,7 @@ import {
   distributeAllocationToSlots,
   emptyPlaysheet,
   ratingsFromAllocation,
+  requiredStarterSpendM,
   setPlaysheetPosition,
   slotMarketCap,
   withDepth,
@@ -99,9 +100,12 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
   const budget = clampGameBudget(budgetM);
   const budgetD = Math.round(budget * 10);
   const spentD = totalDimes(pos);
-  const remainingD = budgetD - spentD;
+  const targetD = toDimes(requiredStarterSpendM(budget));
+  const remainingD = targetD - spentD;
   const spent = fromDimes(spentD);
-  const depth = fromDimes(remainingD);
+  const remaining = fromDimes(Math.max(0, remainingD));
+  const depthReserve = fromDimes(budgetD - targetD);
+  const canContinue = remainingD === 0;
   const groups = useMemo(() => allocationFromPlaysheet(pos), [pos]);
   const simAlloc = useMemo(() => withDepth(groups, budget), [groups, budget]);
   const ratings = useMemo(() => ratingsFromAllocation(simAlloc), [simAlloc]);
@@ -331,15 +335,18 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
 
         <div className="mt-4 grid grid-cols-2 gap-px bg-line">
           <div className="bg-ink py-3 pr-3">
-            <p className="text-[10px] font-semibold text-fog">Starters</p>
+            <p className="text-[10px] font-semibold text-fog">Spent</p>
             <p className="tnum mt-0.5 text-2xl font-black tracking-tight">{fmtMoney1(spent)}</p>
           </div>
           <div className="bg-ink py-3 pl-3">
-            <p className="text-[10px] font-semibold text-fog">Depth</p>
-            <p className="tnum mt-0.5 text-2xl font-black tracking-tight">{fmtMoney1(depth)}</p>
+            <p className="text-[10px] font-semibold text-fog">Left to allocate</p>
+            <p className="tnum mt-0.5 text-2xl font-black tracking-tight">{fmtMoney1(remaining)}</p>
           </div>
         </div>
-        <p className="mt-2 text-xs text-fog">Leftover book pays the rest of the 85.</p>
+        <p id="roster-budget-help" className="mt-2 text-xs text-fog" aria-live="polite">
+          Spend {fmtMoney1(fromDimes(targetD))} on the playsheet to continue.
+          {depthReserve > 0 ? ` The other ${fmtMoney1(depthReserve)} is reserved for depth.` : ""}
+        </p>
 
         <div className="mt-4 grid grid-cols-3 gap-px bg-line">
           {(
@@ -363,8 +370,10 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
         </div>
 
         <button
-          onClick={onNext}
-          className="mt-5 w-full rounded-xl bg-emerald-500 py-3 text-lg font-bold text-ink transition-ui hover:bg-emerald-400"
+          onClick={() => { if (canContinue) onNext(); }}
+          disabled={!canContinue}
+          aria-describedby="roster-budget-help"
+          className="mt-5 w-full rounded-xl bg-emerald-500 py-3 text-lg font-bold text-ink transition-ui hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-45"
         >
           Continue
         </button>

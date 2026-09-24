@@ -22,6 +22,20 @@
       "when": 1790130683234,
       "tag": "0002_milky_khan",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790262617660,
+      "tag": "0003_needy_shen",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790263822490,
+      "tag": "0004_faithful_surge",
+      "breakpoints": true
     }
   ]
 }

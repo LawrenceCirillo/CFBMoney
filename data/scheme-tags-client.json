@@ -1,0 +1,277 @@
+{
+  "version": "v1",
+  "teams": {
+    "ohio-state": {
+      "offTag": "pro-style",
+      "defTag": "multiple"
+    },
+    "oregon": {
+      "offTag": "spread",
+      "defTag": "multiple"
+    },
+    "texas": {
+      "offTag": "pro-style",
+      "defTag": "multiple"
+    },
+    "lsu": {
+      "offTag": "spread",
+      "defTag": "4-3"
+    },
+    "texas-am": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "miami": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "notre-dame": {
+      "offTag": "spread",
+      "defTag": "multiple"
+    },
+    "ole-miss": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "tennessee": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "alabama": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "texas-tech": {
+      "offTag": "spread",
+      "defTag": "3-4"
+    },
+    "usc": {
+      "offTag": "air-raid",
+      "defTag": "4-2-5"
+    },
+    "indiana": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "michigan": {
+      "offTag": "power-run",
+      "defTag": "4-2-5"
+    },
+    "florida": {
+      "offTag": "spread",
+      "defTag": "multiple"
+    },
+    "south-carolina": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "auburn": {
+      "offTag": "spread",
+      "defTag": "multiple"
+    },
+    "nebraska": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "georgia": {
+      "offTag": "spread",
+      "defTag": "3-4"
+    },
+    "oklahoma": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "clemson": {
+      "offTag": "power-run",
+      "defTag": "4-2-5"
+    },
+    "penn-state": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "wisconsin": {
+      "offTag": "pro-style",
+      "defTag": "4-2-5"
+    },
+    "missouri": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "ucla": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "mississippi-state": {
+      "offTag": "spread",
+      "defTag": "3-3-5"
+    },
+    "virginia-tech": {
+      "offTag": "spread",
+      "defTag": "4-3"
+    },
+    "florida-state": {
+      "offTag": "spread",
+      "defTag": "3-3-5"
+    },
+    "vanderbilt": {
+      "offTag": "power-run",
+      "defTag": "4-2-5"
+    },
+    "georgia-tech": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "kentucky": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "nc-state": {
+      "offTag": "power-run",
+      "defTag": "3-4"
+    },
+    "arkansas": {
+      "offTag": "spread",
+      "defTag": "3-3-5"
+    },
+    "louisville": {
+      "offTag": "pro-style",
+      "defTag": "4-2-5"
+    },
+    "tcu": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "maryland": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "michigan-state": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "northwestern": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "washington": {
+      "offTag": "pro-style",
+      "defTag": "4-2-5"
+    },
+    "byu": {
+      "offTag": "power-run",
+      "defTag": "4-3"
+    },
+    "north-carolina": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "california": {
+      "offTag": "pro-style",
+      "defTag": "3-4"
+    },
+    "smu": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "virginia": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "baylor": {
+      "offTag": "air-raid",
+      "defTag": "4-2-5"
+    },
+    "rutgers": {
+      "offTag": "spread",
+      "defTag": "multiple"
+    },
+    "arizona-state": {
+      "offTag": "power-run",
+      "defTag": "4-2-5"
+    },
+    "illinois": {
+      "offTag": "power-run",
+      "defTag": "3-3-5"
+    },
+    "kansas-state": {
+      "offTag": "power-run",
+      "defTag": "4-2-5"
+    },
+    "minnesota": {
+      "offTag": "power-run",
+      "defTag": "4-2-5"
+    },
+    "utah": {
+      "offTag": "power-run",
+      "defTag": "4-3"
+    },
+    "west-virginia": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "colorado": {
+      "offTag": "spread",
+      "defTag": "4-3"
+    },
+    "syracuse": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "iowa": {
+      "offTag": "pro-style",
+      "defTag": "4-2-5"
+    },
+    "pitt": {
+      "offTag": "spread",
+      "defTag": "4-3"
+    },
+    "purdue": {
+      "offTag": "spread",
+      "defTag": "3-4"
+    },
+    "stanford": {
+      "offTag": "pro-style",
+      "defTag": "4-3"
+    },
+    "wake-forest": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "ucf": {
+      "offTag": "spread",
+      "defTag": "3-4"
+    },
+    "houston": {
+      "offTag": "spread",
+      "defTag": "3-3-5"
+    },
+    "oklahoma-state": {
+      "offTag": "air-raid",
+      "defTag": "3-4"
+    },
+    "kansas": {
+      "offTag": "spread",
+      "defTag": "multiple"
+    },
+    "arizona": {
+      "offTag": "spread",
+      "defTag": "3-3-5"
+    },
+    "cincinnati": {
+      "offTag": "spread",
+      "defTag": "3-4"
+    },
+    "iowa-state": {
+      "offTag": "pro-style",
+      "defTag": "4-3"
+    },
+    "duke": {
+      "offTag": "spread",
+      "defTag": "4-2-5"
+    },
+    "boston-college": {
+      "offTag": "pro-style",
+      "defTag": "4-3"
+    }
+  }
+}

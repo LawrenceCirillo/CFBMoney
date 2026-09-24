@@ -26,7 +26,14 @@ import {
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
 import { fmtMoney1 } from "@/lib/format";
 import PublishPanel from "./PublishPanel";
+import PlayoffPath from "./PlayoffPath";
 import TeamMark from "@/components/TeamMark";
+import ProbabilityPill from "./ProbabilityPill";
+import {
+  DEFENSIVE_OPTIONS, OFFENSIVE_OPTIONS, defTagLabel, gameplanNarration,
+  gameplanRecord, neutralPick, offTagLabel, resolveGameplan,
+  tendencyLabel, type DefensiveTendency, type GameplanPick, type OffensiveTendency,
+} from "@/lib/gameplan";
 
 interface Props {
   alloc: Allocation;
@@ -57,19 +64,12 @@ function rankOf(games: ScheduledGame[], fieldProj: number[]): number {
   return projectedRank(projection(games.filter((g) => !g.stage || !!g.result)), fieldProj);
 }
 
-function probPill(p: number) {
-  const pct = Math.round(p * 100);
-  const cls =
-    p >= 0.6
-      ? "bg-emerald-500/15 text-status-success border-emerald-500/30"
-      : p >= 0.4
-        ? "bg-amber-500/15 text-status-caution border-amber-500/30"
-        : "bg-red-500/15 text-status-loss border-red-500/30";
-  return (
-    <span className={`rounded-full border px-2.5 py-0.5 text-xs font-bold tabular-nums ${cls}`}>
-      {pct}%
-    </span>
-  );
+function edgeText(edge: number): string {
+  return edge > 0 ? `your edge (+${edge}%)` : edge < 0 ? `uphill (−${Math.abs(edge)}%)` : "neutral (0%)";
+}
+
+function edgeColor(edge: number): string {
+  return edge > 0 ? "text-status-success" : edge < 0 ? "text-status-loss" : "text-fog";
 }
 
 function ratingBars(you: Ratings, opp: Ratings) {
@@ -123,7 +123,11 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   );
 
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const input: ReplayInput = { mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc };
+  const [gameplan, setGameplan] = useState<GameplanPick[]>([]);
+  const [autoGameplan, setAutoGameplan] = useState(false);
+  const [offPick, setOffPick] = useState<OffensiveTendency | null>(null);
+  const [defPick, setDefPick] = useState<DefensiveTendency | null>(null);
+  const input: ReplayInput = { mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan, autoGameplan };
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
@@ -152,45 +156,60 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   const dna = useMemo(() => groupRanks(withDepth(alloc, budgetM), data.teams), [alloc, budgetM]);
   const tags = useMemo(() => archetype(alloc), [alloc]);
   const qbDna = dna.find((d) => d.key === "QB")!;
+  const coachingRecord = gameplanRecord(games.filter((game) => game.result).map((game) => ({
+    won: game.result!.won, winProb: game.winProb, gameplan: game.gameplan,
+  })));
 
   const newSeason = () => {
     if (revealTimer.current) clearTimeout(revealTimer.current);
     const s = Math.floor(Math.random() * 2 ** 31);
     setSeed(s);
-    const g = replaySeason({ ...input, seed: s }, 0).games;
+    const g = replaySeason({ ...input, seed: s, gameplan: [], autoGameplan: false }, 0).games;
     setGames(g);
     setRankHistory([rankOf(g, fieldProj)]);
     setFeatured(0);
     setRevealing(false);
     setCopied(false);
+    setGameplan([]);
+    setAutoGameplan(false);
+    setOffPick(null);
+    setDefPick(null);
   };
 
-  /** Simulate the featured game with a beat of theater, then schedule what's next. */
+  /** Simulate the featured game with a short beat, then schedule what's next. */
   const kickoff = () => {
     if (revealing || done) return;
     const g = games[featured];
     if (!g || g.result) return;
+    if (!autoGameplan && (!offPick || !defPick)) return;
+    const pick = autoGameplan ? neutralPick(g.week) : { week: g.week, off: offPick!, def: defPick! };
+    const nextCalls = [...gameplan, pick];
+    const nextInput = { ...input, gameplan: nextCalls };
+    setGameplan(nextCalls);
     setRevealing(true);
     revealTimer.current = setTimeout(() => {
-      const next = replaySeason(input, played + 1).games;
+      const next = replaySeason(nextInput, played + 1).games;
       const snapshot = rankOf(next, fieldProj);
       setGames(next);
       setRankHistory((h) => [...h, snapshot]);
       setRevealing(false);
-    }, 1100);
+    }, 450);
   };
 
   const advance = () => {
     const i = games.findIndex((g) => !g.result);
     setFeatured(i === -1 ? games.length - 1 : i);
+    setOffPick(null);
+    setDefPick(null);
   };
 
   /** Skip the theater: simulate every remaining game instantly. */
   const simToEnd = () => {
-    if (revealing) return;
+    if (revealing || !autoGameplan) return;
     if (revealTimer.current) clearTimeout(revealTimer.current);
     const next = replaySeason(input).games;
     setGames(next);
+    setGameplan(next.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })));
     setRankHistory((h) => [...h, rankOf(next, fieldProj)]);
     setFeatured(next.length - 1);
   };
@@ -202,6 +221,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
       `$${budgetM}M roster · ${program.name} · ${s.wins}-${s.losses} (${s.expectedWins} expected)\n` +
       `${tags.join(" · ")}\n` +
       (outcome ? `${outcome}\n` : "") +
+      coachingRecord.map((row) => `${row.label}: ${row.wins}-${row.losses} (${row.aboveExpected >= 0 ? "+" : ""}${row.aboveExpected.toFixed(1)} vs expected)`).join("\n") + "\n" +
       (s.bestWin ? `Best win: ${s.bestWin.opponent} ${s.bestWin.scoreFor}-${s.bestWin.scoreAgainst}\n` : "") +
       (s.worstLoss ? `Worst loss: ${s.worstLoss.opponent} ${s.worstLoss.scoreFor}-${s.worstLoss.scoreAgainst}` : "");
     try {
@@ -214,8 +234,13 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   };
 
   const fg = games[featured];
+  const shownOff = autoGameplan ? "balanced" : offPick ?? "balanced";
+  const shownDef = autoGameplan ? "base" : defPick ?? "base";
+  const previewPlan = fg && !fg.result
+    ? resolveGameplan({ week: fg.week, off: shownOff, def: shownDef }, fg.opponent.slug, fg.winProb)
+    : null;
   const prevGame = featured > 0 ? games[featured - 1] : null;
-  const story = fg && !fg.result ? storylineFor(fg, prevGame) : null;
+  const story = fg && !fg.result ? storylineFor(fg, prevGame, previewPlan) : null;
   const fgUpset =
     fg?.result && ((fg.result.won && fg.winProb < 0.35) || (!fg.result.won && fg.winProb > 0.65));
 
@@ -263,7 +288,9 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
           {!done && (
             <button
               onClick={simToEnd}
-              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-paper transition-ui hover:border-fog"
+              disabled={!autoGameplan || revealing}
+              title={!autoGameplan ? "Turn on Auto gameplan to sim the remaining weeks" : undefined}
+              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-paper transition-ui hover:border-fog disabled:cursor-not-allowed disabled:opacity-45"
             >
               Sim to end
             </button>
@@ -312,6 +339,8 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
         </div>
       </div>
 
+      <PlayoffPath games={games} program={program} />
+
       {!done && fg && (
         <div className="mb-12">
           {story && (
@@ -341,32 +370,65 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                 {fg.opponent.conference}
                 {fg.opponent.ap_rank != null && ` · AP #${fg.opponent.ap_rank}`}
               </p>
-              <div className="mt-2">{probPill(fg.winProb)}</div>
+              <div className="mt-2"><ProbabilityPill probability={previewPlan?.adjustedWinProb ?? fg.gameplan?.adjustedWinProb ?? fg.winProb} /></div>
             </div>
           </div>
+
+          {previewPlan && (
+            <section className="mt-8 rounded-2xl border border-line bg-panel/40 p-4 sm:p-6" aria-label={`Week ${fg.week} gameplan`}>
+              <p className="text-xs font-semibold text-fog">
+                They run: <span className="text-paper">{offTagLabel(previewPlan.oppOffTag)} / {defTagLabel(previewPlan.oppDefTag)}</span>
+              </p>
+              <p className="mt-2 text-sm text-fog">Expectation assumes a neutral gameplan. Out-coach it.</p>
+              <p className="mt-1 text-xs text-fog">Your defensive base is 4-2-5; the call below adjusts it for this matchup.</p>
+              <div className="mt-5">
+                <p className="mb-2 text-sm font-bold text-paper">Offensive tendency</p>
+                <div className="grid grid-cols-3 gap-2" role="group" aria-label="Offensive tendency">
+                  {OFFENSIVE_OPTIONS.map((option) => (
+                    <button key={option.value} type="button" aria-pressed={autoGameplan ? option.value === "balanced" : offPick === option.value}
+                      disabled={autoGameplan || revealing} onClick={() => setOffPick(option.value)}
+                      className={`min-h-20 rounded-xl px-2 py-3 text-xs font-bold leading-tight transition-ui sm:min-h-14 sm:text-sm ${shownOff === option.value && (autoGameplan || offPick) ? "bg-paper text-ink" : "bg-ink text-paper hover:bg-line"} disabled:cursor-not-allowed disabled:opacity-65`}>
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+                <p className={`mt-2 text-xs font-semibold ${edgeColor(previewPlan.offEdge)}`} aria-live="polite">
+                  {tendencyLabel(shownOff)} vs their {defTagLabel(previewPlan.oppDefTag)} front — {edgeText(previewPlan.offEdge)}
+                </p>
+              </div>
+              <div className="mt-5">
+                <p className="mb-2 text-sm font-bold text-paper">Defensive tendency</p>
+                <div className="grid grid-cols-3 gap-2" role="group" aria-label="Defensive tendency">
+                  {DEFENSIVE_OPTIONS.map((option) => (
+                    <button key={option.value} type="button" aria-pressed={autoGameplan ? option.value === "base" : defPick === option.value}
+                      disabled={autoGameplan || revealing} onClick={() => setDefPick(option.value)}
+                      className={`min-h-20 rounded-xl px-2 py-3 text-xs font-bold leading-tight transition-ui sm:min-h-14 sm:text-sm ${shownDef === option.value && (autoGameplan || defPick) ? "bg-paper text-ink" : "bg-ink text-paper hover:bg-line"} disabled:cursor-not-allowed disabled:opacity-65`}>
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+                <p className={`mt-2 text-xs font-semibold ${edgeColor(previewPlan.defEdge)}`} aria-live="polite">
+                  {tendencyLabel(shownDef)} vs their {offTagLabel(previewPlan.oppOffTag)} — {edgeText(previewPlan.defEdge)}
+                </p>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+                <label className="flex min-h-14 cursor-pointer items-center gap-3 text-sm font-semibold text-paper">
+                  <input type="checkbox" checked={autoGameplan} disabled={revealing}
+                    onChange={(event) => setAutoGameplan(event.target.checked)} className="h-5 w-5 accent-emerald-500" />
+                  Auto gameplan for the rest of the season
+                </label>
+                <p className={`text-sm font-bold ${edgeColor(previewPlan.netEdge)}`} aria-live="polite">
+                  Net edge: {previewPlan.netEdge > 0 ? "+" : ""}{previewPlan.netEdge}%
+                </p>
+              </div>
+            </section>
+          )}
 
           <div className="mt-8 grid items-end gap-10 sm:grid-cols-2">
             <div>{ratingBars(userR, fg.oppRatings)}</div>
             <div>
               <AnimatePresence mode="wait" initial={false}>
-                {revealing ? (
-                  <motion.div
-                    key="live"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <motion.p
-                      animate={{ opacity: [1, 0.35, 1] }}
-                      transition={{ repeat: Infinity, duration: 0.9 }}
-                      className="text-xs font-semibold text-status-caution"
-                    >
-                      Live
-                    </motion.p>
-                    <p className="tnum mt-2 text-6xl font-black tracking-tight text-fog">– : –</p>
-                    <p className="mt-2 text-sm text-fog">The sim is deciding.</p>
-                  </motion.div>
-                ) : fg.result ? (
+                {fg.result ? (
                   <motion.div
                     key={`final-${featured}-${seed}`}
                     initial={{ opacity: 0, y: 8 }}
@@ -382,6 +444,9 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                     >
                       {fg.result.won ? "W" : "L"} {fg.result.scoreFor}–{fg.result.scoreAgainst}
                     </p>
+                    {fg.gameplan && gameplanNarration(fg.gameplan, fg.result.won) && (
+                      <p className="mt-3 max-w-sm text-sm text-fog">{gameplanNarration(fg.gameplan, fg.result.won)}</p>
+                    )}
                     <button
                       onClick={advance}
                       className="mt-6 rounded-xl bg-emerald-500 px-8 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400"
@@ -399,9 +464,10 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                     <p className="tnum text-6xl font-black tracking-tight text-fog">– : –</p>
                     <button
                       onClick={kickoff}
-                      className="mt-6 rounded-xl bg-emerald-500 px-10 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400"
+                      disabled={revealing || (!autoGameplan && (!offPick || !defPick))}
+                      className="mt-6 rounded-xl bg-emerald-500 px-10 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-45"
                     >
-                      Kick off
+                      {revealing ? "Simulating…" : "Kick off"}
                     </button>
                   </motion.div>
                 )}
@@ -442,6 +508,14 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                   <p className="text-xs text-fog">
                     {g.stage ? STAGE_LABEL[g.stage] : g.opponent.conference}
                   </p>
+                  {g.gameplan && (
+                    <p className="mt-1 text-xs text-fog">
+                      {tendencyLabel(g.gameplan.off)} · {tendencyLabel(g.gameplan.def)} · {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
+                    </p>
+                  )}
+                  {g.gameplan && gameplanNarration(g.gameplan, r.won) && (
+                    <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, r.won)}</p>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   {upset && (
@@ -490,13 +564,29 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             {summary.wins}–{summary.losses}
           </p>
           <p className="mt-3 max-w-xl text-sm text-fog">
-            Final projected rank #{rank} · this roster projected {projWins.toFixed(1)} wins.
+            Final projected rank #{rank} · {regWins} regular-season wins against a pregame
+            projection of {projWins.toFixed(1)}.
             {vsProj > 0.05
-              ? ` Beat it by ${vsProj.toFixed(1)} — the build outplayed the money.`
+              ? ` This run finished ${vsProj.toFixed(1)} wins above that projection.`
               : vsProj < -0.05
-                ? ` Missed it by ${Math.abs(vsProj).toFixed(1)} — bad luck, or a soft build.`
-                : ` Right on the number. The money never lies.`}
+                ? ` This run finished ${Math.abs(vsProj).toFixed(1)} wins below that projection.`
+                : ` This run finished close to that projection.`}
+            {" "}The roster sets the odds; schedule and game draws still matter.
           </p>
+
+          <section className="mt-8" aria-label="Gameplan record">
+            <h3 className="text-lg font-black text-paper">Gameplan record</h3>
+            {coachingRecord.length ? (
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {coachingRecord.map((row) => (
+                  <p key={row.label} className="rounded-xl bg-panel px-4 py-3 text-sm text-paper">
+                    When you called {row.label}: <strong className="tabular-nums">{row.wins}–{row.losses}</strong>{" "}
+                    <span className="tabular-nums text-fog">({row.aboveExpected >= 0 ? "+" : ""}{row.aboveExpected.toFixed(1)} vs expected)</span>
+                  </p>
+                ))}
+              </div>
+            ) : <p className="mt-2 text-sm text-fog">Neutral calls all season.</p>}
+          </section>
 
           <div className="mt-8 grid max-w-xl grid-cols-2 gap-px bg-edge">
             {summary.bestWin && (
@@ -561,6 +651,8 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             alloc={alloc}
             budgetM={budgetM}
             seed={seed}
+            gameplan={gameplan}
+            autoGameplan={autoGameplan}
           />
 
           <div className="mt-8 flex flex-wrap gap-3">

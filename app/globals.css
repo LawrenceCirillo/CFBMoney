@@ -108,6 +108,7 @@
 
 html {
   background: var(--color-ink);
+  scroll-padding-top: 4.5rem;
   color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

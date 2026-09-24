@@ -2,10 +2,7 @@ import type { TeamBudget } from "@/lib/types";
 import { data } from "@/lib/data";
 import { logoSrc, markDisc } from "@/lib/mark";
 
-/**
- * Spend (x) vs. the current AP rank (y, inverted).
- * Top-left = Moneyball, top-right = Powerhouses, bottom-right = Underperformers.
- */
+/** Spend (x) vs. the current AP rank (y, inverted). */
 export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
   const W = 880;
   const H = 560;
@@ -19,10 +16,6 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
 
   const X = (v: number) => m.l + ((v - x0) / (x1 - x0)) * (W - m.l - m.r);
   const Y = (r: number) => m.t + ((r - yTop) / (yBottom - yTop)) * (H - m.t - m.b);
-
-  const sorted = [...xs].sort((a, b) => a - b);
-  const medX = sorted[Math.floor(sorted.length / 2)];
-  const medY = 13;
 
   const xTicks: number[] = [];
   for (let v = Math.ceil(x0 / 10) * 10; v <= x1; v += 10) xTicks.push(v);
@@ -47,21 +40,6 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
           </text>
         </g>
       ))}
-
-      {/* quadrant dividers */}
-      <line x1={X(medX)} y1={m.t} x2={X(medX)} y2={H - m.b} stroke="var(--chart-grid)" strokeDasharray="5 5" />
-      <line x1={m.l} y1={Y(medY)} x2={W - m.r} y2={Y(medY)} stroke="var(--chart-grid)" strokeDasharray="5 5" />
-
-      {/* quadrant labels */}
-      <text x={m.l + 14} y={m.t + 24} fontSize={13} fontWeight={800} fill="var(--chart-dim)">
-        Moneyball
-      </text>
-      <text x={W - m.r - 14} y={m.t + 24} textAnchor="end" fontSize={13} fontWeight={800} fill="var(--chart-dim)">
-        Powerhouses
-      </text>
-      <text x={W - m.r - 14} y={H - m.b - 14} textAnchor="end" fontSize={13} fontWeight={800} fill="var(--chart-dim)">
-        Underperformers
-      </text>
 
       {/* axis titles */}
       <text x={(m.l + W - m.r) / 2} y={H - 8} textAnchor="middle" fontSize={12} fill="var(--chart-text)">

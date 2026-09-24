@@ -17,9 +17,10 @@ import {
   projectedRank,
 } from "./season-mode";
 import type { TeamBudget } from "./types";
+import { neutralPick, resolveGameplan, schemeTagFingerprint, type GameplanPick } from "./gameplan";
 
 /** Change this when schedule, ratings, RNG, or postseason rules change. */
-export const SIM_VERSION = 1;
+export const SIM_VERSION = 2;
 export type ReplayMode = "quick" | "season";
 
 export interface ReplayInput {
@@ -31,6 +32,9 @@ export interface ReplayInput {
   budgetM: number;
   /** Starter allocations. The unspent book is assigned to depth by withDepth. */
   alloc: Allocation;
+  /** Explicit weekly calls. Quick sim and auto mode resolve missing weeks neutrally. */
+  gameplan: GameplanPick[];
+  autoGameplan: boolean;
 }
 
 /**
@@ -41,6 +45,7 @@ export function fingerprintForTeams(teams: TeamBudget[]): string {
   const material = JSON.stringify([
     SIM_VERSION,
     teams.map((t) => [t.slug, t.name, t.color, t.conference, t.budget_mid_m]),
+    schemeTagFingerprint(),
   ]);
   let left = 0x811c9dc5;
   let right = 0x9e3779b9;
@@ -85,14 +90,22 @@ export function replaySeason(
     : [];
   const ctx = field ? { program, teams, userR: ratings, field, rng } : null;
   const games = buildSeasonGames(input.seed, ratings, program, teams);
+  const calls = new Map(input.gameplan.map((pick) => [pick.week, pick]));
   let played = 0;
 
   while (played < throughGames) {
     const index = games.findIndex((g) => !g.result);
     if (index < 0) break;
     const game = games[index];
-    const result = simulateGame(ratings, game.oppRatings, game.isHome, rng);
-    games[index] = { ...game, result };
+    const pick = input.mode === "quick" ? neutralPick(game.week)
+      : calls.get(game.week) ?? (input.autoGameplan ? neutralPick(game.week) : undefined);
+    if (!pick) throw new Error(`Missing gameplan for week ${game.week}`);
+    const resolved = resolveGameplan(pick, game.opponent.slug, game.winProb);
+    const gameplan = input.mode === "quick"
+      ? { ...resolved, offEdge: 0, defEdge: 0, netEdge: 0, adjustedWinProb: game.winProb }
+      : resolved;
+    const result = simulateGame(ratings, game.oppRatings, game.isHome, rng, gameplan.adjustedWinProb);
+    games[index] = { ...game, gameplan, result };
     played++;
 
     if (!ctx) continue;

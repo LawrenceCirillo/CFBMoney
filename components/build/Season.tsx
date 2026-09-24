@@ -16,6 +16,7 @@ import {
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
 import { fmtMoney1 } from "@/lib/format";
 import TeamMark from "@/components/TeamMark";
+import ProbabilityPill from "./ProbabilityPill";
 import PublishPanel from "./PublishPanel";
 
 interface Props {
@@ -25,25 +26,10 @@ interface Props {
   onBack: () => void;
 }
 
-function probPill(p: number) {
-  const pct = Math.round(p * 100);
-  const cls =
-    p >= 0.6
-      ? "bg-emerald-500/15 text-status-success border-emerald-500/30"
-      : p >= 0.4
-        ? "bg-amber-500/15 text-status-caution border-amber-500/30"
-        : "bg-red-500/15 text-status-loss border-red-500/30";
-  return (
-    <span className={`rounded-full border px-2.5 py-0.5 text-xs font-bold tabular-nums ${cls}`}>
-      {pct}%
-    </span>
-  );
-}
-
 export default function Season({ alloc, budgetM, program, onBack }: Props) {
   const userR = useMemo(() => ratingsFromAllocation(withDepth(alloc, budgetM)), [alloc, budgetM]);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const input: ReplayInput = { mode: "quick", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc };
+  const input: ReplayInput = { mode: "quick", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan: [], autoGameplan: true };
   const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
   const [copied, setCopied] = useState(false);
 
@@ -213,7 +199,7 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
                     exit={{ opacity: 0, y: -6 }}
                     className="flex items-center gap-2"
                   >
-                    {probPill(g.winProb)}
+                    <ProbabilityPill probability={g.winProb} />
                   </motion.div>
                 )}
               </AnimatePresence>

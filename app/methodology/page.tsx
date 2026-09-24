@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { data } from "@/lib/data";
+import { fmtPollDate } from "@/lib/format";
 import { methodologySourceLabels } from "@/lib/methodology";
+import { seasonSnapshot } from "@/lib/season-snapshot";
 
 const AP_SOURCE = "https://apnews.com/hub/ap-top-25-college-football-poll";
 const FPI_SOURCE = "https://www.espn.com/college-football/fpi";
@@ -22,9 +24,9 @@ export default function Methodology() {
       <p className="text-xs font-semibold text-fog">Methodology</p>
       <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-6xl">What the numbers mean.</h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-fog">
-        CFB Money combines reported roster budget estimates with current poll and schedule data.
-        The Moneyball charts and Build game then apply our own simplified model. The modeled wins
-        and dollars per expected win on this site are not observed spending or game results.
+        CFB Money combines reported roster budget estimates with current poll, record, and schedule data.
+        The Moneyball chart and Build game then apply our own simplified model. Modeled wins are
+        not observed game results or a forecast for a school’s actual schedule.
       </p>
 
       <nav aria-label="On this page" className="mt-8 flex flex-wrap gap-2 text-sm">
@@ -47,7 +49,7 @@ export default function Methodology() {
           separately as the season moves forward, so their dates can differ. The labels below come
           from the current committed data, not the day you opened this page.
         </p>
-        <dl className="mt-6 grid gap-3 sm:grid-cols-3">
+        <dl className="mt-6 grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl border border-edge bg-panel/40 p-5">
             <dt className="text-xs font-semibold text-fog">Roster budget estimates</dt>
             <dd className="mt-2 text-lg font-bold text-paper">{labels.budgets}</dd>
@@ -72,6 +74,14 @@ export default function Methodology() {
               {" · "}updated after a reviewed capture.
             </dd>
           </div>
+          <div className="rounded-xl border border-edge bg-panel/40 p-5">
+            <dt className="text-xs font-semibold text-fog">ESPN team records</dt>
+            <dd className="tnum mt-2 text-lg font-bold text-paper">{fmtPollDate(seasonSnapshot.as_of)}, {seasonSnapshot.season}</dd>
+            <dd className="mt-3 text-sm text-fog">
+              <a className={linkClass} href={seasonSnapshot.url}>ESPN team pages</a>
+              {" · "}current regular-season records in the reviewed snapshot.
+            </dd>
+          </div>
         </dl>
       </section>
 
@@ -87,12 +97,12 @@ export default function Methodology() {
             <dd className="mt-1 text-fog">The {data.totals.teams} tracked programs are ranked by midpoint, highest first. Equal midpoints share a rank; the next rank skips the tied places.</dd>
           </div>
           <div>
-            <dt className="font-bold text-paper">AP value gap</dt>
-            <dd className="mt-1 text-fog">Spend rank minus current AP rank, shown only for teams in the current Top 25. A positive gap means the poll ranks a team higher than its budget midpoint rank. It is a rank comparison, not a measure of return on investment.</dd>
+            <dt className="font-bold text-paper">AP-versus-spend rank gap</dt>
+            <dd className="mt-1 text-fog">Spend rank minus current AP rank, shown only for teams in the current Top 25. A positive gap means the poll ranks a team higher than its budget midpoint rank. It is a rank comparison, not a measure of return on investment. Moneyball selects its first two examples by the largest positive and negative gaps and shows all ties. Its third example is the lowest played schedule-strength rank among the other AP-ranked teams, again showing all ties.</dd>
           </div>
           <div>
             <dt className="font-bold text-paper">Schedule strength</dt>
-            <dd className="mt-1 text-fog">{data.fpi.note} These contextual ESPN ranks do not feed the Moneyball win model.</dd>
+            <dd className="mt-1 text-fog">{data.fpi.note} These contextual ESPN ranks do not feed the Build game model.</dd>
           </div>
         </dl>
       </section>
@@ -105,7 +115,9 @@ export default function Methodology() {
           <li><strong className="text-paper">3. Ratings to simulated games.</strong> Build creates a 12-game slate, calculates rating-based expected scores and a home edge for each matchup, then draws scores with random variation. A saved seed makes a run reproducible. The displayed simulation results are generated games, not recorded {data.season} outcomes.</li>
         </ol>
         <p className="mt-6 rounded-xl border border-edge bg-panel/40 p-5 leading-relaxed text-fog">
-          Moneyball’s average dollars per expected win divide a budget midpoint by its modeled expected wins. Its “price of each win” compares budgets at neighboring points on that same curve. Neither figure is an observed cost per win.
+          Moneyball compares modeled expected wins at two hypothetical budgets $10 million apart.
+          Both budgets stay within the span of reported team midpoints. The difference follows the
+          Build game’s assumed curve; it is not an observed increase in wins caused by spending.
         </p>
       </section>
 
@@ -115,8 +127,8 @@ export default function Methodology() {
           <li>The Athletic ranges are third-party estimates, not audited school expenditures. Schools may count roster costs differently; we cannot resolve those accounting differences from the ranges.</li>
           <li>The talent curve, position shares, home edge, and score variation are model assumptions. Coaching, injuries, individual player quality, and many other causes of results are outside this budget-only comparison.</li>
           <li>Coverage is limited to the {data.totals.teams} programs in this dataset. ESPN schedule ranks cover the broader FBS field, so their rank numbers are not ranks within these {data.totals.teams} programs.</li>
-          <li>AP ranks and value gaps can change with each reviewed weekly ballot; the budget ranges stay fixed until separately updated.</li>
-          <li>Spending alone is not shown to cause wins. Moneyball’s modeled dollars per expected win must not be read as actual {data.season} dollars spent per observed win.</li>
+          <li>AP ranks and AP-versus-spend rank gaps can change with each reviewed weekly ballot; the budget ranges stay fixed until separately updated.</li>
+          <li>Spending alone is not shown to cause wins. The modeled $10 million comparison must not be read as an actual {data.season} return on roster spending.</li>
         </ul>
         <p className="mt-8 text-sm text-fog">
           <Link href="/moneyball" className={linkClass}>Return to Moneyball</Link>

@@ -80,7 +80,7 @@ export default async function LeaderboardPage({ searchParams }: Props) {
             Leaderboard
           </h1>
           <p className="mt-2 max-w-xl text-sm text-fog">
-            Ranked results are replayed by the server from the published roster and seed.
+            Ranked results use the current game model and are replayed by the server from the published roster, seed, and weekly calls.
             Click any season for the full game log.
           </p>
         </div>
@@ -207,15 +207,15 @@ export default async function LeaderboardPage({ searchParams }: Props) {
         <section className="mt-12 border-t border-line pt-8" aria-labelledby="legacy-heading">
           <h2 id="legacy-heading" className="font-display text-2xl font-bold text-paper">Earlier seasons · unranked archive</h2>
           <p className="mt-2 text-sm text-fog">
-            {legacyTotal} season{legacyTotal === 1 ? "" : "s"} published before server replay.
-            Their recaps remain available, but their results are unverified and do not receive ranks.
+            {legacyTotal} season{legacyTotal === 1 ? "" : "s"} published under earlier rules or before server replay.
+            Their recaps remain available; rankings compare seasons played under the current rules.
           </p>
           <ul className="mt-5 space-y-2">
             {legacyRows.map((row) => (
               <li key={row.id}>
                 <Link href={`/s/${row.id}`} className="flex flex-wrap justify-between gap-2 rounded-xl border border-edge px-4 py-3 text-sm text-paper hover:border-fog">
                   <span>{row.gmName || "Anonymous"} · {row.programName}</span>
-                  <span className="tabular-nums text-fog">{row.wins}–{row.losses} · unverified</span>
+                  <span className="tabular-nums text-fog">{row.wins}–{row.losses} · {row.verified ? `verified model v${row.simVersion}` : "unverified"}</span>
                 </Link>
               </li>
             ))}

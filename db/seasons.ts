@@ -1,9 +1,9 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, isNull, ne, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb } from "./client";
 import { seasons, type NewSeason, type Season } from "./schema";
 import type { SeasonPayload } from "../lib/season-payload";
-import { replaySeason } from "../lib/season-replay";
+import { replaySeason, SIM_VERSION } from "../lib/season-replay";
 
 export type { Season };
 
@@ -23,6 +23,8 @@ export type LeaderboardRow = Pick<
   | "avgMargin"
   | "bestWin"
   | "tags"
+  | "verified"
+  | "simVersion"
 >;
 
 export type LeaderboardSort = "wins" | "overachieve";
@@ -45,10 +47,13 @@ export async function createSeason(payload: SeasonPayload, publishKey: string): 
     programColor: replay.program.color,
     budgetM: payload.budgetM,
     alloc: replay.fullAlloc,
+    starterAlloc: payload.alloc,
     seed: payload.seed,
     mode: payload.mode,
     simVersion: payload.simVersion,
     dataFingerprint: payload.dataFingerprint,
+    gameplan: payload.gameplan,
+    autoGameplan: payload.autoGameplan,
     verified: true,
     wins: replay.summary.wins,
     losses: replay.summary.losses,
@@ -71,6 +76,7 @@ export async function createSeason(payload: SeasonPayload, publishKey: string): 
       scoreAgainst: g.result!.scoreAgainst,
       won: g.result!.won,
       stage: g.stage,
+      gameplan: g.gameplan,
     })),
   };
   const inserted = await db.insert(seasons).values(row)
@@ -104,7 +110,12 @@ const leaderboardCols = {
   avgMargin: seasons.avgMargin,
   bestWin: seasons.bestWin,
   tags: seasons.tags,
+  verified: seasons.verified,
+  simVersion: seasons.simVersion,
 } as const;
+
+const currentRules = and(eq(seasons.verified, true), eq(seasons.simVersion, SIM_VERSION));
+const earlierRules = or(eq(seasons.verified, false), isNull(seasons.simVersion), ne(seasons.simVersion, SIM_VERSION));
 
 /** Top seasons for the leaderboard. */
 export async function getLeaderboard(
@@ -117,20 +128,20 @@ export async function getLeaderboard(
     sort === "overachieve"
       ? [desc(overachieve), desc(seasons.wins), desc(seasons.avgMargin)]
       : [desc(seasons.wins), desc(overachieve), desc(seasons.avgMargin)];
-  return db.select(leaderboardCols).from(seasons).where(eq(seasons.verified, true)).orderBy(...order).limit(limit);
+  return db.select(leaderboardCols).from(seasons).where(currentRules).orderBy(...order).limit(limit);
 }
 
-/** Older, unranked rows remain available by share link and in an archive. */
+/** Earlier rulesets and pre-replay rows remain available by share link and in an archive. */
 export async function getLegacyArchive(limit = 50, offset = 0): Promise<LeaderboardRow[]> {
   return getDb().select(leaderboardCols).from(seasons)
-    .where(eq(seasons.verified, false)).orderBy(desc(seasons.createdAt)).limit(limit).offset(offset);
+    .where(earlierRules).orderBy(desc(seasons.createdAt)).limit(limit).offset(offset);
 }
 
-/** Count verified seasons by default; pass false for legacy rows. */
-export async function countSeasons(verified = true): Promise<number> {
+/** Count seasons ranked under the current rules; pass false for the earlier archive. */
+export async function countSeasons(current = true): Promise<number> {
   const db = getDb();
   const rows = await db
     .select({ n: sql<number>`count(*)::int` })
-    .from(seasons).where(eq(seasons.verified, verified));
+    .from(seasons).where(current ? currentRules : earlierRules);
   return rows[0]?.n ?? 0;
 }
