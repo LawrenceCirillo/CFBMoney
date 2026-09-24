@@ -32,7 +32,7 @@ supplied separately from research):
 **Offense**
 - Air it out: base +1. vs `3-4`/`4-3` → +4 (linebackers in space). vs `3-3-5` →
   −3 (disguise + pattern-match). vs `4-2-5`/`multiple` → +1.
-- Balanced: +2 vs `multiple` defenses (a hybrid front cannot key on a tendency); 0 everywhere else.
+- Balanced: +3 vs `multiple` defenses (a hybrid front cannot key on a tendency); 0 everywhere else.
 - Ground & pound: base +1. vs `3-3-5` → +4 (light boxes). vs `4-3`/`3-4` → −3
   (stacked fronts). vs `4-2-5`/`multiple` → +1.
 **Defense**
@@ -61,12 +61,12 @@ becomes a skill expression rather than a luck readout. Say this in the UI:
 ## Narration (decisions must be legible)
 - **Pre-game matchup card:** show each pick's edge live as the player taps:
   "Blitz heavy vs their Air Raid — your edge (+5%)" (green) /
-  "Ground & pound vs their 4-3 front — uphill (−3%)" (red), plus the net.
+  "Ground & pound vs their 4-3 front — uphill (−2%)" (red), plus the net.
   Show opponent tags: "They run: Air Raid / 3-3-5".
 - **Post-game one-liner** (dry, Bloomberg tone — never corny), keyed off
   (pick, edge sign, result): e.g. blitz + win → "The blitz got home — 5 sacks,
   2 turnovers."; blitz + loss vs power-run → "They ran it through the blitz —
-  240 rushing yards."; neutral picks → no line (don't narrate nothing).
+    240 rushing yards."; neutral picks → outcome-only recap, without a tactical claim.
 - **Season report:** a "Gameplan record" block, e.g. "When you blitzed: 4–2
   (+2.1 vs expected)". This is what makes 12 small decisions feel like one
   coaching performance.
@@ -107,3 +107,11 @@ your blitz packages." Keep the copy dry.
   Narration should describe the call, matchup, and result without invented stats.
 - The score-based simulator converts the probability modifier into an expected
   margin change; the displayed odds and simulated scores remain aligned.
+- The offense matchup values above are added to the stated +1 base for Air it out
+  and Ground & pound. Their final displayed edges are +5, -2, or +2.
+- The September 24 QA pass requested an outcome recap after auto-gameplanned
+  weeks. Balanced + Base remains the auto pick; the recap describes the result
+  without claiming the user chose a tactical call. Repeated situations rotate
+  deterministic wording and name the opponent.
+- The revised Balanced counter is +3 against `multiple`, so it is uniquely best
+  there after the Air/Ground base +1 is included. All other matrix cells stay put.

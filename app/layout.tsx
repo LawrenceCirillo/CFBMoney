@@ -4,6 +4,7 @@ import { Archivo } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ScoreTicker from "@/components/ScoreTicker";
+import { SeasonTickerProvider } from "@/components/SeasonTickerContext";
 import ThemeProvider from "@/components/ThemeProvider";
 import { data } from "@/lib/data";
 import { fmtPollDate } from "@/lib/format";
@@ -30,30 +31,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <ThemeProvider>
-          <ScoreTicker />
-          <div className="sticky top-0 z-50">
-            <Navbar />
-          </div>
-          <main id="content" className="mx-auto max-w-6xl px-4 sm:px-6">
-            {children}
-          </main>
-          <footer className="mt-24 border-t border-line">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 text-sm text-fog">
-              Budget estimates via{" "}
-              <a
-                className="underline underline-offset-2 hover:text-paper"
-                href="https://www.nytimes.com/athletic/interactive/college-football-nil-spending-budgets/"
-              >
-                The Athletic’s NIL budget report
-              </a>. {data.source.note} AP ranks through Week {data.poll.week} of {data.season}
-              (poll of {fmtPollDate(data.poll.as_of)}). School marks identify programs and belong to
-              those schools. A prototype — not affiliated with ESPN, the NCAA,
-              any school, or any conference. {" "}
-              <Link href="/methodology" className="font-semibold underline underline-offset-2 hover:text-paper">
-                Methodology
-              </Link>
+          <SeasonTickerProvider>
+            <ScoreTicker />
+            <div className="sticky top-0 z-50">
+              <Navbar />
             </div>
-          </footer>
+            <main id="content" className="mx-auto max-w-6xl px-4 sm:px-6">
+              {children}
+            </main>
+            <footer className="mt-24 border-t border-line">
+              <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 text-sm text-fog">
+                Budget estimates via{" "}
+                <a
+                  className="underline underline-offset-2 hover:text-paper"
+                  href="https://www.nytimes.com/athletic/interactive/college-football-nil-spending-budgets/"
+                >
+                  The Athletic’s NIL budget report
+                </a>. {data.source.note} AP ranks through Week {data.poll.week} of {data.season}
+                (poll of {fmtPollDate(data.poll.as_of)}). School marks identify programs and belong to
+                those schools. A prototype — not affiliated with ESPN, the NCAA,
+                any school, or any conference. {" "}
+                <Link href="/methodology" className="font-semibold underline underline-offset-2 hover:text-paper">
+                  Methodology
+                </Link>
+              </div>
+            </footer>
+          </SeasonTickerProvider>
         </ThemeProvider>
       </body>
     </html>

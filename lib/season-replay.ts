@@ -20,7 +20,7 @@ import type { TeamBudget } from "./types";
 import { neutralPick, resolveGameplan, schemeTagFingerprint, type GameplanPick } from "./gameplan";
 
 /** Change this when schedule, ratings, RNG, or postseason rules change. */
-export const SIM_VERSION = 2;
+export const SIM_VERSION = 3;
 export type ReplayMode = "quick" | "season";
 
 export interface ReplayInput {

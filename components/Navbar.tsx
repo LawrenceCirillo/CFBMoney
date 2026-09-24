@@ -76,7 +76,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="relative border-b border-line bg-ink/90 backdrop-blur">
+    <header className="relative border-b border-line bg-ink">
       <div className="mx-auto grid h-14 max-w-6xl grid-cols-[1fr_auto] items-center px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
         <Link href="/" className={`shrink-0 text-lg font-black tracking-tight ${searchOpen ? "hidden sm:block" : ""}`} onClick={() => setMenuOpen(false)}>
           CFB<span className="font-medium text-fog">MONEY</span>
