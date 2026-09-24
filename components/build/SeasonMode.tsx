@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { data } from "@/lib/data";
 import type { TeamBudget } from "@/lib/types";
@@ -29,6 +29,7 @@ import PublishPanel from "./PublishPanel";
 import PlayoffPath from "./PlayoffPath";
 import TeamMark from "@/components/TeamMark";
 import ProbabilityPill from "./ProbabilityPill";
+import { useSeasonTicker } from "@/components/SeasonTickerContext";
 import {
   DEFENSIVE_OPTIONS, OFFENSIVE_OPTIONS, defTagLabel, gameplanNarration,
   gameplanRecord, neutralPick, offTagLabel, resolveGameplan,
@@ -112,6 +113,7 @@ function ratingBars(you: Ratings, opp: Ratings) {
 }
 
 export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
+  const { setSeason: setTickerSeason } = useSeasonTicker();
   const userR = useMemo(() => ratingsFromAllocation(withDepth(alloc, budgetM)), [alloc, budgetM]);
   const field = useMemo(() => fieldRatings(), []);
   const fieldProj = useMemo(
@@ -147,6 +149,27 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   const played = games.filter((g) => g.result).length;
   const done = played === games.length;
   const postseasonStarted = games.some((g) => g.stage);
+
+  useEffect(() => {
+    setTickerSeason({
+      programSlug: program.slug,
+      programAbbr: program.abbr,
+      featured,
+      done,
+      games: games.map((game) => ({
+        week: game.week,
+        stage: game.stage,
+        opponentSlug: game.opponent.slug,
+        opponentAbbr: game.opponent.abbr,
+        isHome: game.isHome,
+        scoreFor: game.result?.scoreFor,
+        scoreAgainst: game.result?.scoreAgainst,
+        won: game.result?.won,
+      })),
+    });
+  }, [games, featured, done, program.slug, program.abbr, setTickerSeason]);
+
+  useEffect(() => () => setTickerSeason(null), [setTickerSeason]);
 
   const rank = rankHistory[rankHistory.length - 1];
   const prevRank = rankHistory.length > 1 ? rankHistory[rankHistory.length - 2] : null;
@@ -284,20 +307,20 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {!done && (
             <button
               onClick={simToEnd}
               disabled={!autoGameplan || revealing}
               title={!autoGameplan ? "Turn on Auto gameplan to sim the remaining weeks" : undefined}
-              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-paper transition-ui hover:border-fog disabled:cursor-not-allowed disabled:opacity-45"
+              className="scroll-mt-20 rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-paper transition-ui hover:border-fog disabled:cursor-not-allowed disabled:opacity-45"
             >
               Sim to end
             </button>
           )}
           <button
             onClick={newSeason}
-            className="rounded-full border border-line px-5 py-2.5 text-sm text-fog transition-ui hover:border-fog hover:text-paper"
+            className="scroll-mt-20 rounded-full border border-line px-5 py-2.5 text-sm text-fog transition-ui hover:border-fog hover:text-paper"
           >
             New season
           </button>
@@ -444,8 +467,8 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                     >
                       {fg.result.won ? "W" : "L"} {fg.result.scoreFor}–{fg.result.scoreAgainst}
                     </p>
-                    {fg.gameplan && gameplanNarration(fg.gameplan, fg.result.won) && (
-                      <p className="mt-3 max-w-sm text-sm text-fog">{gameplanNarration(fg.gameplan, fg.result.won)}</p>
+                    {fg.gameplan && (
+                      <p className="mt-3 max-w-sm text-sm text-fog">{gameplanNarration(fg.gameplan, fg.result.won, fg.opponent.name, fg.winProb)}</p>
                     )}
                     <button
                       onClick={advance}
@@ -513,8 +536,8 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
                       {tendencyLabel(g.gameplan.off)} · {tendencyLabel(g.gameplan.def)} · {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
                     </p>
                   )}
-                  {g.gameplan && gameplanNarration(g.gameplan, r.won) && (
-                    <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, r.won)}</p>
+                  {g.gameplan && (
+                    <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, r.won, g.opponent.name, g.winProb)}</p>
                   )}
                 </div>
                 <div className="flex items-center gap-3">

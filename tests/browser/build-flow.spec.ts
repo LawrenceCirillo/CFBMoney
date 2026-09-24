@@ -29,10 +29,14 @@ test("playsheet survives navigation and both sim modes render", async ({ page })
   await expect(page.getByRole("heading", { name: "Whose season are you playing?" })).toBeVisible();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByText(/Step 3 · Season mode/)).toBeVisible();
+  await expect(page.getByRole("region", { name: "Your season scores, Week 1" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Sim to end" })).toBeDisabled();
   await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season" }).check();
   await page.getByRole("button", { name: "Sim to end" }).click();
+  await expect(page.getByRole("region", { name: "Your season scores, Final" })).toBeVisible();
+  await expect(page.getByText(/A neutral plan against|No matchup adjustment against/).first()).toBeVisible();
   await page.getByRole("button", { name: "Quick sim" }).click();
+  await expect(page.getByRole("region", { name: /Week 3 scores/ })).toBeVisible();
   await expect(page.getByText(/Step 3 · Quick sim/)).toBeVisible();
   await page.getByRole("button", { name: "Sim season" }).click();
   await expect(page.getByText("Game log")).toBeVisible();
@@ -76,4 +80,6 @@ test("manual week requires two calls and previews their edge", async ({ page }) 
   await kickoff.click();
   await expect(page.getByRole("button", { name: /Play next week|Open season report/ })).toBeVisible();
   await expect(page.getByText(/Air it out · Blitz heavy/)).toBeVisible();
+  await page.getByRole("button", { name: "Play next week" }).click();
+  await expect(page.getByRole("region", { name: "Your season scores, Week 2" })).toBeVisible();
 });

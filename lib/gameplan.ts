@@ -62,13 +62,13 @@ export function neutralPick(week: number): GameplanPick {
 }
 
 export function offensiveEdge(off: OffensiveTendency, defense: DefTag): number {
-  if (off === "balanced") return defense === "multiple" ? 2 : 0;
+  if (off === "balanced") return defense === "multiple" ? 3 : 0;
   if (off === "air") {
-    if (defense === "4-3" || defense === "3-4") return 4;
-    return defense === "3-3-5" ? -3 : 1;
+    if (defense === "4-3" || defense === "3-4") return 5;
+    return defense === "3-3-5" ? -2 : 2;
   }
-  if (defense === "3-3-5") return 4;
-  return defense === "4-3" || defense === "3-4" ? -3 : 1;
+  if (defense === "3-3-5") return 5;
+  return defense === "4-3" || defense === "3-4" ? -2 : 2;
 }
 
 export function defensiveEdge(def: DefensiveTendency, offense: OffTag): number {
@@ -80,6 +80,10 @@ export function defensiveEdge(def: DefensiveTendency, offense: OffTag): number {
   return offense === "air-raid" || offense === "spread" ? 4 : -2;
 }
 
+export function clampGameplanEdge(edge: number): number {
+  return Math.max(-8, Math.min(8, edge));
+}
+
 export function resolveGameplan(
   pick: GameplanPick,
   opponentSlug: string,
@@ -88,7 +92,7 @@ export function resolveGameplan(
   const { offTag, defTag } = schemeTagsFor(opponentSlug);
   const offEdge = offensiveEdge(pick.off, defTag);
   const defEdge = defensiveEdge(pick.def, offTag);
-  const netEdge = Math.max(-8, Math.min(8, offEdge + defEdge));
+  const netEdge = clampGameplanEdge(offEdge + defEdge);
   return {
     ...pick, oppOffTag: offTag, oppDefTag: defTag, offEdge, defEdge, netEdge,
     adjustedWinProb: netEdge === 0 ? neutralWinProb
@@ -96,19 +100,34 @@ export function resolveGameplan(
   };
 }
 
-export function gameplanNarration(plan: GameplanResolution, won: boolean): string | null {
-  if (plan.off === "balanced" && plan.def === "base") return null;
+export function gameplanNarration(plan: GameplanResolution, won: boolean, opponent: string, neutralWinProb: number): string {
+  const favored = neutralWinProb >= 0.5;
+  const neutralLines = won
+    ? favored
+      ? [`A neutral plan against ${opponent}; the roster carried its pregame edge.`, `No matchup adjustment against ${opponent}. The favored roster won.`]
+      : [`A neutral plan against ${opponent}; the roster beat its pregame odds.`, `No matchup adjustment against ${opponent}. The underdog won anyway.`]
+    : favored
+      ? [`A neutral plan against ${opponent}; the favored roster came up short.`, `No matchup adjustment against ${opponent}. The pregame favorite lost.`]
+      : [`A neutral plan against ${opponent}; the result followed the pregame odds.`, `No matchup adjustment against ${opponent}. The underdog fell short.`];
+  if (plan.off === "balanced" && plan.def === "base" && plan.netEdge === 0) {
+    return neutralLines[(plan.week - 1) % neutralLines.length];
+  }
   const useDefense = Math.abs(plan.defEdge) >= Math.abs(plan.offEdge) && plan.def !== "base";
   const call = tendencyLabel(useDefense ? plan.def : plan.off);
   const edge = useDefense ? plan.defEdge : plan.offEdge;
   const matchup = useDefense ? offTagLabel(plan.oppOffTag) : `${defTagLabel(plan.oppDefTag)} front`;
-  if (edge > 0) return won
-    ? `${call} found its edge against the ${matchup}.`
-    : `${call} had the matchup edge. The result went the other way.`;
-  if (edge < 0) return won
-    ? `Won despite a difficult ${call} matchup against the ${matchup}.`
-    : `The ${matchup} punished the ${call} call.`;
-  return null;
+  const lines = edge > 0
+    ? won
+      ? [`${call} found its edge against ${opponent}'s ${matchup}.`, `${opponent}'s ${matchup} favored the ${call} call, and the roster won.`]
+      : [`${call} had a matchup edge against ${opponent}. The result went the other way.`, `${opponent}'s ${matchup} favored ${call}; the edge did not secure a win.`]
+    : edge < 0
+      ? won
+        ? [`Beat ${opponent} despite a difficult ${call} matchup against the ${matchup}.`, `The ${call} call faced a difficult ${matchup} matchup, but the roster beat ${opponent}.`]
+        : [`${opponent}'s ${matchup} punished the ${call} call.`, `The ${call} call faced a difficult ${matchup} matchup, and ${opponent} won.`]
+      : won
+        ? [`The ${call} call offered no modeled edge against ${opponent}; the roster won.`, `${call} was even against ${opponent}'s ${matchup}. The roster won.`]
+        : [`The ${call} call offered no modeled edge against ${opponent}; the roster lost.`, `${call} was even against ${opponent}'s ${matchup}. The roster fell short.`];
+  return lines[(plan.week - 1) % lines.length];
 }
 
 export interface GameplanRecordRow {

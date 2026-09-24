@@ -78,15 +78,23 @@ for (let seed = 0; seed < N; seed++) {
     gameplan: [], autoGameplan: true,
   };
   const calls: GameplanPick[] = buildSeasonGames(seed, ratings, program, data.teams).map((game) => {
-    let best = { week: game.week, off: "balanced", def: "base" } as GameplanPick;
     let edge = -Infinity;
+    let bestCalls: GameplanPick[] = [];
     for (const off of OFFENSIVE_OPTIONS) for (const def of DEFENSIVE_OPTIONS) {
       const call = { week: game.week, off: off.value, def: def.value };
       const next = resolveGameplan(call, game.opponent.slug, game.winProb).netEdge;
-      if (next > edge) { best = call; edge = next; }
+      if (next > edge) { bestCalls = [call]; edge = next; }
+      else if (next === edge) bestCalls.push(call);
     }
-    defensiveChoices.set(best.def, (defensiveChoices.get(best.def) ?? 0) + 1);
-    offensiveChoices.set(best.off, (offensiveChoices.get(best.off) ?? 0) + 1);
+    for (const choice of new Set(bestCalls.map((call) => call.def))) {
+      defensiveChoices.set(choice, (defensiveChoices.get(choice) ?? 0) + 1);
+    }
+    for (const choice of new Set(bestCalls.map((call) => call.off))) {
+      offensiveChoices.set(choice, (offensiveChoices.get(choice) ?? 0) + 1);
+    }
+    // Tied calls produce the same probability. Prefer Balanced so its viable
+    // multiple-front matchup is visible in the representative perfect slate.
+    const best = bestCalls.find((call) => call.off === "balanced") ?? bestCalls[0];
     return best;
   });
   const neutral = replaySeason(base).games.slice(0, 12).filter((game) => game.result?.won).length;
@@ -96,7 +104,7 @@ for (let seed = 0; seed < N; seed++) {
 }
 const averageGain = winGain / N;
 console.log(`Perfect weekly gameplan vs neutral: ${averageGain >= 0 ? "+" : ""}${averageGain.toFixed(2)} regular-season wins (${N} paired seeds)`);
-console.log(`Best defensive picks: ${JSON.stringify(Object.fromEntries(defensiveChoices))}`);
-console.log(`Best offensive picks: ${JSON.stringify(Object.fromEntries(offensiveChoices))}`);
+console.log(`Optimal defensive picks (ties included): ${JSON.stringify(Object.fromEntries(defensiveChoices))}`);
+console.log(`Optimal offensive picks (ties included): ${JSON.stringify(Object.fromEntries(offensiveChoices))}`);
 if (averageGain < 0.5 || averageGain > 1.0 ||
   defensiveChoices.size !== DEFENSIVE_OPTIONS.length || offensiveChoices.size !== OFFENSIVE_OPTIONS.length) process.exitCode = 1;

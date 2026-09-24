@@ -46,7 +46,7 @@ import {
 } from "../lib/season-mode";
 import { SeasonPayloadSchema } from "../lib/season-payload";
 import { DATA_FINGERPRINT, SIM_VERSION, fingerprintForTeams, replaySeason, type ReplayInput } from "../lib/season-replay";
-import { resolveGameplan, type GameplanPick } from "../lib/gameplan";
+import { clampGameplanEdge, gameplanNarration, offensiveEdge, resolveGameplan, type DefTag, type GameplanPick } from "../lib/gameplan";
 
 let failures = 0;
 function assert(cond: boolean, label: string, extra?: unknown) {
@@ -596,14 +596,35 @@ for (const mode of ["quick", "season"] as const) {
 }
 
 {
+  const edgeCases: { defense: DefTag; air: number; ground: number }[] = [
+    { defense: "4-3", air: 5, ground: -2 },
+    { defense: "3-4", air: 5, ground: -2 },
+    { defense: "3-3-5", air: -2, ground: 5 },
+    { defense: "4-2-5", air: 2, ground: 2 },
+    { defense: "multiple", air: 2, ground: 2 },
+  ];
+  for (const { defense, air, ground } of edgeCases) {
+    assert(offensiveEdge("air", defense) === air, `Air it out vs ${defense} includes base +1`);
+    assert(offensiveEdge("ground", defense) === ground, `Ground & pound vs ${defense} includes base +1`);
+  }
   const plus = resolveGameplan({ week: 1, off: "air", def: "blitz" }, "oklahoma-state", 0.5);
   const minus = resolveGameplan({ week: 1, off: "ground", def: "blitz" }, "nc-state", 0.5);
-  assert(plus.offEdge === 4 && plus.defEdge === 5 && plus.netEdge === 8, "positive gameplan edge clamps to +8 points");
-  assert(minus.offEdge === -3 && minus.defEdge === -5 && minus.netEdge === -8, "negative gameplan edge clamps to -8 points");
-  assert(resolveGameplan({ week: 1, off: "balanced", def: "base" }, "ohio-state", 0.5).offEdge === 2,
-    "Balanced counters a multiple front by +2 points");
+  assert(plus.offEdge === 5 && plus.defEdge === 5 && plus.netEdge === 8, "positive gameplan edge clamps to +8 points");
+  assert(minus.offEdge === -2 && minus.defEdge === -5 && minus.netEdge === -7, "negative matchup includes base +1");
+  assert(clampGameplanEdge(-10) === -8, "negative combined edge clamps to -8 points");
+  assert(resolveGameplan({ week: 1, off: "balanced", def: "base" }, "ohio-state", 0.5).offEdge === 3,
+    "Balanced counters a multiple front by +3 points");
+  assert(offensiveEdge("balanced", "multiple") > offensiveEdge("air", "multiple") &&
+    offensiveEdge("balanced", "multiple") > offensiveEdge("ground", "multiple"),
+    "Balanced is uniquely best against a multiple front");
   assert(resolveGameplan({ week: 1, off: "balanced", def: "base" }, "georgia", 0.5).offEdge === 0,
     "Balanced remains neutral against a 3-4 front");
+  const neutralWeek1 = resolveGameplan({ week: 1, off: "balanced", def: "base" }, "georgia", 0.5);
+  const neutralWeek2 = resolveGameplan({ week: 2, off: "balanced", def: "base" }, "georgia", 0.5);
+  assert(gameplanNarration(neutralWeek1, true, "Georgia", 0.5).includes("Georgia"),
+    "auto-style neutral week receives an opponent-specific result recap");
+  assert(gameplanNarration(neutralWeek1, true, "Georgia", 0.5) !== gameplanNarration(neutralWeek2, true, "Georgia", 0.5),
+    "repeated situation rotates deterministic narration wording");
   const regular: GameplanPick[] = Array.from({ length: 12 }, (_, index) => ({
     week: index + 1,
     off: index % 3 === 0 ? "air" : index % 3 === 1 ? "ground" : "balanced",

@@ -297,9 +297,7 @@ export default async function ShareSeasonPage({ params }: Props) {
                     {tendencyLabel(g.gameplan.off)} / {tendencyLabel(g.gameplan.def)} ·{" "}
                     {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
                   </p>
-                  {gameplanNarration(g.gameplan, g.won) && (
-                    <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, g.won)}</p>
-                  )}
+                  <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, g.won, g.oppName, g.winProb)}</p>
                 </>
               )}
             </div>
