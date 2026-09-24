@@ -217,7 +217,7 @@ export default function Season({ alloc, budgetM, gravityOn, program, onBack }: P
           className="mt-16 border-t border-line pt-8"
         >
           <p className="text-xs font-semibold text-fog">Season report</p>
-          <p className="mt-1 text-xs font-semibold text-fog">Gravity {gravityOn ? "on" : "off · Pure parity"} · {GRAVITY_VERSION}</p>
+          <p className="mt-1 text-xs font-semibold text-fog">Gravity {gravityOn ? "on" : "off · Pure parity"} · v{SIM_VERSION}</p>
           <p className="tnum mt-3 text-6xl font-black tracking-tight sm:text-7xl">
             {summary.wins}–{summary.losses}
           </p>

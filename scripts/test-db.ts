@@ -62,6 +62,10 @@ async function main() {
       assert.equal(row.games.length, replay.games.length);
       assert.deepEqual(row.games.map((g) => [g.week, g.oppSlug, g.scoreFor, g.scoreAgainst, g.stage ?? null]),
         replay.games.map((g) => [g.week, g.opponent.slug, g.result?.scoreFor, g.result?.scoreAgainst, g.stage ?? null]));
+      const shareHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id }) }));
+      assert.match(shareHtml, new RegExp(`Season projection</p><p[^>]*>${row.expectedWins.toFixed(1)}</p>`));
+      assert.match(shareHtml, /Gravity on · v4/);
+      assert(!shareHtml.includes(row.dataFingerprint!));
       console.log(`  ok ${mode}: stored result matches canonical replay`);
     }
 

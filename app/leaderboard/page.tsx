@@ -81,7 +81,7 @@ export default async function LeaderboardPage({ searchParams }: Props) {
           </h1>
           <p className="mt-2 max-w-xl text-sm text-fog">
             Ranked results use the current game model and are replayed by the server from the published roster, seed, and weekly calls.
-            Click any season for the full game log.
+            Exp. covers every game played, including postseason. Click any season for the full game log.
           </p>
         </div>
         <div className="flex gap-2">

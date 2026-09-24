@@ -106,10 +106,13 @@ async function main() {
 
       const share = await fetch(`${base}/s/${posted.body.id}`);
       const html = await share.text();
+      const visibleHtml = html.replace(/<!-- -->/g, "");
       assert.equal(share.status, 200);
       assert(html.includes(`HTTP ${mode} test`));
       assert(html.includes(`${saved.wins}–${saved.losses}`));
       assert(/Gravity\s*(?:<!-- -->)?\s*on/.test(html));
+      assert(visibleHtml.includes("Gravity on · v4"));
+      assert(!html.includes(saved.dataFingerprint!));
       assert(/Wk\s*(<!-- -->)?\s*1/.test(html));
       if (mode === "season") {
         assert(html.includes("Gameplan record"));

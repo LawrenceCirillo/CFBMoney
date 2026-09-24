@@ -74,18 +74,17 @@ export default async function ShareSeasonPage({ params }: Props) {
   });
   if (!season) notFound();
 
-  // The honest exam: regular-season wins vs the roster's preseason projection.
-  const regGames = season.games.filter((g) => !g.stage);
-  const projWins = regGames.reduce((s, g) => s + g.winProb, 0);
-  const regWins = regGames.filter((g) => g.won).length;
-  const over = regWins - projWins;
+  // Use the saved full-season expectation, the same value that ranks this
+  // published run on the leaderboard. It includes any postseason game played.
+  const projWins = season.expectedWins;
+  const over = season.wins - projWins;
   const coachingRecord = gameplanRecord(season.games);
   const verdict =
     over > 0.05
-      ? `Finished ${over.toFixed(1)} wins above the neutral preseason projection.`
+      ? `Finished ${over.toFixed(1)} wins above the season projection.`
       : over < -0.05
-        ? `Finished ${Math.abs(over).toFixed(1)} wins below the neutral preseason projection.`
-        : "Finished close to the neutral preseason projection.";
+        ? `Finished ${Math.abs(over).toFixed(1)} wins below the season projection.`
+        : "Finished close to the season projection.";
 
   return (
     <div className="mx-auto max-w-3xl py-10 sm:py-14">
@@ -98,7 +97,7 @@ export default async function ShareSeasonPage({ params }: Props) {
           </p>
           {season.verified ? (
             <p className="mt-2 text-xs text-status-success">
-              Server replayed · {season.mode === "season" ? "Season mode" : "Quick sim"} · model v{season.simVersion} · data {season.dataFingerprint}
+              Server replayed · {season.mode === "season" ? "Season mode" : "Quick sim"} · model v{season.simVersion}
             </p>
           ) : (
             <p className="mt-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-status-caution">
@@ -107,7 +106,7 @@ export default async function ShareSeasonPage({ params }: Props) {
           )}
           {season.gravityVersion && (
             <span className="mt-2 inline-flex rounded-full border border-line bg-ink px-3 py-1 text-xs font-semibold text-paper">
-              Gravity {season.gravityOn ? "on" : "off · Pure parity"} · {season.gravityVersion}
+              Gravity {season.gravityOn ? "on" : "off · Pure parity"} · v{season.simVersion}
             </span>
           )}
           <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
@@ -141,7 +140,7 @@ export default async function ShareSeasonPage({ params }: Props) {
 
           <div className="mt-6 grid grid-cols-3 gap-3 text-center">
             {[
-              { label: "Neutral projection", value: projWins.toFixed(1) },
+              { label: "Season projection", value: projWins.toFixed(1) },
               {
                 label: "Avg margin",
                 value: `${season.avgMargin > 0 ? "+" : ""}${season.avgMargin.toFixed(1)}`,
@@ -161,8 +160,11 @@ export default async function ShareSeasonPage({ params }: Props) {
           </div>
 
           <p className="mt-5 text-sm text-fog">{verdict}</p>
+          {season.games.some((game) => game.stage) && (
+            <p className="mt-1 text-xs text-fog">Season projection includes postseason games played.</p>
+          )}
           {season.mode === "season" && season.gameplan && (
-            <p className="mt-2 text-sm text-fog">Expectation assumes a neutral gameplan. Out-coach it.</p>
+            <p className="mt-2 text-sm text-fog">Game probabilities assume a neutral gameplan. Out-coach them.</p>
           )}
           {season.verified && season.simVersion !== SIM_VERSION && (
             <p className="mt-2 text-sm text-fog">
