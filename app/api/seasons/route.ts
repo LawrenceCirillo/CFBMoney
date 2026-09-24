@@ -4,6 +4,7 @@ import { createSeason } from "@/db/seasons";
 import { dbEnabled } from "@/db/client";
 import { getTeam } from "@/lib/data";
 import { DATA_FINGERPRINT } from "@/lib/season-replay";
+import { replaySeason } from "@/lib/season-replay";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -76,6 +77,17 @@ export async function POST(req: Request) {
       { error: "Season data changed. Reload the page and simulate again." },
       { status: 409 }
     );
+  }
+
+  try {
+    const replay = replaySeason(parsed.data);
+    const calls = replay.games.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def }));
+    if (!replay.complete || (parsed.data.mode === "season" &&
+      JSON.stringify(calls) !== JSON.stringify(parsed.data.gameplan))) {
+      return NextResponse.json({ error: "Gameplan does not cover the completed season." }, { status: 422 });
+    }
+  } catch {
+    return NextResponse.json({ error: "Season replay could not verify the gameplan." }, { status: 422 });
   }
 
   try {

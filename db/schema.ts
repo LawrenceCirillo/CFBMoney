@@ -9,6 +9,7 @@ import {
   index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import type { GameplanPick, GameplanResolution } from "../lib/gameplan";
 
 /** One game inside a published season, stored as JSONB on the season row. */
 export type StoredGame = {
@@ -22,6 +23,7 @@ export type StoredGame = {
   scoreAgainst: number;
   won: boolean;
   stage?: "qf" | "sf" | "ncg" | "bowl";
+  gameplan?: GameplanResolution;
 };
 
 /** The eight position-group allocations, in $M. */
@@ -64,11 +66,15 @@ export const seasons = pgTable(
     /** Roster budget in $M (currently always 30; stored for future flexibility) */
     budgetM: real("budget_m").notNull(),
     alloc: jsonb("alloc").$type<StoredAlloc>().notNull(),
+    /** Canonical starter input for future independent replay; null on older rows. */
+    starterAlloc: jsonb("starter_alloc").$type<StoredAlloc>(),
     seed: integer("seed").notNull(),
     /** Null metadata identifies seasons published before server replay. */
     mode: text("mode", { enum: ["quick", "season"] }),
     simVersion: integer("sim_version"),
     dataFingerprint: text("data_fingerprint"),
+    gameplan: jsonb("gameplan").$type<GameplanPick[]>(),
+    autoGameplan: boolean("auto_gameplan"),
     verified: boolean("verified").default(false).notNull(),
     wins: integer("wins").notNull(),
     losses: integer("losses").notNull(),

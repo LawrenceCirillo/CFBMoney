@@ -17,10 +17,16 @@ import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-repla
 import type { SeasonPayload } from "../lib/season-payload";
 import { startTestPostgres } from "./test-postgres";
 
-const payload = (mode: "quick" | "season", seed: number): SeasonPayload => ({
-  mode, seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-  programSlug: "texas", budgetM: 30, alloc: cappedOptimalAllocation(30),
-});
+const payload = (mode: "quick" | "season", seed: number): SeasonPayload => {
+  const base: SeasonPayload = {
+    mode, seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+    programSlug: "texas", budgetM: 30, alloc: cappedOptimalAllocation(30),
+    gameplan: [], autoGameplan: true,
+  };
+  return mode === "season" ? { ...base, gameplan: replaySeason(base).games.map((game) => ({
+    week: game.week, off: "balanced", def: "base",
+  })) } : base;
+};
 
 async function main() {
   // tsx compiles Next's JSX as classic React in this direct test harness.
@@ -102,6 +108,17 @@ async function main() {
     assert(byWins[0].wins >= byWins[1].wins);
     assert(byOver[0].wins - byOver[0].expectedWins >= byOver[1].wins - byOver[1].expectedWins);
     console.log("  ok legacy links survive and never receive verified rank");
+
+    await db.insert(schema.seasons).values({
+      ...legacyRow, id: "rules00001", verified: true, simVersion: 1, wins: 98,
+    });
+    assert.equal(await countSeasons(), 3, "earlier verified rules do not enter current ranks");
+    assert.equal(await countSeasons(false), 2);
+    assert((await getLegacyArchive()).some((row) => row.id === "rules00001" && row.verified));
+    assert(!(await getLeaderboard()).some((row) => row.id === "rules00001"));
+    const earlierHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id: "rules00001" }) }));
+    assert.match(earlierHtml, /Verified under an earlier game model/);
+    console.log("  ok earlier verified ruleset stays shareable but is not ranked with current seasons");
 
     const legacyHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id: "legacy0001" }) }));
     assert.match(legacyHtml, /Unverified legacy result/);

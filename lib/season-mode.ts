@@ -14,6 +14,7 @@
 
 import type { TeamBudget } from "./types";
 import { expectedWins as modeledExpectedWins } from "./moneyball";
+import { offTagLabel, schemeTagsFor, type GameplanResolution } from "./gameplan";
 import {
   teamRatings,
   expectedScore,
@@ -35,7 +36,8 @@ export interface Storyline {
 /** Narrative tag for a matchup, from simple heuristics. */
 export function storylineFor(
   game: ScheduledGame,
-  prev: ScheduledGame | null
+  prev: ScheduledGame | null,
+  plan?: GameplanResolution | null,
 ): Storyline {
   if (game.stage === "qf")
     return { tag: "Playoff quarterfinal", blurb: "Win or go home. The bracket starts here.", tone: "hype" };
@@ -46,7 +48,7 @@ export function storylineFor(
   if (game.stage === "bowl")
     return { tag: "The Money Bowl", blurb: "End the season with a trophy.", tone: "mid" };
   if (game.rivalry)
-    return { tag: "Rivalry week", blurb: `${game.rivalry}. Throw the records out.`, tone: "hype" };
+    return { tag: "Rivalry week", blurb: `${game.rivalry}. Their ${offTagLabel(schemeTagsFor(game.opponent.slug).offTag)} against ${plan?.def === "blitz" ? "your blitz packages" : "your defensive call"}.`, tone: "hype" };
 
   const p = game.winProb;
   const opp = game.opponent;

@@ -6,6 +6,8 @@ import { dbEnabled } from "@/db/client";
 import { fmtMoney1 } from "@/lib/format";
 import { getTeam } from "@/lib/data";
 import TeamMark from "@/components/TeamMark";
+import { defTagLabel, gameplanNarration, gameplanRecord, offTagLabel, tendencyLabel } from "@/lib/gameplan";
+import { SIM_VERSION } from "@/lib/season-replay";
 
 export const dynamic = "force-dynamic";
 
@@ -77,12 +79,13 @@ export default async function ShareSeasonPage({ params }: Props) {
   const projWins = regGames.reduce((s, g) => s + g.winProb, 0);
   const regWins = regGames.filter((g) => g.won).length;
   const over = regWins - projWins;
+  const coachingRecord = gameplanRecord(season.games);
   const verdict =
     over > 0.05
-      ? `Beat the projection by ${over.toFixed(1)} wins — the build outplayed the money.`
+      ? `Finished ${over.toFixed(1)} wins above the neutral preseason projection.`
       : over < -0.05
-        ? `Missed the projection by ${Math.abs(over).toFixed(1)} wins — bad luck, or a soft build.`
-        : "Right on the number. The money never lies.";
+        ? `Finished ${Math.abs(over).toFixed(1)} wins below the neutral preseason projection.`
+        : "Finished close to the neutral preseason projection.";
 
   return (
     <div className="mx-auto max-w-3xl py-10 sm:py-14">
@@ -133,7 +136,7 @@ export default async function ShareSeasonPage({ params }: Props) {
 
           <div className="mt-6 grid grid-cols-3 gap-3 text-center">
             {[
-              { label: "Projected wins", value: projWins.toFixed(1) },
+              { label: "Neutral projection", value: projWins.toFixed(1) },
               {
                 label: "Avg margin",
                 value: `${season.avgMargin > 0 ? "+" : ""}${season.avgMargin.toFixed(1)}`,
@@ -153,6 +156,14 @@ export default async function ShareSeasonPage({ params }: Props) {
           </div>
 
           <p className="mt-5 text-sm text-fog">{verdict}</p>
+          {season.mode === "season" && season.gameplan && (
+            <p className="mt-2 text-sm text-fog">Expectation assumes a neutral gameplan. Out-coach it.</p>
+          )}
+          {season.verified && season.simVersion !== SIM_VERSION && (
+            <p className="mt-2 text-sm text-fog">
+              Verified under an earlier game model. This recap remains available but is not ranked with current seasons.
+            </p>
+          )}
 
           {season.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
@@ -168,6 +179,22 @@ export default async function ShareSeasonPage({ params }: Props) {
           )}
         </div>
       </div>
+
+      {season.mode === "season" && season.gameplan && (
+        <section className="mt-4 rounded-2xl border border-edge bg-panel/40 p-6" aria-label="Gameplan record">
+          <h2 className="text-lg font-black text-paper">Gameplan record</h2>
+          {coachingRecord.length ? (
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              {coachingRecord.map((row) => (
+                <p key={row.label} className="text-sm text-paper">
+                  When you called {row.label}: <strong>{row.wins}–{row.losses}</strong>{" "}
+                  <span className="text-fog">({row.aboveExpected >= 0 ? "+" : ""}{row.aboveExpected.toFixed(1)} vs expected)</span>
+                </p>
+              ))}
+            </div>
+          ) : <p className="mt-2 text-sm text-fog">Neutral calls all season.</p>}
+        </section>
+      )}
 
       {/* best / worst */}
       {(season.bestWin || season.worstLoss) && (
@@ -263,6 +290,18 @@ export default async function ShareSeasonPage({ params }: Props) {
                 {g.oppName}
               </p>
               <p className="text-xs text-fog">{Math.round(g.winProb * 100)}% to win</p>
+              {season.mode === "season" && g.gameplan && (
+                <>
+                  <p className="mt-1 text-xs text-fog">
+                    They ran {offTagLabel(g.gameplan.oppOffTag)} / {defTagLabel(g.gameplan.oppDefTag)} ·{" "}
+                    {tendencyLabel(g.gameplan.off)} / {tendencyLabel(g.gameplan.def)} ·{" "}
+                    {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
+                  </p>
+                  {gameplanNarration(g.gameplan, g.won) && (
+                    <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, g.won)}</p>
+                  )}
+                </>
+              )}
             </div>
             {scoreLine(g)}
           </div>

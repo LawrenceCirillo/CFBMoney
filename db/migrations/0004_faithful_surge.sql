@@ -1,0 +1,1 @@
+ALTER TABLE "seasons" ADD COLUMN "starter_alloc" jsonb;

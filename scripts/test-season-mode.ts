@@ -46,6 +46,7 @@ import {
 } from "../lib/season-mode";
 import { SeasonPayloadSchema } from "../lib/season-payload";
 import { DATA_FINGERPRINT, SIM_VERSION, fingerprintForTeams, replaySeason, type ReplayInput } from "../lib/season-replay";
+import { resolveGameplan, type GameplanPick } from "../lib/gameplan";
 
 let failures = 0;
 function assert(cond: boolean, label: string, extra?: unknown) {
@@ -521,6 +522,7 @@ function oldUiRun(
   const input: ReplayInput = {
     mode: "season", seed: 2, programSlug: playoffProgram.slug, budgetM: 55,
     alloc: playoffAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+    gameplan: [], autoGameplan: true,
   };
   const manual = oldUiRun("season", 2, false, playoffAlloc, 55, playoffProgram);
   const fast = oldUiRun("season", 2, true, playoffAlloc, 55, playoffProgram);
@@ -528,7 +530,9 @@ function oldUiRun(
   assert(full.games.filter((g) => g.stage).map((g) => g.stage).join(",") === "qf,sf,ncg",
     "playoff fixture reaches quarterfinal, semifinal, and title game");
   assert(replayLog(manual) === replayLog(fast), "playoff manual and fast paths agree");
-  assert(replayLog(manual) === replayLog(full.games), "playoff shared replay matches old path");
+  assert(JSON.stringify(manual.slice(0, 12).map((g) => g.opponent.slug)) ===
+    JSON.stringify(full.games.slice(0, 12).map((g) => g.opponent.slug)),
+    "playoff replay keeps the old honest schedule");
   for (let n = 0; n <= full.games.length; n++) {
     const partial = replaySeason(input, n);
     assert(replayLog(partial.games.filter((g) => g.result)) === replayLog(full.games.slice(0, n)),
@@ -541,13 +545,20 @@ for (const mode of ["quick", "season"] as const) {
     const input: ReplayInput = {
       mode, seed, programSlug: program.slug, budgetM: 30, alloc: replayAlloc,
       simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+      gameplan: [], autoGameplan: true,
     };
     const manual = oldUiRun(mode, seed, false);
     const fast = oldUiRun(mode, seed, true);
     const full = replaySeason(input);
     const label = `${mode}/seed ${seed}`;
     assert(replayLog(manual) === replayLog(fast), `${label}: old manual and fast paths agree`);
-    assert(replayLog(full.games) === replayLog(manual), `${label}: shared replay preserves old results`);
+    if (mode === "quick") {
+      assert(replayLog(full.games) === replayLog(manual), `${label}: quick sim preserves neutral results`);
+    } else {
+      assert(JSON.stringify(full.games.slice(0, 12).map((g) => g.opponent.slug)) ===
+        JSON.stringify(manual.slice(0, 12).map((g) => g.opponent.slug)),
+        `${label}: gameplan keeps the regular-season schedule`);
+    }
     assert(replayLog(replaySeason(input).games) === replayLog(full.games), `${label}: repeat is deterministic`);
     assert(full.complete, `${label}: full run is complete`);
     for (let n = 0; n <= full.games.length; n++) {
@@ -560,7 +571,8 @@ for (const mode of ["quick", "season"] as const) {
 
 {
   const base = { mode: "season", seed: 24, programSlug: "texas", budgetM: 30,
-    alloc: replayAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT };
+    alloc: replayAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+    gameplan: [], autoGameplan: true };
   assert(SeasonPayloadSchema.safeParse(base).success, "canonical input validates");
   assert(!SeasonPayloadSchema.safeParse({ ...base, wins: 99 }).success, "forged wins rejected");
   assert(!SeasonPayloadSchema.safeParse({ ...base, games: [] }).success, "caller game log rejected");
@@ -581,6 +593,49 @@ for (const mode of ["quick", "season"] as const) {
     "preseasonExpectedWins sums regular-season win probs"
   );
   assert(preseasonExpectedWins([]) === 0, "preseasonExpectedWins of empty slate is 0");
+}
+
+{
+  const plus = resolveGameplan({ week: 1, off: "air", def: "blitz" }, "oklahoma-state", 0.5);
+  const minus = resolveGameplan({ week: 1, off: "ground", def: "blitz" }, "nc-state", 0.5);
+  assert(plus.offEdge === 4 && plus.defEdge === 5 && plus.netEdge === 8, "positive gameplan edge clamps to +8 points");
+  assert(minus.offEdge === -3 && minus.defEdge === -5 && minus.netEdge === -8, "negative gameplan edge clamps to -8 points");
+  assert(resolveGameplan({ week: 1, off: "balanced", def: "base" }, "ohio-state", 0.5).offEdge === 2,
+    "Balanced counters a multiple front by +2 points");
+  assert(resolveGameplan({ week: 1, off: "balanced", def: "base" }, "georgia", 0.5).offEdge === 0,
+    "Balanced remains neutral against a 3-4 front");
+  const regular: GameplanPick[] = Array.from({ length: 12 }, (_, index) => ({
+    week: index + 1,
+    off: index % 3 === 0 ? "air" : index % 3 === 1 ? "ground" : "balanced",
+    def: index % 3 === 0 ? "blitz" : index % 3 === 1 ? "bracket" : "base",
+  }));
+  const base: ReplayInput = {
+    mode: "season", seed: 147, programSlug: "texas", budgetM: 30,
+    alloc: cappedOptimalAllocation(30), simVersion: SIM_VERSION,
+    dataFingerprint: DATA_FINGERPRINT, gameplan: [], autoGameplan: true,
+  };
+  const neutral = replaySeason(base);
+  const provisional = replaySeason({ ...base, gameplan: regular });
+  const mixed: ReplayInput = {
+    ...base, autoGameplan: false,
+    gameplan: provisional.games.map((game) => regular.find((pick) => pick.week === game.week) ??
+      { week: game.week, off: "balanced", def: "base" }),
+  };
+  const first = JSON.stringify(replaySeason(mixed));
+  const second = JSON.stringify(replaySeason(mixed));
+  assert(first === second, "same seed, roster, and mixed gameplan produce byte-identical seasons");
+  const played = replaySeason(mixed).games;
+  for (let n = 0; n <= played.length; n++) {
+    const partial = replaySeason(mixed, n).games.filter((game) => game.result);
+    assert(JSON.stringify(partial) === JSON.stringify(played.slice(0, n)),
+      `mixed gameplan step ${n} matches full replay`);
+  }
+  assert(played.every((game) => game.gameplan && Math.abs(game.gameplan.netEdge) <= 8), "every game logs its bounded gameplan");
+  assert(Math.abs(preseasonExpectedWins(played) - preseasonExpectedWins(neutral.games)) < 1e-9,
+    "gameplan does not change neutral preseasonExpectedWins");
+  assert(JSON.stringify(played.slice(0, 12).map((game) => game.opponent.slug)) ===
+    JSON.stringify(neutral.games.slice(0, 12).map((game) => game.opponent.slug)),
+    "gameplan does not change the honest regular-season schedule");
 }
 
 console.log(failures === 0 ? "\nALL SEASON-MODE TESTS PASSED" : `\n${failures} FAILURES`);

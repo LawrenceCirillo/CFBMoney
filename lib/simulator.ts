@@ -22,6 +22,7 @@
 // injected rng so seasons are reproducible from a seed.
 
 import type { TeamBudget } from "./types";
+import type { GameplanResolution } from "./gameplan";
 
 export type PositionKey = "QB" | "RB" | "WR" | "OL" | "DL" | "LB" | "DB" | "ST";
 export type Allocation = Record<PositionKey, number>;
@@ -144,6 +145,11 @@ export const MARKET_CAPS: Allocation = (() => {
 
 /** Sum of per-position starter market caps ($M). */
 export const MARKET_HEADROOM_M = PLAYSHEET_SLOTS.reduce((s, slot) => s + slot.cap, 0);
+
+/** The sheet must spend the full book until every starter reaches a market cap. */
+export function requiredStarterSpendM(budgetM: number): number {
+  return Math.round(Math.min(clampGameBudget(budgetM), MARKET_HEADROOM_M) * 10) / 10;
+}
 
 export function slotMarketCap(key: string): number {
   const slot = PLAYSHEET_SLOTS.find((s) => s.key === key);
@@ -542,11 +548,25 @@ export function simulateGame(
   a: Ratings,
   b: Ratings,
   aHome: boolean,
-  rng: () => number
+  rng: () => number,
+  adjustedWinProb?: number,
 ): GameResult {
   const exp = expectedScore(a, b, aHome);
-  let scoreFor = Math.max(0, Math.round(exp.for + gauss(rng) * SCORE_NOISE_SD));
-  let scoreAgainst = Math.max(0, Math.round(exp.against + gauss(rng) * SCORE_NOISE_SD));
+  // Keep the score model and displayed probability in the same units. A
+  // gameplan changes the expected margin whose normal-CDF gives the new odds.
+  let marginShift = 0;
+  if (adjustedWinProb !== undefined && Math.abs(adjustedWinProb - exp.winProb) > 1e-12) {
+    let lo = -10 * MARGIN_SD;
+    let hi = 10 * MARGIN_SD;
+    for (let i = 0; i < 60; i++) {
+      const mid = (lo + hi) / 2;
+      if (normalCdf(mid / MARGIN_SD) < adjustedWinProb) lo = mid;
+      else hi = mid;
+    }
+    marginShift = (lo + hi) / 2 - exp.margin;
+  }
+  let scoreFor = Math.max(0, Math.round(exp.for + marginShift / 2 + gauss(rng) * SCORE_NOISE_SD));
+  let scoreAgainst = Math.max(0, Math.round(exp.against - marginShift / 2 + gauss(rng) * SCORE_NOISE_SD));
   // overtime: no ties in college football
   let guard = 0;
   while (scoreFor === scoreAgainst && guard++ < 25) {
@@ -554,7 +574,7 @@ export function simulateGame(
     scoreAgainst = Math.max(0, scoreAgainst + Math.round(gauss(rng) * 3));
   }
   if (scoreFor === scoreAgainst) {
-    if (rng() < exp.winProb) scoreFor += 3;
+    if (rng() < (adjustedWinProb ?? exp.winProb)) scoreFor += 3;
     else scoreAgainst += 3;
   }
   return { scoreFor, scoreAgainst, won: scoreFor > scoreAgainst };
@@ -570,6 +590,8 @@ export interface ScheduledGame {
   oppRatings: Ratings;
   isHome: boolean;
   winProb: number;
+  /** Present only after the weekly call has been made; winProb remains neutral. */
+  gameplan?: GameplanResolution;
   result?: GameResult;
   /** postseason stage; undefined for regular-season games */
   stage?: "qf" | "sf" | "ncg" | "bowl";

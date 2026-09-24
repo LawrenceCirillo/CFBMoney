@@ -3,10 +3,17 @@ import {
   GAME_BUDGET_MAX_M,
   GAME_BUDGET_MIN_M,
   MARKET_CAPS,
+  requiredStarterSpendM,
   type Allocation,
   type PositionKey,
 } from "./simulator";
 import { SIM_VERSION } from "./season-replay";
+
+const GameplanPickSchema = z.object({
+  week: z.number().int().min(1).max(15),
+  off: z.enum(["air", "balanced", "ground"]),
+  def: z.enum(["blitz", "base", "bracket"]),
+}).strict();
 
 const GROUPS: PositionKey[] = ["QB", "RB", "WR", "OL", "DL", "LB", "DB", "ST"];
 const amount = z.number().finite().min(0).max(GAME_BUDGET_MAX_M);
@@ -31,11 +38,21 @@ export const SeasonPayloadSchema = z.object({
   budgetM: z.number().int().min(GAME_BUDGET_MIN_M).max(GAME_BUDGET_MAX_M),
   seed: z.number().int().min(0).max(2 ** 31 - 1),
   alloc: AllocSchema,
+  gameplan: z.array(GameplanPickSchema).max(15),
+  autoGameplan: z.boolean(),
 }).strict().superRefine((value, ctx) => {
+  if (value.mode === "quick" && (value.gameplan.length !== 0 || !value.autoGameplan)) {
+    ctx.addIssue({ code: "custom", path: ["gameplan"], message: "Quick sim uses a neutral gameplan." });
+  }
+  const weeks = value.gameplan.map((pick) => pick.week);
+  if (new Set(weeks).size !== weeks.length || weeks.some((week, index) => index > 0 && week <= weeks[index - 1])) {
+    ctx.addIssue({ code: "custom", path: ["gameplan"], message: "Gameplan weeks must be unique and ordered." });
+  }
   const alloc = value.alloc as Allocation;
   const total = GROUPS.reduce((sum, group) => sum + alloc[group], 0);
-  if (total > value.budgetM + 1e-8) {
-    ctx.addIssue({ code: "custom", path: ["alloc"], message: "Allocation exceeds the roster budget." });
+  const required = requiredStarterSpendM(value.budgetM);
+  if (Math.abs(total - required) > 1e-8) {
+    ctx.addIssue({ code: "custom", path: ["alloc"], message: `Starter allocation must total $${required.toFixed(1)}M.` });
   }
   for (const group of GROUPS) {
     if (alloc[group] > MARKET_CAPS[group] + 1e-8) {

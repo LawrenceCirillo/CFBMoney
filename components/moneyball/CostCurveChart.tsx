@@ -1,60 +1,41 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  costCurve,
-  expectedWins,
-  costPerWin,
-  sweetSpot,
-  fieldRatings,
-  winPrices,
-} from "@/lib/moneyball";
-import { fmtM, fmtMoney2 } from "@/lib/format";
+import { data } from "@/lib/data";
+import { fmtM } from "@/lib/format";
+import { costCurve, expectedWins, fieldRatings } from "@/lib/moneyball";
 
-/**
- * The signature Moneyball visual: roster budget vs expected wins against an
- * average field, with the model's diminishing returns on full display.
- * Drag the slider to price any budget.
- */
+const BUDGET_STEP_M = 10;
+const budgetMidpoints = data.teams.map((team) => team.budget_mid_m);
+const minBudget = Math.min(...budgetMidpoints);
+const maxBudget = Math.max(...budgetMidpoints);
+const maxStart = Math.floor((maxBudget - BUDGET_STEP_M) * 2) / 2;
+
+/** A bounded comparison inside the reported midpoint span, using Build's assumptions. */
 export default function CostCurveChart() {
-  const [budget, setBudget] = useState(30);
-
-  const { curve, sweet, prices, field } = useMemo(() => {
+  const [startBudget, setStartBudget] = useState(Math.min(25, maxStart));
+  const { field, curve } = useMemo(() => {
     const field = fieldRatings();
-    return {
-      field,
-      curve: costCurve(field, 5, 80, 0.5),
-      sweet: sweetSpot(field),
-      prices: winPrices(5, 12, field),
-    };
+    return { field, curve: costCurve(field, minBudget, maxBudget, 0.5) };
   }, []);
 
+  const endBudget = startBudget + BUDGET_STEP_M;
+  const startWins = expectedWins(startBudget, field);
+  const endWins = expectedWins(endBudget, field);
+  const winChange = endWins - startWins;
+
   const W = 880;
-  const H = 470;
-  const m = { t: 44, r: 28, b: 54, l: 54 };
-  const x0 = 5;
-  const x1 = 80;
-  const y1 = 12;
-
-  const X = (b: number) => m.l + ((b - x0) / (x1 - x0)) * (W - m.l - m.r);
-  const Y = (w: number) => m.t + (1 - w / y1) * (H - m.t - m.b);
-
-  const path = useMemo(
-    () =>
-      curve
-        .map((p, i) => `${i === 0 ? "M" : "L"}${X(p.budget).toFixed(1)},${Y(p.wins).toFixed(1)}`)
-        .join(" "),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curve]
+  const H = 430;
+  const m = { t: 30, r: 28, b: 58, l: 58 };
+  const minWins = Math.floor(curve[0].wins);
+  const maxWins = Math.ceil(curve[curve.length - 1].wins);
+  const X = (budget: number) => m.l + ((budget - minBudget) / (maxBudget - minBudget)) * (W - m.l - m.r);
+  const Y = (wins: number) => m.t + (1 - (wins - minWins) / (maxWins - minWins)) * (H - m.t - m.b);
+  const path = curve.map((point, index) => `${index === 0 ? "M" : "L"}${X(point.budget).toFixed(1)},${Y(point.wins).toFixed(1)}`).join(" ");
+  const yTicks = Array.from({ length: maxWins - minWins + 1 }, (_, index) => minWins + index);
+  const xTicks = [minBudget, 20, 30, 40, maxBudget].filter((tick, index, ticks) =>
+    tick >= minBudget && tick <= maxBudget && ticks.indexOf(tick) === index,
   );
-
-  const wins = expectedWins(budget, field);
-  const cpw = costPerWin(budget, field);
-  const nextK = Math.min(12, Math.max(5, Math.floor(wins) + 1));
-  const nextPrice = prices.find((p) => p.win === nextK)?.priceM;
-
-  const xTicks = [10, 20, 30, 40, 50, 60, 70, 80];
-  const yTicks = [0, 2, 4, 6, 8, 10, 12];
 
   return (
     <div>
@@ -62,78 +43,30 @@ export default function CostCurveChart() {
         viewBox={`0 0 ${W} ${H}`}
         className="w-full"
         role="img"
-        aria-label="Roster budget versus expected wins: diminishing returns curve"
+        aria-label={`Build model: ${fmtM(startBudget)} yields ${startWins.toFixed(1)} expected wins; ${fmtM(endBudget)} yields ${endWins.toFixed(1)} expected wins against an average field.`}
       >
-        {/* observed budget band */}
-        <rect
-          x={X(10.5)}
-          y={m.t}
-          width={X(51.5) - X(10.5)}
-          height={H - m.t - m.b}
-          fill="var(--chart-paper)"
-          opacity={0.035}
-        />
-        <line x1={X(10.5)} y1={m.t} x2={X(10.5)} y2={H - m.b} stroke="var(--chart-grid)" strokeDasharray="4 4" />
-        <line x1={X(51.5)} y1={m.t} x2={X(51.5)} y2={H - m.b} stroke="var(--chart-grid)" strokeDasharray="4 4" />
-        <text x={(X(10.5) + X(51.5)) / 2} y={m.t - 12} textAnchor="middle" fontSize={11} fill="var(--chart-dim)" fontWeight={700}>
-          2026 budget range
-        </text>
-
-        {/* grid */}
-        {xTicks.map((v) => (
-          <g key={v}>
-            <line x1={X(v)} y1={m.t} x2={X(v)} y2={H - m.b} stroke="var(--chart-faint)" strokeWidth={1} />
-            <text x={X(v)} y={H - m.b + 22} textAnchor="middle" fontSize={12} fill="var(--chart-text)" className="tnum">
-              ${v}M
+        {yTicks.map((wins) => (
+          <g key={wins}>
+            <line x1={m.l} y1={Y(wins)} x2={W - m.r} y2={Y(wins)} stroke="var(--chart-faint)" />
+            <text x={m.l - 12} y={Y(wins) + 4} textAnchor="end" fontSize={12} fill="var(--chart-text)">
+              {wins}
             </text>
           </g>
         ))}
-        {yTicks.map((w) => (
-          <g key={w}>
-            <line x1={m.l} y1={Y(w)} x2={W - m.r} y2={Y(w)} stroke="var(--chart-faint)" strokeWidth={1} />
-            <text x={m.l - 12} y={Y(w) + 4} textAnchor="end" fontSize={12} fill="var(--chart-text)" className="tnum">
-              {w}
+        {xTicks.map((budget) => (
+          <g key={budget}>
+            <line x1={X(budget)} y1={m.t} x2={X(budget)} y2={H - m.b} stroke="var(--chart-faint)" />
+            <text x={X(budget)} y={H - m.b + 22} textAnchor="middle" fontSize={12} fill="var(--chart-text)" className="tnum">
+              {fmtM(budget)}
             </text>
           </g>
         ))}
-
-        {/* curve */}
-        <path d={path} fill="none" stroke="var(--chart-paper)" strokeWidth={2.5} />
-
-        {/* sweet spot */}
-        <circle cx={X(sweet.budget)} cy={Y(sweet.wins)} r={6} fill="#22c55e" />
-        <text
-          x={X(sweet.budget)}
-          y={Y(sweet.wins) - 16}
-          textAnchor="middle"
-          fontSize={12}
-          fontWeight={800}
-          fill="#22c55e"
-        >
-          Sweet spot · {fmtM(Math.round(sweet.budget))}
-        </text>
-
-        {/* slider marker */}
-        <line
-          x1={X(budget)}
-          y1={m.t}
-          x2={X(budget)}
-          y2={H - m.b}
-          stroke="var(--chart-paper)"
-          strokeWidth={1}
-          strokeDasharray="5 4"
-          opacity={0.55}
-        />
-        <circle cx={X(budget)} cy={Y(wins)} r={7} fill="#0a0a0c" stroke="var(--chart-paper)" strokeWidth={2.5} />
-
-        {/* steep-end annotation */}
-        <text x={W - m.r} y={Y(11.55)} textAnchor="end" fontSize={12} fill="var(--chart-dim)" fontStyle="italic">
-          wins get expensive up here
-        </text>
-
-        {/* axis titles */}
-        <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" fontSize={12} fill="var(--chart-text)">
-          Roster budget →
+        <path d={path} fill="none" stroke="var(--chart-paper)" strokeWidth={3} />
+        <line x1={X(startBudget)} y1={Y(startWins)} x2={X(endBudget)} y2={Y(endWins)} stroke="var(--color-accent)" strokeWidth={2} strokeDasharray="5 5" />
+        <circle cx={X(startBudget)} cy={Y(startWins)} r={8} fill="var(--color-ink)" stroke="var(--chart-paper)" strokeWidth={3} />
+        <circle cx={X(endBudget)} cy={Y(endWins)} r={8} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={2} />
+        <text x={(m.l + W - m.r) / 2} y={H - 5} textAnchor="middle" fontSize={12} fill="var(--chart-text)">
+          Estimated roster budget midpoint →
         </text>
         <text
           x={16}
@@ -143,45 +76,46 @@ export default function CostCurveChart() {
           fill="var(--chart-text)"
           transform={`rotate(-90 16 ${(m.t + H - m.b) / 2})`}
         >
-          Expected wins →
+          Modeled expected wins →
         </text>
       </svg>
 
-      {/* slider + readout */}
-      <div className="mt-2 border-t border-line pt-5">
-        <div className="flex items-center gap-4">
-          <span className="tnum text-sm text-fog">$5M</span>
+      <div className="mt-3 border-t border-line pt-5">
+        <label htmlFor="moneyball-start-budget" className="block text-sm font-semibold">
+          Starting budget: <span className="tnum">{fmtM(startBudget)}</span>
+        </label>
+        <div className="mt-3 flex items-center gap-3">
+          <span className="tnum shrink-0 text-xs text-fog">{fmtM(minBudget)}</span>
           <input
+            id="moneyball-start-budget"
             type="range"
-            min={5}
-            max={80}
+            min={minBudget}
+            max={maxStart}
             step={0.5}
-            value={budget}
-            onChange={(e) => setBudget(Number(e.target.value))}
+            value={startBudget}
+            onChange={(event) => setStartBudget(Number(event.target.value))}
             className="w-full"
-            aria-label="Roster budget in millions"
           />
-          <span className="tnum text-sm text-fog">$80M</span>
+          <span className="tnum shrink-0 text-xs text-fog">{fmtM(maxStart)}</span>
         </div>
-        <div className="mt-5 grid grid-cols-2 gap-px bg-edge sm:grid-cols-4">
-          {[
-            { label: "Budget", value: fmtM(budget) },
-            { label: "Expected wins", value: wins.toFixed(1) },
-            { label: "$ per win", value: fmtMoney2(cpw) },
-            {
-              label: `Price of win #${nextK}`,
-              value: nextPrice != null ? fmtM(Math.round(nextPrice * 10) / 10) : "—",
-            },
-          ].map((s) => (
-            <div key={s.label} className="bg-ink px-4 py-4">
-              <p className="text-[11px] font-semibold text-fog">{s.label}</p>
-              <p className="tnum mt-1 text-2xl font-black tracking-tight sm:text-3xl">{s.value}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 text-xs text-fog">
-          Modeled: {wins.toFixed(1)} expected wins across a 12-game season against an average
-          2026 field, neutral site. Not a prediction.
+        <dl className="mt-5 grid gap-px bg-edge sm:grid-cols-3">
+          <div className="bg-ink px-4 py-4">
+            <dt className="text-xs text-fog">At {fmtM(startBudget)}</dt>
+            <dd className="tnum mt-1 text-2xl font-black">{startWins.toFixed(1)} wins</dd>
+          </div>
+          <div className="bg-ink px-4 py-4">
+            <dt className="text-xs text-fog">At {fmtM(endBudget)}</dt>
+            <dd className="tnum mt-1 text-2xl font-black">{endWins.toFixed(1)} wins</dd>
+          </div>
+          <div className="bg-ink px-4 py-4">
+            <dt className="text-xs text-fog">Modeled change</dt>
+            <dd className="tnum mt-1 text-2xl font-black">+{winChange.toFixed(1)} wins</dd>
+          </div>
+        </dl>
+        <p className="mt-3 text-xs leading-relaxed text-fog">
+          A hypothetical 12-game season against an average {data.season} field at neutral sites.
+          The observed budget midpoint span is {fmtM(minBudget)}–{fmtM(maxBudget)}; this is a game-model
+          comparison, not an estimate of wins purchased by any school.
         </p>
       </div>
     </div>
