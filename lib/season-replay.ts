@@ -6,7 +6,6 @@ import {
   ratingsFromAllocation,
   simulateGame,
   summarizeSeason,
-  withDepth,
   type Allocation,
   type ScheduledGame,
 } from "./simulator";
@@ -18,9 +17,10 @@ import {
 } from "./season-mode";
 import type { TeamBudget } from "./types";
 import { neutralPick, resolveGameplan, schemeTagFingerprint, type GameplanPick } from "./gameplan";
+import { GRAVITY_VERSION, gravityFingerprint } from "./gravity";
 
 /** Change this when schedule, ratings, RNG, or postseason rules change. */
-export const SIM_VERSION = 3;
+export const SIM_VERSION = 4;
 export type ReplayMode = "quick" | "season";
 
 export interface ReplayInput {
@@ -30,11 +30,13 @@ export interface ReplayInput {
   seed: number;
   programSlug: string;
   budgetM: number;
-  /** Starter allocations. The unspent book is assigned to depth by withDepth. */
+  /** Exact-spend playsheet allocation. */
   alloc: Allocation;
   /** Explicit weekly calls. Quick sim and auto mode resolve missing weeks neutrally. */
   gameplan: GameplanPick[];
   autoGameplan: boolean;
+  gravityOn: boolean;
+  gravityVersion: typeof GRAVITY_VERSION;
 }
 
 /**
@@ -46,6 +48,7 @@ export function fingerprintForTeams(teams: TeamBudget[]): string {
     SIM_VERSION,
     teams.map((t) => [t.slug, t.name, t.color, t.conference, t.budget_mid_m]),
     schemeTagFingerprint(),
+    gravityFingerprint(),
   ]);
   let left = 0x811c9dc5;
   let right = 0x9e3779b9;
@@ -77,12 +80,12 @@ export function replaySeason(
 ): ReplayRun {
   const program = teams.find((t) => t.slug === input.programSlug);
   if (!program) throw new Error("Unknown program");
-  if (input.simVersion !== SIM_VERSION || input.dataFingerprint !== fingerprintForTeams(teams)) {
+  if (input.simVersion !== SIM_VERSION || input.dataFingerprint !== fingerprintForTeams(teams) || input.gravityVersion !== GRAVITY_VERSION || typeof input.gravityOn !== "boolean") {
     throw new Error("Unsupported simulation snapshot");
   }
 
-  const fullAlloc = withDepth(input.alloc, input.budgetM);
-  const ratings = ratingsFromAllocation(fullAlloc);
+  const fullAlloc = { ...input.alloc };
+  const ratings = ratingsFromAllocation(fullAlloc, { programSlug: program.slug, gravityOn: input.gravityOn });
   const rng = mulberry32((input.seed ^ (input.mode === "quick" ? 0x12345 : 0x9e3779b9)) >>> 0);
   const field = input.mode === "season" ? fieldRatings(teams) : null;
   const fieldProj = field

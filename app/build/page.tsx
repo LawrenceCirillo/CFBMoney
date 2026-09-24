@@ -41,6 +41,7 @@ function BuildPageInner() {
     distributeAllocationToSlots(emptyAllocation())
   );
   const [budgetM, setBudgetM] = useState(GAME_BUDGET_M);
+  const [gravityOn, setGravityOn] = useState(true);
   const [programSlug, setProgramSlug] = useState(
     () => (requestedProgram && getTeam(requestedProgram) ? requestedProgram : "texas")
   );
@@ -59,6 +60,7 @@ function BuildPageInner() {
   return (
     <div className={step === "build" ? "pb-32 pt-8 lg:pb-0" : "pb-24 pt-10 sm:pt-16"}>
       <p className="text-xs font-semibold text-fog">Build · 22-man playsheet</p>
+      <p className="mt-1 text-sm text-fog">College football has a $55M salary cap. You&rsquo;re the GM.</p>
       <h1
         className={`font-black tracking-tight ${
           step === "build" ? "mt-2 text-3xl sm:text-4xl" : "mt-3 text-4xl sm:text-6xl"
@@ -110,6 +112,8 @@ function BuildPageInner() {
                 pos={pos}
                 setPos={setPos}
                 budgetM={budgetM}
+                programSlug={programSlug}
+                gravityOn={gravityOn}
                 setBudgetM={setBudgetM}
                 onNext={() => setStep("program")}
               />
@@ -119,6 +123,8 @@ function BuildPageInner() {
                 programSlug={programSlug}
                 setProgramSlug={setProgramSlug}
                 budgetM={budgetM}
+                gravityOn={gravityOn}
+                setGravityOn={setGravityOn}
                 onBack={() => setStep("build")}
                 onNext={goSeason}
               />
@@ -151,6 +157,7 @@ function BuildPageInner() {
                     key={`season-${seasonId}`}
                     alloc={alloc}
                     budgetM={budgetM}
+                    gravityOn={gravityOn}
                     program={program}
                     onBack={() => setStep("build")}
                   />
@@ -159,6 +166,7 @@ function BuildPageInner() {
                     key={`quick-${seasonId}`}
                     alloc={alloc}
                     budgetM={budgetM}
+                    gravityOn={gravityOn}
                     program={program}
                     onBack={() => setStep("build")}
                   />

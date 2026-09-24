@@ -8,6 +8,8 @@ const nextConfig = {
   // Home directory has its own package-lock.json; pin tracing to this app
   // so Next doesn't treat C:\Users\ljcir as the workspace root.
   outputFileTracingRoot: projectRoot,
+  // Keep isolated HTTP smoke builds from sharing artifacts with local dev.
+  distDir: process.env.CFB_NEXT_DIST_DIR || ".next",
 };
 
 export default nextConfig;

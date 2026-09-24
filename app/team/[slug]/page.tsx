@@ -6,12 +6,19 @@ import { data, getTeam, conferencePeers } from "@/lib/data";
 import { fmtGap, fmtM, fmtPollRank, fmtRange } from "@/lib/format";
 import { getTeamSeason } from "@/lib/season-snapshot";
 import { conferenceSpendRank } from "@/lib/spend-rank";
+import { gravityTags } from "@/lib/gravity";
+import { buildSeasonGames } from "@/lib/season-mode";
+import { teamRatings } from "@/lib/simulator";
 
 export function generateStaticParams() {
   return data.teams.map((t) => ({ slug: t.slug }));
 }
 
 const SCALE = 60; // $M axis for the range viz
+const SAMPLE_SLATES = data.teams.map((program) => {
+  const games = buildSeasonGames(2026, teamRatings(program.budget_mid_m), program, data.teams);
+  return { slug: program.slug, avg: games.reduce((sum, game) => sum + game.opponent.budget_mid_m, 0) / games.length };
+}).sort((a, b) => b.avg - a.avg);
 
 export default async function TeamPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -21,6 +28,11 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
   const peers = conferencePeers(team);
   const conf = conferenceSpendRank(team, data.teams);
   const season = getTeamSeason(team.slug);
+  const gravity = gravityTags(team.slug);
+  // The schedule is seed-dependent. Use the same illustrative seed for all
+  // programs so this comparison is honest and clearly labeled.
+  const slateRank = SAMPLE_SLATES.findIndex((entry) => entry.slug === team.slug) + 1;
+  const slateAvg = SAMPLE_SLATES[slateRank - 1].avg;
 
   const gap = team.value_gap;
   const gapTone = gap == null || gap === 0 ? "text-paper" : gap > 0 ? "text-status-success" : "text-status-loss";
@@ -48,6 +60,24 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
             {team.name}
           </h1>
         </div>
+      </div>
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        <section className="rounded-2xl border border-edge bg-panel/40 p-5" aria-labelledby="gravity-heading">
+          <h2 id="gravity-heading" className="text-sm font-bold text-paper">Program gravity</h2>
+          {gravity.length ? (
+            <ul className="mt-3 space-y-1 text-sm text-fog">
+              {gravity.map((tag) => (
+                <li key={tag.group}>At {team.name}, $1M buys ${(1 + tag.gravity).toFixed(2)}M of {tag.group} talent.</li>
+              ))}
+            </ul>
+          ) : <p className="mt-3 text-sm text-fog">No tagged position-group edge in the current model.</p>}
+        </section>
+        <section className="rounded-2xl border border-edge bg-panel/40 p-5" aria-labelledby="slate-heading">
+          <h2 id="slate-heading" className="text-sm font-bold text-paper">Schedule difficulty</h2>
+          <p className="mt-3 text-sm text-paper">#{slateRank} hardest of {SAMPLE_SLATES.length} modeled slates</p>
+          <p className="mt-1 text-sm text-fog">Average opponent budget ${slateAvg.toFixed(1)}M in a sample 2026-seed schedule. Your season seed sets the actual slate.</p>
+        </section>
       </div>
 
       <div className="mt-8">

@@ -1,0 +1,266 @@
+{
+  "id": "d40afb53-7217-4d3e-a161-a0bf8f4491b5",
+  "prevId": "a849774d-25e0-4799-bdde-3ae68f9620e1",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.seasons": {
+      "name": "seasons",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publish_key": {
+          "name": "publish_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "gm_name": {
+          "name": "gm_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "program_slug": {
+          "name": "program_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_name": {
+          "name": "program_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_color": {
+          "name": "program_color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budget_m": {
+          "name": "budget_m",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alloc": {
+          "name": "alloc",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "starter_alloc": {
+          "name": "starter_alloc",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "seed": {
+          "name": "seed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sim_version": {
+          "name": "sim_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_fingerprint": {
+          "name": "data_fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameplan": {
+          "name": "gameplan",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auto_gameplan": {
+          "name": "auto_gameplan",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gravity_on": {
+          "name": "gravity_on",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gravity_version": {
+          "name": "gravity_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "wins": {
+          "name": "wins",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "losses": {
+          "name": "losses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expected_wins": {
+          "name": "expected_wins",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avg_margin": {
+          "name": "avg_margin",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "off": {
+          "name": "off",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "def": {
+          "name": "def",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "st": {
+          "name": "st",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tags": {
+          "name": "tags",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "best_win": {
+          "name": "best_win",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "worst_loss": {
+          "name": "worst_loss",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "games": {
+          "name": "games",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "seasons_wins_idx": {
+          "name": "seasons_wins_idx",
+          "columns": [
+            {
+              "expression": "wins",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "seasons_verified_wins_idx": {
+          "name": "seasons_verified_wins_idx",
+          "columns": [
+            {
+              "expression": "verified",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "wins",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "seasons_publish_key_idx": {
+          "name": "seasons_publish_key_idx",
+          "columns": [
+            {
+              "expression": "publish_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -8,6 +8,7 @@ import {
   type PositionKey,
 } from "./simulator";
 import { SIM_VERSION } from "./season-replay";
+import { GRAVITY_VERSION } from "./gravity";
 
 const GameplanPickSchema = z.object({
   week: z.number().int().min(1).max(15),
@@ -40,6 +41,8 @@ export const SeasonPayloadSchema = z.object({
   alloc: AllocSchema,
   gameplan: z.array(GameplanPickSchema).max(15),
   autoGameplan: z.boolean(),
+  gravityOn: z.boolean(),
+  gravityVersion: z.literal(GRAVITY_VERSION),
 }).strict().superRefine((value, ctx) => {
   if (value.mode === "quick" && (value.gameplan.length !== 0 || !value.autoGameplan)) {
     ctx.addIssue({ code: "custom", path: ["gameplan"], message: "Quick sim uses a neutral gameplan." });

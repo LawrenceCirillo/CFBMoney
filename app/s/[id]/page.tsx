@@ -105,6 +105,11 @@ export default async function ShareSeasonPage({ params }: Props) {
               Unverified legacy result. This season was published before server replay and is excluded from ranked leaderboards.
             </p>
           )}
+          {season.gravityVersion && (
+            <span className="mt-2 inline-flex rounded-full border border-line bg-ink px-3 py-1 text-xs font-semibold text-paper">
+              Gravity {season.gravityOn ? "on" : "off · Pure parity"} · {season.gravityVersion}
+            </span>
+          )}
           <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
             <div className="flex items-center gap-3">
               <TeamMark

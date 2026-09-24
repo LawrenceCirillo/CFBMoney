@@ -9,6 +9,7 @@ import {
 import { SeasonPayloadSchema, type SeasonPayload } from "@/lib/season-payload";
 import { DATA_FINGERPRINT, SIM_VERSION, type ReplayMode } from "@/lib/season-replay";
 import type { GameplanPick } from "@/lib/gameplan";
+import { GRAVITY_VERSION } from "@/lib/gravity";
 
 interface Props {
   mode: ReplayMode;
@@ -16,6 +17,7 @@ interface Props {
   program: TeamBudget;
   alloc: Allocation;
   budgetM: number;
+  gravityOn: boolean;
   seed: number;
   gameplan?: GameplanPick[];
   autoGameplan?: boolean;
@@ -26,7 +28,7 @@ interface Props {
  * Builds the payload from the finished season, validates it client-side,
  * then POSTs to /api/seasons.
  */
-export default function PublishPanel({ mode, games, program, alloc, budgetM, seed, gameplan = [], autoGameplan = true }: Props) {
+export default function PublishPanel({ mode, games, program, alloc, budgetM, gravityOn, seed, gameplan = [], autoGameplan = true }: Props) {
   const attempt = useRef<{ key: string; payload: SeasonPayload } | null>(null);
   const [gmName, setGmName] = useState("");
   const [publishState, setPublishState] = useState<"idle" | "saving" | "done" | "error">("idle");
@@ -55,6 +57,8 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, see
       seed,
       gameplan,
       autoGameplan,
+      gravityOn,
+      gravityVersion: GRAVITY_VERSION,
     };
 
     const valid = SeasonPayloadSchema.safeParse(payload);

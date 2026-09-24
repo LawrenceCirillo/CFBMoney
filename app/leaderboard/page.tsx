@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 type Props = { searchParams: Promise<{ sort?: string; archivePage?: string }> };
 
 const SORTS: { key: LeaderboardSort; label: string }[] = [
-  { key: "wins", label: "Most wins" },
   { key: "overachieve", label: "Biggest overachievers" },
+  { key: "wins", label: "Most wins" },
 ];
 
 function medal(rank: number) {
@@ -29,7 +29,7 @@ function medal(rank: number) {
 
 export default async function LeaderboardPage({ searchParams }: Props) {
   const sp = await searchParams;
-  const sort: LeaderboardSort = sp.sort === "overachieve" ? "overachieve" : "wins";
+  const sort: LeaderboardSort = sp.sort === "wins" ? "wins" : "overachieve";
   const pageNumber = Number(sp.archivePage);
   const archivePage = Number.isSafeInteger(pageNumber) && pageNumber > 1 && pageNumber <= 1_000_000 ? pageNumber : 1;
   const archivePageSize = 50;

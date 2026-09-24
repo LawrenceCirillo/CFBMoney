@@ -18,6 +18,7 @@ import {
   emptyAllocation,
   emptyPlaysheet,
   GAME_BUDGET_MAX_M,
+  GAME_BUDGET_M,
   GAME_BUDGET_MIN_M,
   MARKET_CAPS,
   MARKET_HEADROOM_M,
@@ -33,6 +34,8 @@ import {
   type ScheduledGame,
 } from "../lib/simulator";
 import { expectedWins as modeledExpectedWins, fieldRatings } from "../lib/moneyball";
+import { gravityTags, GRAVITY_VERSION } from "../lib/gravity";
+import gravityTable from "../data/program-gravity.json";
 import {
   RIVALRIES,
   buildSeasonGames,
@@ -78,8 +81,8 @@ function fakeGame(over: Partial<ScheduledGame> = {}): ScheduledGame {
 console.log("market caps");
 {
   const headroom = Math.round(MARKET_HEADROOM_M * 10) / 10;
-  assert(headroom === 43.5, "playsheet headroom is $43.5M", headroom);
-  assert(headroom > 30, "headroom exceeds the $30M budget");
+  assert(headroom === 78.3, "playsheet headroom is $78.3M", headroom);
+  assert(headroom > GAME_BUDGET_M * 1.4, "headroom exceeds 1.4x the $55M book");
 
   for (const g of POSITION_GROUPS) {
     const members = PLAYSHEET_SLOTS.filter((s) => s.group === g.key);
@@ -108,31 +111,30 @@ console.log("market caps");
     assert(slots[p.key] <= p.cap + 1e-9, `${p.key} within $${p.cap}M cap`, slots[p.key]);
   }
 
-  const raw = optimalAllocation(30);
-  assert(raw.QB > MARKET_CAPS.QB || raw.RB > MARKET_CAPS.RB || raw.LB > MARKET_CAPS.LB, "uncapped optimal would exceed at least one market cap");
+  assert(GAME_BUDGET_M === 55, "default salary cap is $55M");
 
   assert(clampGameBudget(9) === GAME_BUDGET_MIN_M, "budget floors at $10M");
   assert(clampGameBudget(80) === GAME_BUDGET_MAX_M, "budget caps at $55M");
   assert(clampGameBudget(30.4) === 30, "budget rounds to integer millions");
 
   const room = MARKET_HEADROOM_M;
-  assert(room === 43.5, "starter headroom stays $43.5M at a $55M book", room);
+  assert(Math.round(room * 10) / 10 === 78.3, "starter headroom stays $78.3M at a $55M book", room);
   const capped55 = cappedOptimalAllocation(55);
   const sum55 = Math.round(POSITION_GROUPS.reduce((s, g) => s + capped55[g.key], 0) * 10) / 10;
-  assert(sum55 === 43.5, "capped optimal at $55M spends starter headroom, not the whole book", capped55);
+  assert(sum55 === 55, "capped optimal at $55M spends the full book", capped55);
   for (const g of POSITION_GROUPS) {
-    assert(capped55[g.key] <= MARKET_CAPS[g.key] + 1e-9, `$55M starter ${g.key} within unscaled cap`, {
+    assert(capped55[g.key] <= MARKET_CAPS[g.key] + 1e-9, `$55M starter ${g.key} within market cap`, {
       spend: capped55[g.key],
       cap: MARKET_CAPS[g.key],
     });
   }
   const slots55 = distributeAllocationToSlots(capped55);
   for (const p of PLAYSHEET_SLOTS) {
-    assert(slots55[p.key] <= p.cap + 1e-9, `${p.key} cap does not scale with the book`, slots55[p.key]);
+    assert(slots55[p.key] <= p.cap + 1e-9, `${p.key} respects scaled cap`, slots55[p.key]);
   }
   const full55 = withDepth(capped55, 55);
   const fullSum = Math.round(POSITION_GROUPS.reduce((s, g) => s + full55[g.key], 0) * 10) / 10;
-  assert(fullSum === 55, "$55M book with depth sums to the program budget", full55);
+  assert(fullSum === 55, "$55M full allocation equals the starter book", full55);
 
   const shrunk = clampPlaysheetToBudget(slots55, 30);
   const shrunkSum = Math.round(PLAYSHEET_SLOTS.reduce((s, p) => s + shrunk[p.key], 0) * 10) / 10;
@@ -522,10 +524,15 @@ function oldUiRun(
   const input: ReplayInput = {
     mode: "season", seed: 2, programSlug: playoffProgram.slug, budgetM: 55,
     alloc: playoffAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-    gameplan: [], autoGameplan: true,
+    gameplan: [], autoGameplan: true, gravityOn: false, gravityVersion: "v1",
   };
-  const manual = oldUiRun("season", 2, false, playoffAlloc, 55, playoffProgram);
-  const fast = oldUiRun("season", 2, true, playoffAlloc, 55, playoffProgram);
+  const fixtureSeed = Array.from({ length: 1000 }, (_, seed) => seed).find((seed) =>
+    replaySeason({ ...input, seed }).games.filter((g) => g.stage).map((g) => g.stage).join(",") === "qf,sf,ncg"
+  );
+  if (fixtureSeed === undefined) throw new Error("No full playoff fixture found in 1000 seeds");
+  input.seed = fixtureSeed;
+  const manual = oldUiRun("season", fixtureSeed, false, playoffAlloc, 55, playoffProgram);
+  const fast = oldUiRun("season", fixtureSeed, true, playoffAlloc, 55, playoffProgram);
   const full = replaySeason(input);
   assert(full.games.filter((g) => g.stage).map((g) => g.stage).join(",") === "qf,sf,ncg",
     "playoff fixture reaches quarterfinal, semifinal, and title game");
@@ -545,7 +552,7 @@ for (const mode of ["quick", "season"] as const) {
     const input: ReplayInput = {
       mode, seed, programSlug: program.slug, budgetM: 30, alloc: replayAlloc,
       simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-      gameplan: [], autoGameplan: true,
+      gameplan: [], autoGameplan: true, gravityOn: false, gravityVersion: "v1",
     };
     const manual = oldUiRun(mode, seed, false);
     const fast = oldUiRun(mode, seed, true);
@@ -572,7 +579,7 @@ for (const mode of ["quick", "season"] as const) {
 {
   const base = { mode: "season", seed: 24, programSlug: "texas", budgetM: 30,
     alloc: replayAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-    gameplan: [], autoGameplan: true };
+    gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1" };
   assert(SeasonPayloadSchema.safeParse(base).success, "canonical input validates");
   assert(!SeasonPayloadSchema.safeParse({ ...base, wins: 99 }).success, "forged wins rejected");
   assert(!SeasonPayloadSchema.safeParse({ ...base, games: [] }).success, "caller game log rejected");
@@ -625,6 +632,10 @@ for (const mode of ["quick", "season"] as const) {
     "auto-style neutral week receives an opponent-specific result recap");
   assert(gameplanNarration(neutralWeek1, true, "Georgia", 0.5) !== gameplanNarration(neutralWeek2, true, "Georgia", 0.5),
     "repeated situation rotates deterministic narration wording");
+  const quietRecaps = Array.from({ length: 12 }, (_, index) =>
+    gameplanNarration({ ...neutralWeek1, week: index + 1 }, true, "Georgia", 0.65));
+  assert(new Set(quietRecaps).size === quietRecaps.length,
+    "quiet-week recaps remain distinct across a 12-game slate with the same result and odds");
   const regular: GameplanPick[] = Array.from({ length: 12 }, (_, index) => ({
     week: index + 1,
     off: index % 3 === 0 ? "air" : index % 3 === 1 ? "ground" : "balanced",
@@ -633,7 +644,7 @@ for (const mode of ["quick", "season"] as const) {
   const base: ReplayInput = {
     mode: "season", seed: 147, programSlug: "texas", budgetM: 30,
     alloc: cappedOptimalAllocation(30), simVersion: SIM_VERSION,
-    dataFingerprint: DATA_FINGERPRINT, gameplan: [], autoGameplan: true,
+    dataFingerprint: DATA_FINGERPRINT, gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
   };
   const neutral = replaySeason(base);
   const provisional = replaySeason({ ...base, gameplan: regular });
@@ -657,6 +668,45 @@ for (const mode of ["quick", "season"] as const) {
   assert(JSON.stringify(played.slice(0, 12).map((game) => game.opponent.slug)) ===
     JSON.stringify(neutral.games.slice(0, 12).map((game) => game.opponent.slug)),
     "gameplan does not change the honest regular-season schedule");
+}
+
+console.log("program gravity");
+{
+  assert(GRAVITY_VERSION === "v1", "gravity table version is v1");
+  assert(gravityTable.gravityVersion === GRAVITY_VERSION && gravityTable.teams.length === data.teams.length &&
+    data.teams.every((team) => gravityTable.teams.some((entry) => entry.slug === team.slug)),
+    "gravity table has one entry for every program");
+  assert(gravityTable.teams.filter((entry) => entry.tags.length > 0).length === 40,
+    "researched gravity table tags 40 programs");
+  assert(gravityTags("texas").some((tag) => tag.group === "RB" && tag.gravity === 0.12),
+    "Texas RB tag is loaded from the single data table");
+  const context = { programSlug: "texas", gravityOn: true };
+  const optimized = cappedOptimalAllocation(55, context);
+  assert(POSITION_GROUPS.reduce((sum, g) => sum + Math.round(optimized[g.key] * 10), 0) === 550,
+    "gravity-aware auto allocation spends exactly $55M in integer dimes");
+  const off = ratingsFromAllocation(optimized);
+  const on = ratingsFromAllocation(optimized, context);
+  assert(on.off > off.off && on.def === off.def && on.st === off.st,
+    "gravity changes only the tagged side's effective spend");
+  const base: ReplayInput = {
+    mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+    seed: 147, programSlug: "texas", budgetM: 55, alloc: optimized,
+    gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: GRAVITY_VERSION,
+  };
+  const onReplay = replaySeason(base);
+  const offReplay = replaySeason({ ...base, gravityOn: false });
+  assert(JSON.stringify(onReplay.games.slice(0, 12).map((g) => [g.opponent.slug, g.isHome])) ===
+    JSON.stringify(offReplay.games.slice(0, 12).map((g) => [g.opponent.slug, g.isHome])),
+    "gravity leaves the honest schedule unchanged");
+  assert(preseasonExpectedWins(onReplay.games) > preseasonExpectedWins(offReplay.games),
+    "neutral preseason expected wins include gravity");
+  assert(JSON.stringify(replaySeason(base)) === JSON.stringify(onReplay),
+    "gravity-on season replays byte-for-byte from published inputs");
+  assert(SeasonPayloadSchema.safeParse(base).success, "gravity-on publish payload validates");
+  assert(!SeasonPayloadSchema.safeParse({ ...base, gravityVersion: "v0" }).success,
+    "wrong gravity table version cannot publish");
+  assert(!SeasonPayloadSchema.safeParse({ ...base, gravityOn: undefined }).success,
+    "gravity choice is mandatory in published payload");
 }
 
 console.log(failures === 0 ? "\nALL SEASON-MODE TESTS PASSED" : `\n${failures} FAILURES`);

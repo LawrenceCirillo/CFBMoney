@@ -1,5 +1,22 @@
 import { expect, test } from "@playwright/test";
 
+test("gravity toggle carries from program setup into the season report", async ({ page }) => {
+  await page.goto("/build?program=texas");
+  await expect(page.getByText(/Gravity preview for Texas: RB \+12%/)).toBeVisible();
+  await page.getByRole("button", { name: "Auto-optimize" }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  const parity = page.getByRole("button", { name: "Off · Pure parity" });
+  await parity.click();
+  await expect(parity).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Back to roster" }).click();
+  await expect(page.getByText(/Gravity preview for Texas/)).toHaveCount(0);
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season" }).check();
+  await page.getByRole("button", { name: "Sim to end" }).click();
+  await expect(page.getByText("Gravity off · Pure parity · v1")).toBeVisible();
+});
+
 test("playsheet survives navigation and both sim modes render", async ({ page }) => {
   await page.goto("/build");
   await expect(page.getByRole("heading", { name: /Build a roster/ })).toBeVisible();
@@ -56,10 +73,12 @@ test("playoff run shows the user's path through the bracket", async ({ page }) =
 
   const path = page.getByRole("region", { name: "Your playoff path" });
   await expect(path).toBeVisible();
+  await expect(page.getByRole("region", { name: "Your season scores, Final" })
+    .locator("[data-season-week]").first()).toHaveAttribute("data-season-week", "1");
   await expect(path.getByText("Quarterfinal")).toBeVisible();
   await expect(path.getByText("Semifinal")).toBeVisible();
   await expect(path.getByText("National championship")).toBeVisible();
-  await expect(path.getByText("Eliminated")).toBeVisible();
+  await expect(path.getByText(/^(?:Eliminated|National champions)$/)).toBeVisible();
 });
 
 test("manual week requires two calls and previews their edge", async ({ page }) => {

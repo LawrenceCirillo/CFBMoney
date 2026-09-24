@@ -99,7 +99,7 @@ function SeasonGameChip({ game, programSlug, programAbbr, current }: {
     </Link>
   );
   return (
-    <div className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap border-r border-ink/15 px-4 ${current ? "bg-ink/10" : ""}`}>
+    <div data-season-week={game.week} className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap border-r border-ink/15 px-4 ${current ? "bg-ink/10" : ""}`}>
       <span className="text-[10px] font-black uppercase tracking-wide text-ink/55">{game.stage ?? `W${game.week}`}</span>
       {game.isHome ? theirs : yours}
       <span className="text-[11px] text-ink/45">at</span>
@@ -118,7 +118,8 @@ export default function ScoreTicker() {
     const current = season.games[season.featured];
     const stageLabel: Record<string, string> = { qf: "Quarterfinal", sf: "Semifinal", ncg: "Championship", bowl: "Bowl" };
     const range = season.done ? "Final" : `Week ${current?.week ?? 1}${current?.stage ? ` · ${stageLabel[current.stage]}` : ""}`;
-    const ordered = [...season.games.slice(season.featured), ...season.games.slice(0, season.featured)];
+    const ordered = season.games;
+    const played = season.games.filter((game) => game.scoreFor != null).length;
     return (
       <div className="score-ticker flex h-11 border-b border-ink/15 bg-paper text-ink" data-paused={paused}>
         <div className="z-10 flex shrink-0 items-center gap-2 border-r border-ink/15 bg-paper px-4">
@@ -131,12 +132,12 @@ export default function ScoreTicker() {
           </button>
         </div>
         <div className="score-ticker-window min-w-0 flex-1 overflow-hidden" role="region" aria-label={`Your season scores, ${range}`}>
-          <div className="score-ticker-track flex w-max">
+          <div key={`${season.programSlug}-${played}-${season.featured}`} className="score-ticker-track flex w-max">
             {[false, true].map((hidden) => (
               <div key={String(hidden)} className="flex h-11 items-center" inert={hidden ? true : undefined} aria-hidden={hidden || undefined}>
                 {ordered.map((game, index) => (
                   <SeasonGameChip key={`${hidden}-${game.week}-${game.stage ?? "reg"}`} game={game}
-                    programSlug={season.programSlug} programAbbr={season.programAbbr} current={index === 0} />
+                    programSlug={season.programSlug} programAbbr={season.programAbbr} current={index === season.featured} />
                 ))}
               </div>
             ))}

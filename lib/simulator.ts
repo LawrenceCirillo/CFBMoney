@@ -23,6 +23,7 @@
 
 import type { TeamBudget } from "./types";
 import type { GameplanResolution } from "./gameplan";
+import { gravityRates, type GravityContext, type GravityRates } from "./gravity";
 
 export type PositionKey = "QB" | "RB" | "WR" | "OL" | "DL" | "LB" | "DB" | "ST";
 export type Allocation = Record<PositionKey, number>;
@@ -30,14 +31,14 @@ export type Allocation = Record<PositionKey, number>;
 export interface PositionGroup {
   key: PositionKey;
   label: string;
-  /** slider cap in the $30M game */
+  /** modeled group ceiling */
   max: number;
   /**
    * Half-saturation constant ($M): talent = FLOOR + (1-FLOOR) * spend/(spend+c).
    * Classic diminishing returns — the first million matters most, the tenth
    * barely registers. Marginal talent is highest at $0, so every group always
    * wants *some* money (no degenerate $0 units), and stars get expensive fast.
-   * `c` sits near a typical $30M group's spend, where decisions live.
+   * `c` controls the point of diminishing returns.
    */
   c: number;
   side: "off" | "def" | "st";
@@ -46,14 +47,14 @@ export interface PositionGroup {
 }
 
 export const POSITION_GROUPS: PositionGroup[] = [
-  { key: "QB", label: "Quarterback", max: 5, c: 4.9, side: "off", weight: 0.38 },
-  { key: "RB", label: "Running Back", max: 1.5, c: 1.9, side: "off", weight: 0.15 },
-  { key: "WR", label: "Wide Receiver", max: 7, c: 3.2, side: "off", weight: 0.21 },
-  { key: "OL", label: "Offensive Line", max: 8.5, c: 4.6, side: "off", weight: 0.26 },
-  { key: "DL", label: "Defensive Line", max: 8, c: 4.6, side: "def", weight: 0.38 },
-  { key: "LB", label: "Linebacker", max: 3, c: 2.4, side: "def", weight: 0.3 },
-  { key: "DB", label: "Defensive Back", max: 8.5, c: 4.6, side: "def", weight: 0.32 },
-  { key: "ST", label: "Special Teams", max: 2, c: 0.8, side: "st", weight: 1.0 },
+  { key: "QB", label: "Quarterback", max: 9, c: 4.9, side: "off", weight: 0.38 },
+  { key: "RB", label: "Running Back", max: 2.7, c: 1.9, side: "off", weight: 0.15 },
+  { key: "WR", label: "Wide Receiver", max: 12.6, c: 3.2, side: "off", weight: 0.21 },
+  { key: "OL", label: "Offensive Line", max: 15.3, c: 4.6, side: "off", weight: 0.26 },
+  { key: "DL", label: "Defensive Line", max: 14.4, c: 4.6, side: "def", weight: 0.38 },
+  { key: "LB", label: "Linebacker", max: 5.4, c: 2.4, side: "def", weight: 0.3 },
+  { key: "DB", label: "Defensive Back", max: 15.3, c: 4.6, side: "def", weight: 0.32 },
+  { key: "ST", label: "Special Teams", max: 3.6, c: 0.8, side: "st", weight: 1.0 },
 ];
 
 /** Modeled share of a real team's budget per group. Labeled as estimates in the UI. */
@@ -63,7 +64,7 @@ export const POSITION_SPLITS: Record<PositionKey, number> = {
 };
 
 /** Default NIL book. Players can set any integer from MIN to MAX. */
-export const GAME_BUDGET_M = 30;
+export const GAME_BUDGET_M = 55;
 export const GAME_BUDGET_MIN_M = 10;
 /** Top of The Athletic's 2026 range (Texas high $55M). Program book, not 22 salaries. */
 export const GAME_BUDGET_MAX_M = 55;
@@ -74,11 +75,10 @@ export function clampGameBudget(budgetM: number): number {
 }
 
 /**
- * Real NIL pay scale for the 22-man playsheet + ST. These do not scale with
- * the program book: a Mensah/Underwood QB can hit $5M whether the athletic
- * department books $20M or $55M. Leftover money is depth — the rest of the 85.
- * Group caps equal the sum of member caps ($43.5M), so a typical $30M book
- * can still be spent entirely on the sheet, and a $55M book cannot.
+ * Market ceilings for the 22-man playsheet + ST, scaled by 1.8 from the
+ * original relative structure. They total $78.3M (1.42x the $55M book),
+ * leaving room for every dime to be spent while retaining scarce premium
+ * positions. These are ceilings, not asserted real salaries.
  */
 export interface PlaysheetSlot {
   key: string;
@@ -86,10 +86,10 @@ export interface PlaysheetSlot {
   cap: number;
 }
 
-const STAR_QB_CAP = 5;
-const PREMIUM_CAP = 2.5;
-const STARTER_CAP = 1.5;
-const ST_CAP = 2;
+const STAR_QB_CAP = 9;
+const PREMIUM_CAP = 4.5;
+const STARTER_CAP = 2.7;
+const ST_CAP = 3.6;
 
 export const PLAYSHEET_SLOTS = [
   { key: "LT", group: "OL", cap: PREMIUM_CAP },
@@ -192,7 +192,7 @@ const OFF_W = 0.46;
 const DEF_W = 0.46;
 const ST_W = 0.08;
 const BASE_POINTS = 27; // average-team-vs-average-team shootout level
-const POINTS_PER_RATING = 0.6; // each rating point ≈ 0.6 expected points
+const POINTS_PER_RATING = 0.6; // unchanged: a rating point moves expected score by 0.6
 const ST_POINTS_FACTOR = 0.12; // ST rating swings scoring a little
 const HOME_EDGE = 1.5; // ≈3-point home swing, in line with college football
 const MARGIN_SD = 13.5; // empirical std of FBS victory margins
@@ -262,12 +262,17 @@ export function talentFromSpend(spendM: number, c: number): number {
   return TALENT_FLOOR + (1 - TALENT_FLOOR) * (s / (s + c));
 }
 
-export function ratingsFromAllocation(alloc: Allocation): Ratings {
+export function ratingsFromAllocation(alloc: Allocation, context?: GravityContext): Ratings {
+  return ratingsFromAllocationWithRates(alloc, gravityRates(context));
+}
+
+/** Explicit rates are for calibration; replay always looks rates up by versioned program. */
+export function ratingsFromAllocationWithRates(alloc: Allocation, rates: GravityRates): Ratings {
   let off = 0;
   let def = 0;
   let st = 0;
   for (const g of POSITION_GROUPS) {
-    const t = talentFromSpend(alloc[g.key], g.c);
+    const t = talentFromSpend(alloc[g.key] * (1 + (rates[g.key] ?? 0)), g.c);
     if (g.side === "off") off += g.weight * t;
     else if (g.side === "def") def += g.weight * t;
     else st += g.weight * t;
@@ -282,22 +287,23 @@ export function teamRatings(budgetMidM: number): Ratings {
   return ratingsFromAllocation(alloc);
 }
 
-function groupWeight(g: PositionGroup): number {
+function groupWeight(g: PositionGroup, effectiveC = g.c): number {
   const sideW = g.side === "off" ? OFF_W : g.side === "def" ? DEF_W : ST_W;
-  return sideW * g.weight * (1 - TALENT_FLOOR) * g.c;
+  return sideW * g.weight * (1 - TALENT_FLOOR) * effectiveC;
 }
 
 /**
  * Unconstrained water-fill among a subset of groups. Returns raw (unrounded)
  * spends that sum to budgetM.
  */
-function optimalAmong(groups: PositionGroup[], budgetM: number): Map<PositionKey, number> {
+function optimalAmong(groups: PositionGroup[], budgetM: number, rates: GravityRates = {}): Map<PositionKey, number> {
   const out = new Map<PositionKey, number>();
   for (const g of groups) out.set(g.key, 0);
   if (groups.length === 0 || budgetM <= 0) return out;
-  const items = groups.map((g) => ({ g, wc: groupWeight(g) }));
+  // t((1+r)s,c) = t(s,c/(1+r)); water-fill on actual dollars and adjusted c.
+  const items = groups.map((g) => ({ g, c: g.c / (1 + (rates[g.key] ?? 0)), wc: groupWeight(g, g.c / (1 + (rates[g.key] ?? 0))) }));
   const totalAt = (lam: number) =>
-    items.reduce((s, { g, wc }) => s + Math.max(0, Math.sqrt(wc / lam) - g.c), 0);
+    items.reduce((s, { c, wc }) => s + Math.max(0, Math.sqrt(wc / lam) - c), 0);
   let lo = 1e-12;
   let hi = 1;
   while (totalAt(hi) > budgetM) hi *= 2;
@@ -307,8 +313,8 @@ function optimalAmong(groups: PositionGroup[], budgetM: number): Map<PositionKey
     else hi = mid;
   }
   const lam = (lo + hi) / 2;
-  for (const { g, wc } of items) {
-    out.set(g.key, Math.max(0, Math.sqrt(wc / lam) - g.c));
+  for (const { g, c, wc } of items) {
+    out.set(g.key, Math.max(0, Math.sqrt(wc / lam) - c));
   }
   return out;
 }
@@ -355,9 +361,9 @@ function settleDimes(raw: Allocation, budgetM: number, caps: Allocation): Alloca
 
 /**
  * Optimal starter allocation that respects MARKET_CAPS. Spends at most
- * min(budget, $43.5M) on the 22; anything above headroom is depth.
+ * min(budget, market headroom) on the 22.
  */
-export function cappedOptimalAllocation(budgetM: number): Allocation {
+export function cappedOptimalAllocation(budgetM: number, context?: GravityContext): Allocation {
   const budget = Math.min(clampGameBudget(budgetM), MARKET_HEADROOM_M);
   const caps = MARKET_CAPS;
   const pinned = new Set<PositionKey>();
@@ -370,7 +376,7 @@ export function cappedOptimalAllocation(budgetM: number): Allocation {
     );
     const remaining = budget - used;
     if (open.length === 0 || remaining <= 1e-9) break;
-    const raw = optimalAmong(open, remaining);
+    const raw = optimalAmong(open, remaining, gravityRates(context));
     const overflow = open.filter((g) => (raw.get(g.key) ?? 0) > caps[g.key] + 1e-9);
     if (overflow.length === 0) {
       for (const g of open) alloc[g.key] = raw.get(g.key) ?? 0;

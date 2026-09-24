@@ -20,8 +20,8 @@ import { startTestPostgres } from "./test-postgres";
 const payload = (mode: "quick" | "season", seed: number): SeasonPayload => {
   const base: SeasonPayload = {
     mode, seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-    programSlug: "texas", budgetM: 30, alloc: cappedOptimalAllocation(30),
-    gameplan: [], autoGameplan: true,
+    programSlug: "texas", budgetM: 55, alloc: cappedOptimalAllocation(55, { programSlug: "texas", gravityOn: true }),
+    gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
   };
   return mode === "season" ? { ...base, gameplan: replaySeason(base).games.map((game) => ({
     week: game.week, off: "balanced", def: "base",
@@ -51,6 +51,8 @@ async function main() {
       assert.equal(row.verified, true);
       assert.equal(row.mode, mode);
       assert.equal(row.simVersion, SIM_VERSION);
+      assert.equal(row.gravityOn, true);
+      assert.equal(row.gravityVersion, "v1");
       assert.equal(row.dataFingerprint, DATA_FINGERPRINT);
       assert.equal(row.wins, replay.summary.wins);
       assert.equal(row.losses, replay.summary.losses);
