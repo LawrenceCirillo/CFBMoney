@@ -9,11 +9,11 @@ import {
   groupRanks,
   ratingsFromAllocation,
   summarizeSeason,
-  withDepth,
   type Allocation,
   type ScheduledGame,
 } from "@/lib/simulator";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
+import { GRAVITY_VERSION } from "@/lib/gravity";
 import { fmtMoney1 } from "@/lib/format";
 import TeamMark from "@/components/TeamMark";
 import ProbabilityPill from "./ProbabilityPill";
@@ -22,21 +22,22 @@ import PublishPanel from "./PublishPanel";
 interface Props {
   alloc: Allocation;
   budgetM: number;
+  gravityOn: boolean;
   program: TeamBudget;
   onBack: () => void;
 }
 
-export default function Season({ alloc, budgetM, program, onBack }: Props) {
-  const userR = useMemo(() => ratingsFromAllocation(withDepth(alloc, budgetM)), [alloc, budgetM]);
+export default function Season({ alloc, budgetM, gravityOn, program, onBack }: Props) {
+  const userR = useMemo(() => ratingsFromAllocation(alloc, { programSlug: program.slug, gravityOn }), [alloc, program.slug, gravityOn]);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const input: ReplayInput = { mode: "quick", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan: [], autoGameplan: true };
+  const input: ReplayInput = { mode: "quick", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan: [], autoGameplan: true, gravityOn, gravityVersion: GRAVITY_VERSION };
   const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
   const [copied, setCopied] = useState(false);
 
   const summary = useMemo(() => summarizeSeason(games), [games]);
   const played = games.filter((g) => g.result).length;
   const done = played === games.length;
-  const dna = useMemo(() => groupRanks(withDepth(alloc, budgetM), data.teams), [alloc, budgetM]);
+  const dna = useMemo(() => groupRanks(alloc, data.teams), [alloc]);
   const tags = useMemo(() => archetype(alloc), [alloc]);
   const qbDna = dna.find((d) => d.key === "QB")!;
 
@@ -216,6 +217,7 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
           className="mt-16 border-t border-line pt-8"
         >
           <p className="text-xs font-semibold text-fog">Season report</p>
+          <p className="mt-1 text-xs font-semibold text-fog">Gravity {gravityOn ? "on" : "off · Pure parity"} · {GRAVITY_VERSION}</p>
           <p className="tnum mt-3 text-6xl font-black tracking-tight sm:text-7xl">
             {summary.wins}–{summary.losses}
           </p>
@@ -290,6 +292,7 @@ export default function Season({ alloc, budgetM, program, onBack }: Props) {
             program={program}
             alloc={alloc}
             budgetM={budgetM}
+            gravityOn={gravityOn}
             seed={seed}
           />
 

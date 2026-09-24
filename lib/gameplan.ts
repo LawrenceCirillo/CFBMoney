@@ -102,15 +102,42 @@ export function resolveGameplan(
 
 export function gameplanNarration(plan: GameplanResolution, won: boolean, opponent: string, neutralWinProb: number): string {
   const favored = neutralWinProb >= 0.5;
-  const neutralLines = won
-    ? favored
-      ? [`A neutral plan against ${opponent}; the roster carried its pregame edge.`, `No matchup adjustment against ${opponent}. The favored roster won.`]
-      : [`A neutral plan against ${opponent}; the roster beat its pregame odds.`, `No matchup adjustment against ${opponent}. The underdog won anyway.`]
-    : favored
-      ? [`A neutral plan against ${opponent}; the favored roster came up short.`, `No matchup adjustment against ${opponent}. The pregame favorite lost.`]
-      : [`A neutral plan against ${opponent}; the result followed the pregame odds.`, `No matchup adjustment against ${opponent}. The underdog fell short.`];
   if (plan.off === "balanced" && plan.def === "base" && plan.netEdge === 0) {
-    return neutralLines[(plan.week - 1) % neutralLines.length];
+    const chance = Math.round(neutralWinProb * 100);
+    const setups = [
+      `No matchup adjustment against ${opponent}.`,
+      `Balanced and Base were the calls against ${opponent}.`,
+      `The standard plan went in against ${opponent}.`,
+    ];
+    const outcomes = won
+      ? favored
+        ? [
+          `The ${chance}% pregame favorite won.`,
+          `The favored roster delivered on its ${chance}% win chance.`,
+          `The result matched the ${chance}% pregame outlook.`,
+          `${opponent} could not overturn the ${chance}% pregame edge.`,
+        ]
+        : [
+          `The ${chance}% underdog won anyway.`,
+          `A win came despite a ${chance}% pregame chance.`,
+          `The roster beat its ${chance}% pregame odds.`,
+          `${opponent}'s pregame edge did not hold.`,
+        ]
+      : favored
+        ? [
+          `The ${chance}% pregame favorite lost.`,
+          `The roster fell short despite a ${chance}% win chance.`,
+          `The result reversed the ${chance}% pregame outlook.`,
+          `${opponent} beat the favored roster.`,
+        ]
+        : [
+          `The ${chance}% underdog fell short.`,
+          `The result tracked a ${chance}% pregame chance.`,
+          `The roster did not overturn the pregame odds.`,
+          `${opponent} held its pregame edge.`,
+        ];
+    const index = plan.week - 1;
+    return `${setups[index % setups.length]} ${outcomes[Math.floor(index / setups.length) % outcomes.length]}`;
   }
   const useDefense = Math.abs(plan.defEdge) >= Math.abs(plan.offEdge) && plan.def !== "base";
   const call = tendencyLabel(useDefense ? plan.def : plan.off);

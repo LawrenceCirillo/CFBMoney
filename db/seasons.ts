@@ -1,9 +1,10 @@
-import { and, desc, eq, isNull, ne, or, sql } from "drizzle-orm";
+import { and, desc, eq, isNotNull, isNull, ne, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb } from "./client";
 import { seasons, type NewSeason, type Season } from "./schema";
 import type { SeasonPayload } from "../lib/season-payload";
 import { replaySeason, SIM_VERSION } from "../lib/season-replay";
+import { GRAVITY_VERSION } from "../lib/gravity";
 
 export type { Season };
 
@@ -54,6 +55,8 @@ export async function createSeason(payload: SeasonPayload, publishKey: string): 
     dataFingerprint: payload.dataFingerprint,
     gameplan: payload.gameplan,
     autoGameplan: payload.autoGameplan,
+    gravityOn: payload.gravityOn,
+    gravityVersion: payload.gravityVersion,
     verified: true,
     wins: replay.summary.wins,
     losses: replay.summary.losses,
@@ -114,12 +117,14 @@ const leaderboardCols = {
   simVersion: seasons.simVersion,
 } as const;
 
-const currentRules = and(eq(seasons.verified, true), eq(seasons.simVersion, SIM_VERSION));
-const earlierRules = or(eq(seasons.verified, false), isNull(seasons.simVersion), ne(seasons.simVersion, SIM_VERSION));
+const currentRules = and(eq(seasons.verified, true), eq(seasons.simVersion, SIM_VERSION),
+  eq(seasons.gravityVersion, GRAVITY_VERSION), isNotNull(seasons.gravityOn));
+const earlierRules = or(eq(seasons.verified, false), isNull(seasons.simVersion), ne(seasons.simVersion, SIM_VERSION),
+  isNull(seasons.gravityVersion), ne(seasons.gravityVersion, GRAVITY_VERSION), isNull(seasons.gravityOn));
 
 /** Top seasons for the leaderboard. */
 export async function getLeaderboard(
-  sort: LeaderboardSort = "wins",
+  sort: LeaderboardSort = "overachieve",
   limit = 100
 ): Promise<LeaderboardRow[]> {
   const db = getDb();

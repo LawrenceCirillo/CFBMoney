@@ -36,6 +36,13 @@
       "when": 1790263822490,
       "tag": "0004_faithful_surge",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790272758100,
+      "tag": "0005_fat_sinister_six",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,635 @@
+{
+  "gravityVersion": "v1",
+  "teams": [
+    {
+      "team": "Alabama",
+      "slug": "alabama",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.16,
+          "rationale": "3 first-round OL in 2024-26 drafts: Latham #7 (2024), Booker #12 (2025), Proctor #12 (2026); plus Brailsford R5 2026"
+        }
+      ]
+    },
+    {
+      "team": "Arizona",
+      "slug": "arizona",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.13,
+          "rationale": "McMillan #8 overall in 2025 (led Power 4 receivers in 2024, Biletnikoff finalist); Cowing 4th rd 2024; Brennan era WR1-centric passing attack."
+        },
+        {
+          "group": "OL",
+          "gravity": 0.1,
+          "rationale": "Jordan Morgan 1st rd (2024) + Jonah Savaiinaea 2nd rd (2025) back-to-back high OL picks; 4 Wildcats drafted in 2026."
+        }
+      ]
+    },
+    {
+      "team": "Arizona State",
+      "slug": "arizona-state",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.16,
+          "rationale": "Jordyn Tyson #8 overall in 2026; third 1st-round WR in 8 drafts (Harry '19, Aiyuk '20); coached by Hines Ward."
+        }
+      ]
+    },
+    {
+      "team": "Arkansas",
+      "slug": "arkansas",
+      "tags": []
+    },
+    {
+      "team": "Auburn",
+      "slug": "auburn",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.13,
+          "rationale": "Faulk #31 + Crawford R3 (2026), Derick Hall R2 (2023); edge-rush identity under Durkin"
+        }
+      ]
+    },
+    {
+      "team": "BYU",
+      "slug": "byu",
+      "tags": []
+    },
+    {
+      "team": "Baylor",
+      "slug": "baylor",
+      "tags": []
+    },
+    {
+      "team": "Boston College",
+      "slug": "boston-college",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.15,
+          "rationale": "'O-line U': 6 OL drafted 2023-26 (Trapilo R2 '25, Bowry R4 '26); 18 linemen drafted since 2000; Lindstrom lineage."
+        }
+      ]
+    },
+    {
+      "team": "California",
+      "slug": "california",
+      "tags": []
+    },
+    {
+      "team": "Cincinnati",
+      "slug": "cincinnati",
+      "tags": []
+    },
+    {
+      "team": "Clemson",
+      "slug": "clemson",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.17,
+          "rationale": "5 DL drafted 2023-26 with two R1 picks (Bresee '23, Woods '26) and Parker R2 '26; PFF's No. 1 college D-line in 2025."
+        }
+      ]
+    },
+    {
+      "team": "Colorado",
+      "slug": "colorado",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.12,
+          "rationale": "Travis Hunter #2 overall in 2025 (Biletnikoff winner); Horn Jr. + Wester both drafted 6th rd 2025."
+        }
+      ]
+    },
+    {
+      "team": "Duke",
+      "slug": "duke",
+      "tags": []
+    },
+    {
+      "team": "Florida",
+      "slug": "florida",
+      "tags": []
+    },
+    {
+      "team": "Florida State",
+      "slug": "florida-state",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.13,
+          "rationale": "Verse R1 #19 + Fiske R2 #39 in the 2024 draft; both All-Rookie; anchors of the undefeated 2023 defense."
+        },
+        {
+          "group": "DB",
+          "gravity": 0.1,
+          "rationale": "Green R2 #64 + Jones R3 #96 in 2024 (two top-100 DBs same class); Ramsey/Derwin James lineage."
+        }
+      ]
+    },
+    {
+      "team": "Georgia",
+      "slug": "georgia",
+      "tags": [
+        {
+          "group": "LB",
+          "gravity": 0.18,
+          "rationale": "ESPN's Linebacker U: 8 LBs drafted since 2018; CJ Allen was the first LB off the board in the 2026 draft (Colts)"
+        }
+      ]
+    },
+    {
+      "team": "Georgia Tech",
+      "slug": "georgia-tech",
+      "tags": []
+    },
+    {
+      "team": "Houston",
+      "slug": "houston",
+      "tags": []
+    },
+    {
+      "team": "Illinois",
+      "slug": "illinois",
+      "tags": [
+        {
+          "group": "DB",
+          "gravity": 0.13,
+          "rationale": "Only school with 3 DBs in the first 3 rounds of the 2023 draft (Witherspoon #5 overall, Martin #47, Brown #66); secondary depth returned for 2026 (Xavier Scott, Bailey, Clarke)."
+        }
+      ]
+    },
+    {
+      "team": "Indiana",
+      "slug": "indiana",
+      "tags": [
+        {
+          "group": "QB",
+          "gravity": 0.14,
+          "rationale": "Fernando Mendoza: Heisman winner and No. 1 overall pick in 2026 after Cignetti's 16-0 national-title season; 8 draftees in 2026 (2nd-most in Big Ten)."
+        }
+      ]
+    },
+    {
+      "team": "Iowa",
+      "slug": "iowa",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.13,
+          "rationale": "Ferentz-era OL factory: Logan Jones R2 and Mason Richman R3 in 2026; 6 OL drafted 2022-26 (Wirfs lineage)."
+        },
+        {
+          "group": "ST",
+          "gravity": 0.12,
+          "rationale": "Punter school: Tory Taylor drafted R4 2024 (rare specialist pick) after Ray Guy-caliber career; consistent specialist pipeline."
+        }
+      ]
+    },
+    {
+      "team": "Iowa State",
+      "slug": "iowa-state",
+      "tags": []
+    },
+    {
+      "team": "Kansas",
+      "slug": "kansas",
+      "tags": []
+    },
+    {
+      "team": "Kansas State",
+      "slug": "kansas-state",
+      "tags": [
+        {
+          "group": "DB",
+          "gravity": 0.12,
+          "rationale": "5 DBs drafted 2023-26: Brents 2nd rd '23, Parrish 3rd rd '25, Sigle 5th rd '25, Hayes 6th rd '23, Payne 7th rd '26."
+        },
+        {
+          "group": "OL",
+          "gravity": 0.1,
+          "rationale": "Beebe 3rd rd 2024 (consensus AA, 2x Big 12 OL of year), Leveston 7th rd '24, Hecht 5th rd '26; Whitehair/Risner lineage."
+        }
+      ]
+    },
+    {
+      "team": "Kentucky",
+      "slug": "kentucky",
+      "tags": [
+        {
+          "group": "DB",
+          "gravity": 0.1,
+          "rationale": "Hairston #30 (2025) + Phillips R3 #70 (2024); six straight years with a day-2 pick; Stoops DB-coach pedigree"
+        }
+      ]
+    },
+    {
+      "team": "LSU",
+      "slug": "lsu",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.18,
+          "rationale": "2 first-round WRs in 2024 (Nabers #6, Thomas #23); Chase/Jefferson-era WRU claim still current"
+        }
+      ]
+    },
+    {
+      "team": "Louisville",
+      "slug": "louisville",
+      "tags": []
+    },
+    {
+      "team": "Maryland",
+      "slug": "maryland",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.12,
+          "rationale": "Diggs/Moore lineage plus Tai Felton R3 2025 (Big Ten-leading 96 catches, school record) and Kaden Prather R3 2025; largest draft class since 1986."
+        }
+      ]
+    },
+    {
+      "team": "Miami",
+      "slug": "miami",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.14,
+          "rationale": "Bain #15 + Mesidor #22 overall in 2026 (8th/9th UM edge first-rounders); anchored the 2025 title-game front."
+        },
+        {
+          "group": "OL",
+          "gravity": 0.11,
+          "rationale": "Mauigoa #10 overall + Bell R3 + Cooper R6 in 2026 (plus Rivers in 2025); blue-chip room led by Cantwell and Okunlola."
+        }
+      ]
+    },
+    {
+      "team": "Michigan",
+      "slug": "michigan",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.15,
+          "rationale": "Sherrone Moore's O-Line U: 13th OL drafted in six years (Myles Hinton 2025); program identity built on line play."
+        },
+        {
+          "group": "DL",
+          "gravity": 0.1,
+          "rationale": "Mason Graham #5 and Kenneth Grant #13 overall in 2025; Aidan Hutchinson lineage; three top-100 defensive linemen in 2024-25 drafts."
+        }
+      ]
+    },
+    {
+      "team": "Michigan State",
+      "slug": "michigan-state",
+      "tags": []
+    },
+    {
+      "team": "Minnesota",
+      "slug": "minnesota",
+      "tags": []
+    },
+    {
+      "team": "Mississippi State",
+      "slug": "mississippi-state",
+      "tags": []
+    },
+    {
+      "team": "Missouri",
+      "slug": "missouri",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.14,
+          "rationale": "D-Line Zou: Robinson #27 (2024); EDGE R2 #45 + DL R3 #77 in 2026; durable pass-rush pipeline"
+        }
+      ]
+    },
+    {
+      "team": "NC State",
+      "slug": "nc-state",
+      "tags": []
+    },
+    {
+      "team": "Nebraska",
+      "slug": "nebraska",
+      "tags": []
+    },
+    {
+      "team": "North Carolina",
+      "slug": "north-carolina",
+      "tags": [
+        {
+          "group": "QB",
+          "gravity": 0.11,
+          "rationale": "Maye #3 overall (2024), Trubisky #2 (2017), Howell R5 (2022): three NFL QBs from Chapel Hill in a decade."
+        },
+        {
+          "group": "RB",
+          "gravity": 0.1,
+          "rationale": "Hampton R1 #22 (2025); Javonte Williams R2 + Michael Carter R4 in 2021."
+        }
+      ]
+    },
+    {
+      "team": "Northwestern",
+      "slug": "northwestern",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.12,
+          "rationale": "Durable OL identity: Rashawn Slater #13 (2021), Peter Skoronski #11 (2023), Caleb Tiernan projected Day 2 in 2026; Tim Drevno coaching."
+        }
+      ]
+    },
+    {
+      "team": "Notre Dame",
+      "slug": "notre-dame",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.15,
+          "rationale": "Alt #5 overall + Fisher R2 in 2024; five R1 OL since 2014 (Martin, Nelson, Stanley, McGlinchey); LT never drafted below R2 since 2010."
+        },
+        {
+          "group": "DB",
+          "gravity": 0.1,
+          "rationale": "Morrison R2 + Watts R3 in 2025 (first time since 1994 with two DBs in the first three rounds); Leonard Moore-led 2026 secondary."
+        }
+      ]
+    },
+    {
+      "team": "Ohio State",
+      "slug": "ohio-state",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.2,
+          "rationale": "Clear national-best WRU: first-round WR in 5 straight drafts (2022-26, Tate #4 in 2026); all-time record 14 first-round WRs."
+        }
+      ]
+    },
+    {
+      "team": "Oklahoma",
+      "slug": "oklahoma",
+      "tags": []
+    },
+    {
+      "team": "Oklahoma State",
+      "slug": "oklahoma-state",
+      "tags": []
+    },
+    {
+      "team": "Ole Miss",
+      "slug": "ole-miss",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.17,
+          "rationale": "6 WRs taken in round 2 since 2019 (Brown, Metcalf, Moore, Mingo, Harris, Stribling); Stribling #33 in 2026"
+        }
+      ]
+    },
+    {
+      "team": "Oregon",
+      "slug": "oregon",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.11,
+          "rationale": "Josh Conerly Jr. R1 in 2025; three OL drafted in 2026 (Pregnon R3, Harkey R6); Lanning/OL coach A'lique Terry development track record."
+        }
+      ]
+    },
+    {
+      "team": "Penn State",
+      "slug": "penn-state",
+      "tags": [
+        {
+          "group": "LB",
+          "gravity": 0.19,
+          "rationale": "Linebacker U: record 72 linebackers drafted in school history (Kobe King 2025); program-defining identity."
+        }
+      ]
+    },
+    {
+      "team": "Pitt",
+      "slug": "pitt",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.11,
+          "rationale": "Kancey R1 #19 (2023), ACC DPOY; Partridge DL factory lineage (Donald, Patrick Jones); Narduzzi front-7 program."
+        }
+      ]
+    },
+    {
+      "team": "Purdue",
+      "slug": "purdue",
+      "tags": []
+    },
+    {
+      "team": "Rutgers",
+      "slug": "rutgers",
+      "tags": []
+    },
+    {
+      "team": "SMU",
+      "slug": "smu",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.1,
+          "rationale": "Rashee Rice R2 (2023), Danny Gray R3 (2022), Courtland Sutton lineage; Lashlee pass-happy WR factory."
+        }
+      ]
+    },
+    {
+      "team": "South Carolina",
+      "slug": "south-carolina",
+      "tags": [
+        {
+          "group": "DB",
+          "gravity": 0.13,
+          "rationale": "Emmanwori #35 (2025), Kilgore #52 (2026); 4 DBs drafted 2025-26 under Beamer/White"
+        },
+        {
+          "group": "DL",
+          "gravity": 0.1,
+          "rationale": "Sanders #41 (2025) + Hemingway/Kennard day 3; 4 DL drafted 2025-26"
+        }
+      ]
+    },
+    {
+      "team": "Stanford",
+      "slug": "stanford",
+      "tags": []
+    },
+    {
+      "team": "Syracuse",
+      "slug": "syracuse",
+      "tags": []
+    },
+    {
+      "team": "TCU",
+      "slug": "tcu",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.15,
+          "rationale": "4 WRs drafted 2023-25: Johnston 1st rd '23, Bech 2nd rd '25, Williams 3rd rd '25, Davis 4th rd '23; 6 active NFL WRs."
+        },
+        {
+          "group": "DB",
+          "gravity": 0.1,
+          "rationale": "Bud Clark 2nd rd '26, Newton 5th rd '24, Thorpe winner Hodges-Tomlinson '23; Moehrig/Gladney 1st/2nd-rd lineage."
+        }
+      ]
+    },
+    {
+      "team": "Tennessee",
+      "slug": "tennessee",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.1,
+          "rationale": "Pearce #26 (2025) + Norman-Lott R2; deep DL-to-NFL rotation under Heupel"
+        }
+      ]
+    },
+    {
+      "team": "Texas",
+      "slug": "texas",
+      "tags": [
+        {
+          "group": "RB",
+          "gravity": 0.12,
+          "rationale": "longest active RB draft streak in CFB (2023-25): Bijan #8, Brooks R2, plus 3 more; all five 2022 scholarship RBs drafted"
+        }
+      ]
+    },
+    {
+      "team": "Texas A&M",
+      "slug": "texas-am",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.16,
+          "rationale": "3 DL in 2025 top-62 (Stewart #17, Scourton #51, Turner #62); 2 more in 2026 top-81 (Onyedim, Regis)"
+        }
+      ]
+    },
+    {
+      "team": "Texas Tech",
+      "slug": "texas-tech",
+      "tags": [
+        {
+          "group": "DL",
+          "gravity": 0.16,
+          "rationale": "Record 2026 haul: Bailey #2 overall, Hunter 2nd rd, Height 3rd rd, Gill-Howard 6th; Tyree Wilson #7 overall in 2023."
+        }
+      ]
+    },
+    {
+      "team": "UCF",
+      "slug": "ucf",
+      "tags": []
+    },
+    {
+      "team": "UCLA",
+      "slug": "ucla",
+      "tags": [
+        {
+          "group": "LB",
+          "gravity": 0.12,
+          "rationale": "4 LBs drafted in 2024-25 incl. Carson Schwesinger (R2 #33, Butkus finalist) and Oluwafemi Oladejo (R2); DC Ikaika Malloe front-7 development."
+        }
+      ]
+    },
+    {
+      "team": "USC",
+      "slug": "usc",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.15,
+          "rationale": "6 WRs drafted 2022-26 including 3 first-rounders (Drake London 2022, Jordan Addison 2023, Makai Lemon 2026); Lemon won 2025 Biletnikoff."
+        }
+      ]
+    },
+    {
+      "team": "Utah",
+      "slug": "utah",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.17,
+          "rationale": "Two 1st-round OL in 2026 (Fano #9, Lomu); Laumea 6th rd '24; Fano was PFF's top-graded FBS tackle in 2024."
+        }
+      ]
+    },
+    {
+      "team": "Vanderbilt",
+      "slug": "vanderbilt",
+      "tags": []
+    },
+    {
+      "team": "Virginia",
+      "slug": "virginia",
+      "tags": []
+    },
+    {
+      "team": "Virginia Tech",
+      "slug": "virginia-tech",
+      "tags": []
+    },
+    {
+      "team": "Wake Forest",
+      "slug": "wake-forest",
+      "tags": [
+        {
+          "group": "DB",
+          "gravity": 0.1,
+          "rationale": "Mustapha R4 + Carson R5 (2024), Prunty R5 (2026); Jessie Bates lineage."
+        }
+      ]
+    },
+    {
+      "team": "Washington",
+      "slug": "washington",
+      "tags": [
+        {
+          "group": "WR",
+          "gravity": 0.14,
+          "rationale": "Odunze #9 overall (2024), Polk R2, McMillan R3, Denzel Boston R2 2026; legendary 2023 receiver room keeps producing."
+        }
+      ]
+    },
+    {
+      "team": "West Virginia",
+      "slug": "west-virginia",
+      "tags": [
+        {
+          "group": "OL",
+          "gravity": 0.12,
+          "rationale": "Frazier 2nd rd 2024 (2x All-American, immediate NFL starter) + Milum drafted 2025; back-to-back high OL picks."
+        }
+      ]
+    },
+    {
+      "team": "Wisconsin",
+      "slug": "wisconsin",
+      "tags": []
+    }
+  ]
+}

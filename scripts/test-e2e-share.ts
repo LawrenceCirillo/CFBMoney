@@ -71,8 +71,8 @@ async function main() {
       const payload: SeasonPayload = {
         gmName: `HTTP ${mode} test`, mode, seed, simVersion: SIM_VERSION,
         dataFingerprint: DATA_FINGERPRINT, programSlug: "texas", budgetM: GAME_BUDGET_M,
-        alloc: cappedOptimalAllocation(GAME_BUDGET_M),
-        gameplan: [], autoGameplan: true,
+        alloc: cappedOptimalAllocation(GAME_BUDGET_M, { programSlug: "texas", gravityOn: true }),
+        gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
       };
       if (mode === "season") {
         const regular = Array.from({ length: 12 }, (_, index) => ({
@@ -95,6 +95,8 @@ async function main() {
       const saved = await getSeason(posted.body.id);
       assert(saved);
       assert.equal(saved.verified, true);
+      assert.equal(saved.gravityOn, true);
+      assert.equal(saved.gravityVersion, "v1");
       assert.equal(saved.wins, replay.summary.wins);
       assert.equal(saved.losses, replay.summary.losses);
       assert.deepEqual(saved.games.map((g) => [g.oppSlug, g.scoreFor, g.scoreAgainst, g.stage ?? null]),
@@ -107,6 +109,7 @@ async function main() {
       assert.equal(share.status, 200);
       assert(html.includes(`HTTP ${mode} test`));
       assert(html.includes(`${saved.wins}–${saved.losses}`));
+      assert(/Gravity\s*(?:<!-- -->)?\s*on/.test(html));
       assert(/Wk\s*(<!-- -->)?\s*1/.test(html));
       if (mode === "season") {
         assert(html.includes("Gameplan record"));
@@ -125,7 +128,7 @@ async function main() {
       gmName: "Rejected", mode: "quick", seed: 42, simVersion: SIM_VERSION,
       dataFingerprint: DATA_FINGERPRINT, programSlug: "texas", budgetM: GAME_BUDGET_M,
       alloc: cappedOptimalAllocation(GAME_BUDGET_M),
-      gameplan: [], autoGameplan: true,
+      gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
     };
     assert.equal((await publish(base, { ...payload, wins: 99 })).status, 422);
     assert.equal((await publish(base, { ...payload, dataFingerprint: "v1-0000000000000000" })).status, 409);

@@ -9,7 +9,6 @@ import {
   groupRanks,
   ratingsFromAllocation,
   summarizeSeason,
-  withDepth,
   type Allocation,
   type Ratings,
   type ScheduledGame,
@@ -24,6 +23,7 @@ import {
   type PostseasonStage,
 } from "@/lib/season-mode";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
+import { GRAVITY_VERSION } from "@/lib/gravity";
 import { fmtMoney1 } from "@/lib/format";
 import PublishPanel from "./PublishPanel";
 import PlayoffPath from "./PlayoffPath";
@@ -39,6 +39,7 @@ import {
 interface Props {
   alloc: Allocation;
   budgetM: number;
+  gravityOn: boolean;
   program: TeamBudget;
   onBack: () => void;
 }
@@ -112,9 +113,9 @@ function ratingBars(you: Ratings, opp: Ratings) {
   );
 }
 
-export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
+export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack }: Props) {
   const { setSeason: setTickerSeason } = useSeasonTicker();
-  const userR = useMemo(() => ratingsFromAllocation(withDepth(alloc, budgetM)), [alloc, budgetM]);
+  const userR = useMemo(() => ratingsFromAllocation(alloc, { programSlug: program.slug, gravityOn }), [alloc, program.slug, gravityOn]);
   const field = useMemo(() => fieldRatings(), []);
   const fieldProj = useMemo(
     () =>
@@ -129,7 +130,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   const [autoGameplan, setAutoGameplan] = useState(false);
   const [offPick, setOffPick] = useState<OffensiveTendency | null>(null);
   const [defPick, setDefPick] = useState<DefensiveTendency | null>(null);
-  const input: ReplayInput = { mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan, autoGameplan };
+  const input: ReplayInput = { mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan, autoGameplan, gravityOn, gravityVersion: GRAVITY_VERSION };
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
@@ -176,7 +177,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
   const rankDelta = prevRank != null ? prevRank - rank : 0; // positive = climbed
 
   const outcome = done ? postseasonOutcome(games) : null;
-  const dna = useMemo(() => groupRanks(withDepth(alloc, budgetM), data.teams), [alloc, budgetM]);
+  const dna = useMemo(() => groupRanks(alloc, data.teams), [alloc]);
   const tags = useMemo(() => archetype(alloc), [alloc]);
   const qbDna = dna.find((d) => d.key === "QB")!;
   const coachingRecord = gameplanRecord(games.filter((game) => game.result).map((game) => ({
@@ -572,6 +573,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
           className="mt-16 border-t border-line pt-8"
         >
           <p className="text-xs font-semibold text-fog">Season report</p>
+          <p className="mt-1 text-xs font-semibold text-fog">Gravity {gravityOn ? "on" : "off · Pure parity"} · {GRAVITY_VERSION}</p>
           {outcome && (
             <p
               className={`mt-3 text-3xl font-black tracking-tight sm:text-4xl ${
@@ -673,6 +675,7 @@ export default function SeasonMode({ alloc, budgetM, program, onBack }: Props) {
             program={program}
             alloc={alloc}
             budgetM={budgetM}
+            gravityOn={gravityOn}
             seed={seed}
             gameplan={gameplan}
             autoGameplan={autoGameplan}

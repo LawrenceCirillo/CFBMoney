@@ -17,8 +17,8 @@ import { startTestPostgres } from "./test-postgres";
 const input = (mode: "quick" | "season", seed: number): SeasonPayload => {
   const base: SeasonPayload = {
     mode, seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-    programSlug: "texas", budgetM: 30, alloc: cappedOptimalAllocation(30),
-    gameplan: [], autoGameplan: true,
+    programSlug: "texas", budgetM: 55, alloc: cappedOptimalAllocation(55, { programSlug: "texas", gravityOn: true }),
+    gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
   };
   return mode === "season" ? { ...base, gameplan: replaySeason(base).games.map((game) => ({
     week: game.week, off: "balanced", def: "base",
@@ -60,6 +60,8 @@ async function main() {
       assert.equal(row.publishKey !== null, true);
       const replay = replaySeason(request);
       assert.equal(row.verified, true);
+      assert.equal(row.gravityOn, true);
+      assert.equal(row.gravityVersion, "v1");
       assert.equal(row.wins, replay.summary.wins);
       assert.deepEqual(row.games.map((g) => [g.oppSlug, g.scoreFor, g.scoreAgainst, g.stage ?? null]),
         replay.games.map((g) => [g.opponent.slug, g.result!.scoreFor, g.result!.scoreAgainst, g.stage ?? null]));
@@ -84,6 +86,8 @@ async function main() {
     assert.equal(mixedRow.verified, true);
     assert.deepEqual(mixedRow.gameplan, mixed.gameplan);
     assert.deepEqual(mixedRow.starterAlloc, mixed.alloc);
+    assert.equal(mixedRow.gravityOn, true);
+    assert.equal(mixedRow.gravityVersion, "v1");
     assert.deepEqual(mixedRow.games.map((game) => game.gameplan), mixedReplay.games.map((game) => game.gameplan));
     assert.deepEqual(mixedRow.games.map((game) => [game.scoreFor, game.scoreAgainst]),
       mixedReplay.games.map((game) => [game.result!.scoreFor, game.result!.scoreAgainst]));
@@ -91,16 +95,17 @@ async function main() {
       mode: mixedRow.mode!, simVersion: mixedRow.simVersion!, dataFingerprint: mixedRow.dataFingerprint!,
       seed: mixedRow.seed, programSlug: mixedRow.programSlug, budgetM: mixedRow.budgetM,
       alloc: mixedRow.starterAlloc!, gameplan: mixedRow.gameplan!, autoGameplan: mixedRow.autoGameplan!,
+      gravityOn: mixedRow.gravityOn!, gravityVersion: "v1",
     });
     assert.deepEqual(storedReplay.games.map((game) => [game.opponent.slug, game.result, game.gameplan]),
       mixedReplay.games.map((game) => [game.opponent.slug, game.result, game.gameplan]));
-    console.log("  ok mixed weekly picks replay exactly on server and publish verified");
+    console.log("  ok $55M gravity-on season with mixed weekly picks replays exactly on server");
 
     const cappedBudget = { ...input("quick", 422), budgetM: 55, alloc: cappedOptimalAllocation(55) };
     const cappedResponse = await publish(cappedBudget);
     assert.equal(cappedResponse.status, 201, `capped starter book publish succeeds: ${cappedResponse.body.error}`);
     assert.equal((await getSeason(cappedResponse.body.id!))?.verified, true);
-    console.log("  ok $55M book reserves spend above starter caps for depth");
+    console.log("  ok $55M book spends entirely on the playsheet");
 
     const valid = input("quick", 999);
     const invalid: [unknown, number, string][] = [
@@ -111,7 +116,6 @@ async function main() {
       [{ ...valid, alloc: { ...valid.alloc, QB: 5, RB: 5, WR: 8, OL: 8, DL: 8, LB: 4, DB: 4, ST: 2 } }, 422, "allocation total"],
       [{ ...valid, alloc: emptyAllocation() }, 422, "empty roster"],
       [{ ...valid, alloc: { ...valid.alloc, QB: valid.alloc.QB - 0.1 } }, 422, "under-spent roster"],
-      [{ ...cappedBudget, alloc: valid.alloc }, 422, "under-spent capped roster"],
       [{ ...mixed, gameplan: mixed.gameplan.slice(0, -1) }, 422, "incomplete manual gameplan"],
       [{ ...mixed, autoGameplan: true, gameplan: mixed.gameplan.slice(0, -1) }, 422, "incomplete auto gameplan"],
       [{ ...valid, simVersion: 99 }, 422, "unsupported version"],

@@ -41,7 +41,7 @@ async function main() {
       gmName: "Availability Test", mode: "quick", seed: 42, simVersion: SIM_VERSION,
       dataFingerprint: DATA_FINGERPRINT, programSlug: "texas", budgetM: 30,
       alloc: cappedOptimalAllocation(30),
-      gameplan: [], autoGameplan: true,
+      gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
     }, randomUUID());
     const shareHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id }) }));
     assert.match(shareHtml, /Availability Test/);

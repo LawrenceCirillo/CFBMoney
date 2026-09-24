@@ -5,17 +5,21 @@ import { data, getTeam } from "@/lib/data";
 import { fmtMoney1, fmtPollRank } from "@/lib/format";
 import { bookStanding } from "@/lib/spend-rank";
 import TeamMark from "@/components/TeamMark";
+import { gravityTags } from "@/lib/gravity";
 
 interface Props {
   programSlug: string;
   setProgramSlug: (s: string) => void;
   budgetM: number;
+  gravityOn: boolean;
+  setGravityOn: (on: boolean) => void;
   onBack: () => void;
   onNext: () => void;
 }
 
-export default function PickProgram({ programSlug, setProgramSlug, budgetM, onBack, onNext }: Props) {
+export default function PickProgram({ programSlug, setProgramSlug, budgetM, gravityOn, setGravityOn, onBack, onNext }: Props) {
   const program = getTeam(programSlug)!;
+  const gravity = gravityTags(program.slug);
   const standing = useMemo(() => bookStanding(budgetM, data.teams), [budgetM]);
 
   const conferences = useMemo(() => {
@@ -82,6 +86,23 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, onBa
           </optgroup>
         ))}
       </select>
+
+      <fieldset className="mt-6 max-w-xl rounded-xl border border-edge bg-panel/40 p-4">
+        <legend className="px-1 text-sm font-bold text-paper">Program gravity</legend>
+        <p className="mb-3 text-sm text-fog">The program can make your dollars work harder in its strongest position groups.</p>
+        <div className="flex flex-wrap gap-2">
+          {([true, false] as const).map((on) => (
+            <button key={String(on)} type="button" onClick={() => setGravityOn(on)}
+              aria-pressed={gravityOn === on}
+              className={`rounded-full border px-4 py-2 text-sm font-semibold transition-ui ${gravityOn === on ? "border-paper bg-panel text-paper" : "border-edge bg-ink text-fog hover:text-paper"}`}>
+              {on ? "On" : "Off · Pure parity"}
+            </button>
+          ))}
+        </div>
+        <p className="mt-3 text-sm text-fog">
+          {gravity.length ? gravity.map((tag) => `${tag.group} +${Math.round(tag.gravity * 100)}%`).join(" · ") : "No tagged position groups for this program."}
+        </p>
+      </fieldset>
 
       <div className="mt-8 grid max-w-3xl grid-cols-3 gap-px bg-edge">
         {stats.map((s) => (

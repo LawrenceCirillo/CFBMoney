@@ -15,7 +15,6 @@ import {
   requiredStarterSpendM,
   setPlaysheetPosition,
   slotMarketCap,
-  withDepth,
   type PositionKey,
   type Playsheet,
   type PlaysheetKey,
@@ -23,11 +22,14 @@ import {
 import { fmtM, fmtMoney1 } from "@/lib/format";
 import { data } from "@/lib/data";
 import { bookStanding } from "@/lib/spend-rank";
+import { gravityTags } from "@/lib/gravity";
 
 interface Props {
   pos: Playsheet;
   setPos: (p: Playsheet) => void;
   budgetM: number;
+  programSlug: string;
+  gravityOn: boolean;
   setBudgetM: (n: number) => void;
   onNext: () => void;
 }
@@ -94,7 +96,7 @@ function nextKeyInGroup(group: PositionKey, current: PlaysheetKey): PlaysheetKey
   return members[idx === -1 ? 0 : (idx + 1) % members.length].key;
 }
 
-export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }: Props) {
+export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravityOn, setBudgetM, onNext }: Props) {
   const [selected, setSelected] = useState<PlaysheetKey>("QB");
 
   const budget = clampGameBudget(budgetM);
@@ -107,8 +109,8 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
   const depthReserve = fromDimes(budgetD - targetD);
   const canContinue = remainingD === 0;
   const groups = useMemo(() => allocationFromPlaysheet(pos), [pos]);
-  const simAlloc = useMemo(() => withDepth(groups, budget), [groups, budget]);
-  const ratings = useMemo(() => ratingsFromAllocation(simAlloc), [simAlloc]);
+  const ratings = useMemo(() => ratingsFromAllocation(groups, { programSlug, gravityOn }), [groups, programSlug, gravityOn]);
+  const tags = gravityOn ? gravityTags(programSlug) : [];
   const standing = useMemo(() => bookStanding(budget, data.teams), [budget]);
   const sel = POSITIONS.find((p) => p.key === selected)!;
   const selCap = slotMarketCap(sel.key);
@@ -134,7 +136,7 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
   };
 
   const optimize = () =>
-    commit(distributeAllocationToSlots(cappedOptimalAllocation(budget)));
+    commit(distributeAllocationToSlots(cappedOptimalAllocation(budget, { programSlug, gravityOn })));
   const reset = () => {
     commit(emptyPlaysheet());
   };
@@ -159,6 +161,7 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
             className={`bg-ink px-2 py-2.5 text-left transition-ui ${active ? "bg-panel" : "hover:bg-panel/60"}`}
           >
             <p className="text-[10px] font-semibold text-fog">{g.key}</p>
+            {tags.some((tag) => tag.group === g.key) && <span className="text-[10px] font-semibold text-status-success">Gravity</span>}
             <p className="tnum mt-0.5 text-sm font-black">{fmtMoney1(groups[g.key])}</p>
           </button>
         );
@@ -173,6 +176,11 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
         {POSITION_GROUPS.find((g) => g.key === sel.group)?.label}
       </p>
       <h3 className="text-lg font-black tracking-tight lg:mt-2 lg:text-2xl">{sel.label}</h3>
+      {tags.some((tag) => tag.group === sel.group) && (
+        <p className="mt-1 text-xs font-semibold text-status-success">
+          {fmtMoney1(groups[sel.group])} → plays like {fmtMoney1(groups[sel.group] * (1 + tags.find((tag) => tag.group === sel.group)!.gravity))}
+        </p>
+      )}
       <div className="mt-2 flex items-center justify-center gap-2 lg:mt-3">
         <button
           onClick={() => setPosition(sel.key, selVal - 0.5)}
@@ -216,8 +224,13 @@ export default function BuildRoster({ pos, setPos, budgetM, setBudgetM, onNext }
       <div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs font-semibold text-fog">
-            Playsheet · tap a player to spend
+            Playsheet · tap a position to allocate
           </p>
+          {tags.length > 0 && (
+            <p className="text-xs text-fog">
+              Gravity preview for {data.teams.find((team) => team.slug === programSlug)?.name ?? programSlug}: {tags.map((tag) => `${tag.group} +${Math.round(tag.gravity * 100)}%`).join(" · ")}
+            </p>
+          )}
           <div className="flex gap-2">
             <button
               onClick={optimize}

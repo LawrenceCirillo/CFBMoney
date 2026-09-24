@@ -63,7 +63,7 @@ export const seasons = pgTable(
     programSlug: text("program_slug").notNull(),
     programName: text("program_name").notNull(),
     programColor: text("program_color").notNull(),
-    /** Roster budget in $M (currently always 30; stored for future flexibility) */
+    /** Roster budget in $M. */
     budgetM: real("budget_m").notNull(),
     alloc: jsonb("alloc").$type<StoredAlloc>().notNull(),
     /** Canonical starter input for future independent replay; null on older rows. */
@@ -75,6 +75,8 @@ export const seasons = pgTable(
     dataFingerprint: text("data_fingerprint"),
     gameplan: jsonb("gameplan").$type<GameplanPick[]>(),
     autoGameplan: boolean("auto_gameplan"),
+    gravityOn: boolean("gravity_on"),
+    gravityVersion: text("gravity_version"),
     verified: boolean("verified").default(false).notNull(),
     wins: integer("wins").notNull(),
     losses: integer("losses").notNull(),
