@@ -31,18 +31,21 @@ function TickerMark({ slug }: { slug: string }) {
 
 function Side({ side, dim }: { side: ScoreSide; dim: boolean }) {
   const team = side.slug ? getTeam(side.slug) : undefined;
+  // The score feed's ARST is Arkansas State; spell it out so it cannot be
+  // mistaken for the Razorbacks, whose scoreboard abbreviation is ARK.
+  const abbr = side.name === "Arkansas St" ? "ARK ST" : side.slug === "arkansas" ? "ARK" : side.abbr;
   const body = (
     <span className={`flex items-center gap-1.5 ${dim ? "opacity-50" : ""}`}>
       {team ? (
         <TickerMark slug={team.slug} />
       ) : (
         <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center text-[8px] font-black tracking-tight text-ink/70">
-          {side.abbr.slice(0, 3)}
+          {side.name === "Arkansas St" ? "AST" : abbr.slice(0, 3)}
         </span>
       )}
       <span className="text-xs font-semibold">
         {side.rank != null ? <span className="tnum mr-1 font-bold">#{side.rank}</span> : null}
-        {side.abbr}
+        {abbr}
       </span>
       <span className={`tnum text-sm ${dim ? "font-semibold" : "font-black"}`}>{side.score}</span>
     </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import BuildRoster from "@/components/build/BuildRoster";
@@ -13,6 +13,8 @@ import {
   distributeAllocationToSlots,
   emptyAllocation,
   GAME_BUDGET_M,
+  GAME_BUDGET_MIN_M,
+  PLAYSHEET_SLOTS,
   type Playsheet,
 } from "@/lib/simulator";
 
@@ -23,6 +25,39 @@ const STEPS: { key: Step; label: string }[] = [
   { key: "program", label: "Program" },
   { key: "season", label: "Season" },
 ];
+
+const BUILD_DRAFT_KEY = "cfb-money-build-draft-v1-55m";
+
+type BuildDraft = {
+  pos: Playsheet;
+  budgetM: number;
+  gravityOn: boolean;
+  programSlug: string;
+};
+
+function readBuildDraft(): BuildDraft | null {
+  try {
+    const raw = window.localStorage.getItem(BUILD_DRAFT_KEY);
+    if (!raw) return null;
+    const saved: unknown = JSON.parse(raw);
+    if (!saved || typeof saved !== "object") return null;
+    const draft = saved as Partial<BuildDraft>;
+    if (!Number.isInteger(draft.budgetM) || draft.budgetM! < GAME_BUDGET_MIN_M || draft.budgetM! > GAME_BUDGET_M ||
+      typeof draft.gravityOn !== "boolean" || typeof draft.programSlug !== "string" || !getTeam(draft.programSlug) ||
+      !draft.pos || typeof draft.pos !== "object") return null;
+    let totalDimes = 0;
+    for (const slot of PLAYSHEET_SLOTS) {
+      const amount = draft.pos[slot.key];
+      if (typeof amount !== "number" || !Number.isFinite(amount) || amount < 0 || amount > slot.cap ||
+        Math.abs(amount * 10 - Math.round(amount * 10)) > 1e-6) return null;
+      totalDimes += Math.round(amount * 10);
+    }
+    if (totalDimes > draft.budgetM! * 10) return null;
+    return draft as BuildDraft;
+  } catch {
+    return null;
+  }
+}
 
 export default function BuildPage() {
   return (
@@ -47,8 +82,33 @@ function BuildPageInner() {
   );
   const [seasonId, setSeasonId] = useState(0);
   const [mode, setMode] = useState<"season" | "quick">("season");
+  const [draftReady, setDraftReady] = useState(false);
+  const restored = useRef(false);
+
+  useEffect(() => {
+    if (restored.current) return;
+    restored.current = true;
+    const draft = readBuildDraft();
+    if (draft) {
+      setPos(draft.pos);
+      setBudgetM(draft.budgetM);
+      setGravityOn(draft.gravityOn);
+      if (!requestedProgram || !getTeam(requestedProgram)) setProgramSlug(draft.programSlug);
+    }
+    setDraftReady(true);
+  }, [requestedProgram]);
+
+  useEffect(() => {
+    if (!draftReady) return;
+    try {
+      window.localStorage.setItem(BUILD_DRAFT_KEY, JSON.stringify({ pos, budgetM, gravityOn, programSlug } satisfies BuildDraft));
+    } catch { /* Private browsing or storage limits must not block Build. */ }
+  }, [draftReady, pos, budgetM, gravityOn, programSlug]);
+
   const program = getTeam(programSlug)!;
   const alloc = allocationFromPlaysheet(pos);
+
+  if (!draftReady) return <div className="pt-10 text-sm text-fog">Loading your roster…</div>;
 
   const stepIndex = STEPS.findIndex((s) => s.key === step);
 

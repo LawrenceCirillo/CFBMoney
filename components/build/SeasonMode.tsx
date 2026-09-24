@@ -573,7 +573,7 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
           className="mt-16 border-t border-line pt-8"
         >
           <p className="text-xs font-semibold text-fog">Season report</p>
-          <p className="mt-1 text-xs font-semibold text-fog">Gravity {gravityOn ? "on" : "off · Pure parity"} · {GRAVITY_VERSION}</p>
+          <p className="mt-1 text-xs font-semibold text-fog">Gravity {gravityOn ? "on" : "off · Pure parity"} · v{SIM_VERSION}</p>
           {outcome && (
             <p
               className={`mt-3 text-3xl font-black tracking-tight sm:text-4xl ${

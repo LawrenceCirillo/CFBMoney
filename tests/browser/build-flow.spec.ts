@@ -8,13 +8,16 @@ test("gravity toggle carries from program setup into the season report", async (
   const parity = page.getByRole("button", { name: "Off · Pure parity" });
   await parity.click();
   await expect(parity).toHaveAttribute("aria-pressed", "true");
+  await page.reload();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(parity).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Back to roster" }).click();
   await expect(page.getByText(/Gravity preview for Texas/)).toHaveCount(0);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season" }).check();
   await page.getByRole("button", { name: "Sim to end" }).click();
-  await expect(page.getByText("Gravity off · Pure parity · v1")).toBeVisible();
+  await expect(page.getByText("Gravity off · Pure parity · v4")).toBeVisible();
 });
 
 test("playsheet survives navigation and both sim modes render", async ({ page }) => {
@@ -31,7 +34,16 @@ test("playsheet survives navigation and both sim modes render", async ({ page })
   await page.getByRole("button", { name: "Auto-optimize" }).click();
   await expect(continueButton).toBeEnabled();
   const optimizedLeftTackle = await leftTackle.getAttribute("aria-label");
+  await page.reload();
+  await expect(leftTackle).toHaveAttribute("aria-label", optimizedLeftTackle!);
+  await expect(continueButton).toBeEnabled();
+  await page.goto("/moneyball");
+  await page.goto("/build");
+  await expect(leftTackle).toHaveAttribute("aria-label", optimizedLeftTackle!);
+  await expect(continueButton).toBeEnabled();
   await page.getByRole("button", { name: "Reset" }).click();
+  await expect(continueButton).toBeDisabled();
+  await page.reload();
   await expect(continueButton).toBeDisabled();
   await page.getByRole("button", { name: "Auto-optimize" }).click();
   await expect(continueButton).toBeEnabled();

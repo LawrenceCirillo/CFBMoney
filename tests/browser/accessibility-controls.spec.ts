@@ -122,3 +122,10 @@ test("ticker does not move with reduced motion", async ({ page }) => {
   await expect(page.locator(".score-ticker-track")).toHaveCSS("animation-name", "none");
   await expect(page.getByRole("button", { name: "Pause scores" })).toBeHidden();
 });
+
+test("ticker distinguishes Arkansas from Arkansas State", async ({ page }) => {
+  await page.goto("/");
+  const ticker = page.locator(".score-ticker-window");
+  await expect(ticker.getByText("ARK", { exact: true }).first()).toBeAttached();
+  await expect(ticker.getByText("ARK ST", { exact: true }).first()).toBeAttached();
+});
