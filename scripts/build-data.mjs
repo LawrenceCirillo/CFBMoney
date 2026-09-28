@@ -125,12 +125,14 @@ const teams = csvRows.map((r) => {
 const byName = new Map(teams.map((t) => [t.name, t]));
 for (const r of pollRows) {
   const team = byName.get(r.team);
-  if (!team) throw new Error(`AP poll team "${r.team}" is not in the Athletic budget file`);
   const week = Number(r.week);
   const rank = Number(r.rank);
   if (!Number.isInteger(rank) || rank < 1 || rank > 25) {
     throw new Error(`Bad AP rank for ${r.team} week ${r.week}: ${r.rank}`);
   }
+  // The source ballot is national. Preserve outside teams there, and only
+  // attach ranks to the 68 programs with a budget record in this model.
+  if (!team) continue;
   if (week === 0) team.preseason_rank = rank;
   else if (week === poll.week) team.ap_rank = rank;
   else if (week > 0 && week < poll.week) continue;

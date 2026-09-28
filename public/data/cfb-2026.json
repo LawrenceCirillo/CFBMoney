@@ -7,13 +7,13 @@
   },
   "poll": {
     "name": "AP Top 25",
-    "week": 3,
-    "as_of": "2026-09-20",
-    "note": "Through Week 3 of the 2026 season. Poll published Sept. 20, 2026."
+    "week": 5,
+    "as_of": "2026-09-27",
+    "note": "Through Week 4 of the 2026 season. Week 5 AP Top 25 published Sept. 27, 2026."
   },
   "fpi": {
     "name": "ESPN FPI",
-    "as_of": "2026-09-22",
+    "as_of": "2026-09-28",
     "note": "Ranks among FBS. 1 is the hardest schedule. Played is games already played, from the view of an average Top 25 team. Remaining is games left, from the view of an average FBS team."
   },
   "totals": {
@@ -32,11 +32,11 @@
       "budget_high_m": 54,
       "budget_mid_m": 51.5,
       "preseason_rank": 1,
-      "ap_rank": 7,
+      "ap_rank": 5,
       "spend_rank": 1,
-      "value_gap": -6,
-      "sos_played_rank": 15,
-      "sos_remaining_rank": 16
+      "value_gap": -4,
+      "sos_played_rank": 24,
+      "sos_remaining_rank": 7
     },
     {
       "abbr": "ORE",
@@ -49,11 +49,11 @@
       "budget_high_m": 54,
       "budget_mid_m": 51,
       "preseason_rank": 2,
-      "ap_rank": 20,
+      "ap_rank": 15,
       "spend_rank": 2,
-      "value_gap": -18,
-      "sos_played_rank": 67,
-      "sos_remaining_rank": 25
+      "value_gap": -13,
+      "sos_played_rank": 18,
+      "sos_remaining_rank": 28
     },
     {
       "abbr": "TEX",
@@ -69,8 +69,8 @@
       "ap_rank": 1,
       "spend_rank": 3,
       "value_gap": 2,
-      "sos_played_rank": 21,
-      "sos_remaining_rank": 5
+      "sos_played_rank": 2,
+      "sos_remaining_rank": 14
     },
     {
       "abbr": "LSU",
@@ -83,11 +83,11 @@
       "budget_high_m": 50,
       "budget_mid_m": 48.5,
       "preseason_rank": 11,
-      "ap_rank": 10,
+      "ap_rank": 11,
       "spend_rank": 4,
-      "value_gap": -6,
-      "sos_played_rank": 27,
-      "sos_remaining_rank": 15
+      "value_gap": -7,
+      "sos_played_rank": 23,
+      "sos_remaining_rank": 11
     },
     {
       "abbr": "TAMU",
@@ -100,11 +100,11 @@
       "budget_high_m": 50,
       "budget_mid_m": 47.5,
       "preseason_rank": 8,
-      "ap_rank": 23,
+      "ap_rank": null,
       "spend_rank": 5,
-      "value_gap": -18,
-      "sos_played_rank": 90,
-      "sos_remaining_rank": 6
+      "value_gap": null,
+      "sos_played_rank": 21,
+      "sos_remaining_rank": 15
     },
     {
       "abbr": "MIA",
@@ -117,11 +117,11 @@
       "budget_high_m": 50,
       "budget_mid_m": 47,
       "preseason_rank": 7,
-      "ap_rank": 6,
+      "ap_rank": 4,
       "spend_rank": 6,
-      "value_gap": 0,
-      "sos_played_rank": 92,
-      "sos_remaining_rank": 46
+      "value_gap": 2,
+      "sos_played_rank": 108,
+      "sos_remaining_rank": 36
     },
     {
       "abbr": "ND",
@@ -137,8 +137,8 @@
       "ap_rank": 3,
       "spend_rank": 7,
       "value_gap": 4,
-      "sos_played_rank": 93,
-      "sos_remaining_rank": 54
+      "sos_played_rank": 99,
+      "sos_remaining_rank": 55
     },
     {
       "abbr": "MISS",
@@ -151,11 +151,11 @@
       "budget_high_m": 45,
       "budget_mid_m": 42,
       "preseason_rank": 9,
-      "ap_rank": 4,
+      "ap_rank": 9,
       "spend_rank": 8,
-      "value_gap": 4,
-      "sos_played_rank": 19,
-      "sos_remaining_rank": 11
+      "value_gap": -1,
+      "sos_played_rank": 4,
+      "sos_remaining_rank": 18
     },
     {
       "abbr": "TENN",
@@ -168,11 +168,11 @@
       "budget_high_m": 43,
       "budget_mid_m": 42,
       "preseason_rank": 20,
-      "ap_rank": 14,
+      "ap_rank": 17,
       "spend_rank": 8,
-      "value_gap": -6,
-      "sos_played_rank": 104,
-      "sos_remaining_rank": 12
+      "value_gap": -9,
+      "sos_played_rank": 38,
+      "sos_remaining_rank": 21
     },
     {
       "abbr": "ALA",
@@ -185,11 +185,11 @@
       "budget_high_m": 42,
       "budget_mid_m": 40,
       "preseason_rank": 13,
-      "ap_rank": 8,
+      "ap_rank": 7,
       "spend_rank": 10,
-      "value_gap": 2,
-      "sos_played_rank": 51,
-      "sos_remaining_rank": 13
+      "value_gap": 3,
+      "sos_played_rank": 46,
+      "sos_remaining_rank": 6
     },
     {
       "abbr": "TTU",
@@ -202,11 +202,11 @@
       "budget_high_m": 42,
       "budget_mid_m": 40,
       "preseason_rank": 12,
-      "ap_rank": 11,
+      "ap_rank": 12,
       "spend_rank": 10,
-      "value_gap": -1,
-      "sos_played_rank": 76,
-      "sos_remaining_rank": 67
+      "value_gap": -2,
+      "sos_played_rank": 96,
+      "sos_remaining_rank": 65
     },
     {
       "abbr": "USC",
@@ -219,10 +219,10 @@
       "budget_high_m": 40,
       "budget_mid_m": 38.5,
       "preseason_rank": 14,
-      "ap_rank": 12,
+      "ap_rank": 18,
       "spend_rank": 12,
-      "value_gap": 0,
-      "sos_played_rank": 108,
+      "value_gap": -6,
+      "sos_played_rank": 61,
       "sos_remaining_rank": 9
     },
     {
@@ -236,10 +236,10 @@
       "budget_high_m": 40,
       "budget_mid_m": 38,
       "preseason_rank": 6,
-      "ap_rank": 5,
+      "ap_rank": 6,
       "spend_rank": 13,
-      "value_gap": 8,
-      "sos_played_rank": 135,
+      "value_gap": 7,
+      "sos_played_rank": 109,
       "sos_remaining_rank": 31
     },
     {
@@ -253,10 +253,10 @@
       "budget_high_m": 40,
       "budget_mid_m": 38,
       "preseason_rank": 16,
-      "ap_rank": 18,
+      "ap_rank": null,
       "spend_rank": 13,
-      "value_gap": -5,
-      "sos_played_rank": 62,
+      "value_gap": null,
+      "sos_played_rank": 63,
       "sos_remaining_rank": 17
     },
     {
@@ -270,11 +270,11 @@
       "budget_high_m": 41,
       "budget_mid_m": 36,
       "preseason_rank": null,
-      "ap_rank": 21,
+      "ap_rank": 8,
       "spend_rank": 15,
-      "value_gap": -6,
-      "sos_played_rank": 61,
-      "sos_remaining_rank": 7
+      "value_gap": 7,
+      "sos_played_rank": 42,
+      "sos_remaining_rank": 12
     },
     {
       "abbr": "SCAR",
@@ -290,8 +290,8 @@
       "ap_rank": null,
       "spend_rank": 16,
       "value_gap": null,
-      "sos_played_rank": 86,
-      "sos_remaining_rank": 4
+      "sos_played_rank": 15,
+      "sos_remaining_rank": 8
     },
     {
       "abbr": "AUB",
@@ -307,8 +307,8 @@
       "ap_rank": null,
       "spend_rank": 17,
       "value_gap": null,
-      "sos_played_rank": 48,
-      "sos_remaining_rank": 8
+      "sos_played_rank": 43,
+      "sos_remaining_rank": 2
     },
     {
       "abbr": "NEB",
@@ -324,8 +324,8 @@
       "ap_rank": null,
       "spend_rank": 17,
       "value_gap": null,
-      "sos_played_rank": 138,
-      "sos_remaining_rank": 23
+      "sos_played_rank": 120,
+      "sos_remaining_rank": 20
     },
     {
       "abbr": "UGA",
@@ -341,8 +341,8 @@
       "ap_rank": 2,
       "spend_rank": 19,
       "value_gap": 17,
-      "sos_played_rank": 120,
-      "sos_remaining_rank": 21
+      "sos_played_rank": 88,
+      "sos_remaining_rank": 22
     },
     {
       "abbr": "OU",
@@ -358,8 +358,8 @@
       "ap_rank": null,
       "spend_rank": 20,
       "value_gap": null,
-      "sos_played_rank": 38,
-      "sos_remaining_rank": 1
+      "sos_played_rank": 3,
+      "sos_remaining_rank": 10
     },
     {
       "abbr": "CLEM",
@@ -375,7 +375,7 @@
       "ap_rank": null,
       "spend_rank": 21,
       "value_gap": null,
-      "sos_played_rank": 17,
+      "sos_played_rank": 22,
       "sos_remaining_rank": 51
     },
     {
@@ -389,11 +389,11 @@
       "budget_high_m": 32,
       "budget_mid_m": 30.5,
       "preseason_rank": 18,
-      "ap_rank": 13,
+      "ap_rank": null,
       "spend_rank": 21,
-      "value_gap": 8,
-      "sos_played_rank": 125,
-      "sos_remaining_rank": 57
+      "value_gap": null,
+      "sos_played_rank": 118,
+      "sos_remaining_rank": 60
     },
     {
       "abbr": "WIS",
@@ -409,8 +409,8 @@
       "ap_rank": null,
       "spend_rank": 23,
       "value_gap": null,
-      "sos_played_rank": 20,
-      "sos_remaining_rank": 47
+      "sos_played_rank": 6,
+      "sos_remaining_rank": 63
     },
     {
       "abbr": "MIZ",
@@ -423,11 +423,11 @@
       "budget_high_m": 30,
       "budget_mid_m": 28.5,
       "preseason_rank": 25,
-      "ap_rank": 19,
+      "ap_rank": 25,
       "spend_rank": 24,
-      "value_gap": 5,
-      "sos_played_rank": 112,
-      "sos_remaining_rank": 2
+      "value_gap": -1,
+      "sos_played_rank": 62,
+      "sos_remaining_rank": 3
     },
     {
       "abbr": "UCLA",
@@ -440,11 +440,11 @@
       "budget_high_m": 30,
       "budget_mid_m": 28,
       "preseason_rank": null,
-      "ap_rank": null,
+      "ap_rank": 23,
       "spend_rank": 25,
-      "value_gap": null,
-      "sos_played_rank": 101,
-      "sos_remaining_rank": 39
+      "value_gap": 2,
+      "sos_played_rank": 107,
+      "sos_remaining_rank": 44
     },
     {
       "abbr": "MSST",
@@ -457,11 +457,11 @@
       "budget_high_m": 30,
       "budget_mid_m": 27.5,
       "preseason_rank": null,
-      "ap_rank": 24,
+      "ap_rank": 16,
       "spend_rank": 26,
-      "value_gap": 2,
-      "sos_played_rank": 41,
-      "sos_remaining_rank": 10
+      "value_gap": 10,
+      "sos_played_rank": 48,
+      "sos_remaining_rank": 5
     },
     {
       "abbr": "VT",
@@ -477,8 +477,8 @@
       "ap_rank": null,
       "spend_rank": 26,
       "value_gap": null,
-      "sos_played_rank": 94,
-      "sos_remaining_rank": 48
+      "sos_played_rank": 122,
+      "sos_remaining_rank": 41
     },
     {
       "abbr": "FSU",
@@ -494,8 +494,8 @@
       "ap_rank": null,
       "spend_rank": 28,
       "value_gap": null,
-      "sos_played_rank": 6,
-      "sos_remaining_rank": 35
+      "sos_played_rank": 25,
+      "sos_remaining_rank": 25
     },
     {
       "abbr": "VAN",
@@ -511,8 +511,8 @@
       "ap_rank": null,
       "spend_rank": 28,
       "value_gap": null,
-      "sos_played_rank": 116,
-      "sos_remaining_rank": 3
+      "sos_played_rank": 71,
+      "sos_remaining_rank": 1
     },
     {
       "abbr": "GT",
@@ -528,8 +528,8 @@
       "ap_rank": null,
       "spend_rank": 30,
       "value_gap": null,
-      "sos_played_rank": 54,
-      "sos_remaining_rank": 34
+      "sos_played_rank": 69,
+      "sos_remaining_rank": 29
     },
     {
       "abbr": "UK",
@@ -542,11 +542,11 @@
       "budget_high_m": 26,
       "budget_mid_m": 24.5,
       "preseason_rank": null,
-      "ap_rank": null,
+      "ap_rank": 24,
       "spend_rank": 30,
-      "value_gap": null,
-      "sos_played_rank": 4,
-      "sos_remaining_rank": 18
+      "value_gap": 6,
+      "sos_played_rank": 10,
+      "sos_remaining_rank": 16
     },
     {
       "abbr": "NCSU",
@@ -562,8 +562,8 @@
       "ap_rank": null,
       "spend_rank": 32,
       "value_gap": null,
-      "sos_played_rank": 44,
-      "sos_remaining_rank": 68
+      "sos_played_rank": 54,
+      "sos_remaining_rank": 67
     },
     {
       "abbr": "ARK",
@@ -579,8 +579,8 @@
       "ap_rank": null,
       "spend_rank": 33,
       "value_gap": null,
-      "sos_played_rank": 2,
-      "sos_remaining_rank": 14
+      "sos_played_rank": 5,
+      "sos_remaining_rank": 4
     },
     {
       "abbr": "LOU",
@@ -593,11 +593,11 @@
       "budget_high_m": 25,
       "budget_mid_m": 23.5,
       "preseason_rank": 24,
-      "ap_rank": 16,
+      "ap_rank": null,
       "spend_rank": 33,
-      "value_gap": 17,
-      "sos_played_rank": 16,
-      "sos_remaining_rank": 66
+      "value_gap": null,
+      "sos_played_rank": 40,
+      "sos_remaining_rank": 64
     },
     {
       "abbr": "TCU",
@@ -613,8 +613,8 @@
       "ap_rank": null,
       "spend_rank": 33,
       "value_gap": null,
-      "sos_played_rank": 111,
-      "sos_remaining_rank": 37
+      "sos_played_rank": 93,
+      "sos_remaining_rank": 39
     },
     {
       "abbr": "MD",
@@ -630,8 +630,8 @@
       "ap_rank": null,
       "spend_rank": 36,
       "value_gap": null,
-      "sos_played_rank": 85,
-      "sos_remaining_rank": 28
+      "sos_played_rank": 95,
+      "sos_remaining_rank": 24
     },
     {
       "abbr": "MSU",
@@ -647,8 +647,8 @@
       "ap_rank": null,
       "spend_rank": 36,
       "value_gap": null,
-      "sos_played_rank": 14,
-      "sos_remaining_rank": 44
+      "sos_played_rank": 8,
+      "sos_remaining_rank": 43
     },
     {
       "abbr": "NW",
@@ -664,8 +664,8 @@
       "ap_rank": null,
       "spend_rank": 36,
       "value_gap": null,
-      "sos_played_rank": 117,
-      "sos_remaining_rank": 22
+      "sos_played_rank": 12,
+      "sos_remaining_rank": 30
     },
     {
       "abbr": "WASH",
@@ -681,8 +681,8 @@
       "ap_rank": null,
       "spend_rank": 36,
       "value_gap": null,
-      "sos_played_rank": 136,
-      "sos_remaining_rank": 19
+      "sos_played_rank": 131,
+      "sos_remaining_rank": 13
     },
     {
       "abbr": "BYU",
@@ -695,11 +695,11 @@
       "budget_high_m": 25,
       "budget_mid_m": 22.5,
       "preseason_rank": 14,
-      "ap_rank": 9,
+      "ap_rank": 10,
       "spend_rank": 40,
-      "value_gap": 31,
-      "sos_played_rank": 102,
-      "sos_remaining_rank": 38
+      "value_gap": 30,
+      "sos_played_rank": 116,
+      "sos_remaining_rank": 40
     },
     {
       "abbr": "UNC",
@@ -715,8 +715,8 @@
       "ap_rank": null,
       "spend_rank": 40,
       "value_gap": null,
-      "sos_played_rank": 55,
-      "sos_remaining_rank": 30
+      "sos_played_rank": 52,
+      "sos_remaining_rank": 27
     },
     {
       "abbr": "CAL",
@@ -732,8 +732,8 @@
       "ap_rank": null,
       "spend_rank": 42,
       "value_gap": null,
-      "sos_played_rank": 79,
-      "sos_remaining_rank": 61
+      "sos_played_rank": 81,
+      "sos_remaining_rank": 59
     },
     {
       "abbr": "UVA",
@@ -749,8 +749,8 @@
       "ap_rank": null,
       "spend_rank": 42,
       "value_gap": null,
-      "sos_played_rank": 100,
-      "sos_remaining_rank": 60
+      "sos_played_rank": 121,
+      "sos_remaining_rank": 58
     },
     {
       "abbr": "SMU",
@@ -763,11 +763,11 @@
       "budget_high_m": 23,
       "budget_mid_m": 22,
       "preseason_rank": 19,
-      "ap_rank": 22,
+      "ap_rank": 21,
       "spend_rank": 42,
-      "value_gap": 20,
-      "sos_played_rank": 26,
-      "sos_remaining_rank": 64
+      "value_gap": 21,
+      "sos_played_rank": 59,
+      "sos_remaining_rank": 57
     },
     {
       "abbr": "BAY",
@@ -783,8 +783,8 @@
       "ap_rank": null,
       "spend_rank": 45,
       "value_gap": null,
-      "sos_played_rank": 58,
-      "sos_remaining_rank": 50
+      "sos_played_rank": 80,
+      "sos_remaining_rank": 42
     },
     {
       "abbr": "RUT",
@@ -800,8 +800,8 @@
       "ap_rank": null,
       "spend_rank": 45,
       "value_gap": null,
-      "sos_played_rank": 73,
-      "sos_remaining_rank": 29
+      "sos_played_rank": 102,
+      "sos_remaining_rank": 23
     },
     {
       "abbr": "ASU",
@@ -817,7 +817,7 @@
       "ap_rank": null,
       "spend_rank": 47,
       "value_gap": null,
-      "sos_played_rank": 24,
+      "sos_played_rank": 32,
       "sos_remaining_rank": 53
     },
     {
@@ -834,8 +834,8 @@
       "ap_rank": null,
       "spend_rank": 47,
       "value_gap": null,
-      "sos_played_rank": 103,
-      "sos_remaining_rank": 26
+      "sos_played_rank": 16,
+      "sos_remaining_rank": 38
     },
     {
       "abbr": "KSU",
@@ -851,8 +851,8 @@
       "ap_rank": null,
       "spend_rank": 49,
       "value_gap": null,
-      "sos_played_rank": 126,
-      "sos_remaining_rank": 65
+      "sos_played_rank": 104,
+      "sos_remaining_rank": 66
     },
     {
       "abbr": "MINN",
@@ -868,8 +868,8 @@
       "ap_rank": null,
       "spend_rank": 50,
       "value_gap": null,
-      "sos_played_rank": 89,
-      "sos_remaining_rank": 27
+      "sos_played_rank": 83,
+      "sos_remaining_rank": 26
     },
     {
       "abbr": "UTAH",
@@ -882,11 +882,11 @@
       "budget_high_m": 22,
       "budget_mid_m": 20,
       "preseason_rank": 21,
-      "ap_rank": 15,
+      "ap_rank": 13,
       "spend_rank": 50,
-      "value_gap": 35,
-      "sos_played_rank": 130,
-      "sos_remaining_rank": 59
+      "value_gap": 37,
+      "sos_played_rank": 106,
+      "sos_remaining_rank": 61
     },
     {
       "abbr": "WVU",
@@ -903,7 +903,7 @@
       "spend_rank": 50,
       "value_gap": null,
       "sos_played_rank": 77,
-      "sos_remaining_rank": 42
+      "sos_remaining_rank": 37
     },
     {
       "abbr": "SYR",
@@ -919,8 +919,8 @@
       "ap_rank": null,
       "spend_rank": 53,
       "value_gap": null,
-      "sos_played_rank": 59,
-      "sos_remaining_rank": 45
+      "sos_played_rank": 57,
+      "sos_remaining_rank": 50
     },
     {
       "abbr": "COLO",
@@ -936,8 +936,8 @@
       "ap_rank": null,
       "spend_rank": 53,
       "value_gap": null,
-      "sos_played_rank": 46,
-      "sos_remaining_rank": 43
+      "sos_played_rank": 30,
+      "sos_remaining_rank": 45
     },
     {
       "abbr": "IOWA",
@@ -950,11 +950,11 @@
       "budget_high_m": 21,
       "budget_mid_m": 19,
       "preseason_rank": 22,
-      "ap_rank": 17,
+      "ap_rank": 14,
       "spend_rank": 55,
-      "value_gap": 38,
-      "sos_played_rank": 119,
-      "sos_remaining_rank": 32
+      "value_gap": 41,
+      "sos_played_rank": 67,
+      "sos_remaining_rank": 34
     },
     {
       "abbr": "PITT",
@@ -970,7 +970,7 @@
       "ap_rank": null,
       "spend_rank": 56,
       "value_gap": null,
-      "sos_played_rank": 99,
+      "sos_played_rank": 119,
       "sos_remaining_rank": 49
     },
     {
@@ -987,8 +987,8 @@
       "ap_rank": null,
       "spend_rank": 56,
       "value_gap": null,
-      "sos_played_rank": 65,
-      "sos_remaining_rank": 24
+      "sos_played_rank": 9,
+      "sos_remaining_rank": 33
     },
     {
       "abbr": "STAN",
@@ -1004,8 +1004,8 @@
       "ap_rank": null,
       "spend_rank": 56,
       "value_gap": null,
-      "sos_played_rank": 7,
-      "sos_remaining_rank": 36
+      "sos_played_rank": 14,
+      "sos_remaining_rank": 35
     },
     {
       "abbr": "WAKE",
@@ -1021,8 +1021,8 @@
       "ap_rank": null,
       "spend_rank": 56,
       "value_gap": null,
-      "sos_played_rank": 29,
-      "sos_remaining_rank": 62
+      "sos_played_rank": 13,
+      "sos_remaining_rank": 68
     },
     {
       "abbr": "UCF",
@@ -1039,7 +1039,7 @@
       "spend_rank": 60,
       "value_gap": null,
       "sos_played_rank": 64,
-      "sos_remaining_rank": 63
+      "sos_remaining_rank": 62
     },
     {
       "abbr": "HOU",
@@ -1052,11 +1052,11 @@
       "budget_high_m": 19,
       "budget_mid_m": 17,
       "preseason_rank": 23,
-      "ap_rank": 25,
+      "ap_rank": 20,
       "spend_rank": 61,
-      "value_gap": 36,
-      "sos_played_rank": 42,
-      "sos_remaining_rank": 56
+      "value_gap": 41,
+      "sos_played_rank": 50,
+      "sos_remaining_rank": 54
     },
     {
       "abbr": "OKST",
@@ -1069,11 +1069,11 @@
       "budget_high_m": 19,
       "budget_mid_m": 17,
       "preseason_rank": null,
-      "ap_rank": null,
+      "ap_rank": 19,
       "spend_rank": 61,
-      "value_gap": null,
-      "sos_played_rank": 50,
-      "sos_remaining_rank": 55
+      "value_gap": 42,
+      "sos_played_rank": 45,
+      "sos_remaining_rank": 56
     },
     {
       "abbr": "KU",
@@ -1089,8 +1089,8 @@
       "ap_rank": null,
       "spend_rank": 63,
       "value_gap": null,
-      "sos_played_rank": 80,
-      "sos_remaining_rank": 41
+      "sos_played_rank": 97,
+      "sos_remaining_rank": 48
     },
     {
       "abbr": "ARIZ",
@@ -1106,8 +1106,8 @@
       "ap_rank": null,
       "spend_rank": 64,
       "value_gap": null,
-      "sos_played_rank": 52,
-      "sos_remaining_rank": 52
+      "sos_played_rank": 68,
+      "sos_remaining_rank": 47
     },
     {
       "abbr": "ISU",
@@ -1123,8 +1123,8 @@
       "ap_rank": null,
       "spend_rank": 65,
       "value_gap": null,
-      "sos_played_rank": 68,
-      "sos_remaining_rank": 40
+      "sos_played_rank": 36,
+      "sos_remaining_rank": 52
     },
     {
       "abbr": "CIN",
@@ -1140,8 +1140,8 @@
       "ap_rank": null,
       "spend_rank": 65,
       "value_gap": null,
-      "sos_played_rank": 134,
-      "sos_remaining_rank": 33
+      "sos_played_rank": 114,
+      "sos_remaining_rank": 32
     },
     {
       "abbr": "DUKE",
@@ -1157,8 +1157,8 @@
       "ap_rank": null,
       "spend_rank": 67,
       "value_gap": null,
-      "sos_played_rank": 75,
-      "sos_remaining_rank": 58
+      "sos_played_rank": 103,
+      "sos_remaining_rank": 46
     },
     {
       "abbr": "BC",
@@ -1174,8 +1174,8 @@
       "ap_rank": null,
       "spend_rank": 68,
       "value_gap": null,
-      "sos_played_rank": 88,
-      "sos_remaining_rank": 20
+      "sos_played_rank": 84,
+      "sos_remaining_rank": 19
     }
   ]
 }

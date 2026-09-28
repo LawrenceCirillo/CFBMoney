@@ -79,9 +79,9 @@ function validateSources(sources, today) {
   for (const row of poll.rows) {
     const week = Number(row.week);
     const rank = Number(row.rank);
-    if (!names.has(row.team) || !Number.isInteger(week) || week < 0 ||
+    if (!row.team || !Number.isInteger(week) || week < 0 ||
         !Number.isInteger(rank) || rank < 1 || rank > 25) {
-      fail("AP poll has an unknown team, week, or rank");
+      fail("AP poll has an empty team, invalid week, or invalid rank");
     }
   }
   const pollWeek = Math.max(...poll.rows.map((row) => Number(row.week)));
@@ -93,6 +93,10 @@ function validateSources(sources, today) {
   if (current.some((row) => Number(row.rank) < 1 || Number(row.rank) > 25)) {
     fail("current AP ranks must be 1–25");
   }
+  // The AP ballot covers all FBS programs; our budget model covers only 68.
+  // Keep outside programs in the source ballot so the tracked ranks retain
+  // their actual AP numbers, including gaps.
+  const untrackedPollTeams = current.filter((row) => !names.has(row.team)).map((row) => row.team);
 
   if (fpi.source !== "ESPN FPI" || fpi.season !== SEASON || !fpi.note) {
     fail("FPI source metadata is incomplete");
@@ -177,7 +181,7 @@ function validateSources(sources, today) {
   }
 
   return {
-    pollWeek, scoreWeek: scores.week, games: scores.games.length,
+    pollWeek, untrackedPollTeams, scoreWeek: scores.week, games: scores.games.length,
     participatingTeams: participating.size, byeTeams: teams.length - participating.size,
     dates: { ap: poll.asOf, fpi: fpi.as_of, scores: scores.as_of, rosters: season.as_of },
     skewDays: {
@@ -277,6 +281,9 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     else {
       const result = validateData();
       console.log(`validated AP Week ${result.pollWeek}, scores Week ${result.scoreWeek}: ${result.games} games, ${result.participatingTeams} teams, ${result.byeTeams} byes`);
+      if (result.untrackedPollTeams.length) {
+        console.log(`AP ballot teams outside the 68-program budget set: ${result.untrackedPollTeams.join(", ")}`);
+      }
       console.log(`snapshot dates: ${JSON.stringify(result.dates)}; days from AP: ${JSON.stringify(result.skewDays)}`);
     }
   } catch (error) {

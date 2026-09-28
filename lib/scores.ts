@@ -31,6 +31,10 @@ export interface Scoreboard {
 
 export const scoreboard = raw as Scoreboard;
 
+export function tickerAbbr(side: Pick<ScoreSide, "name" | "slug" | "abbr">): string {
+  return side.name === "Arkansas St" ? "ARK ST" : side.slug === "arkansas" ? "ARK" : side.abbr;
+}
+
 export interface WeekLine {
   label: string;
   won: boolean | null;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { data, getTeam } from "@/lib/data";
-import { scoreboard, type ScoreGame, type ScoreSide } from "@/lib/scores";
+import { scoreboard, tickerAbbr, type ScoreGame, type ScoreSide } from "@/lib/scores";
 import { useSeasonTicker, type SeasonTickerGame } from "@/components/SeasonTickerContext";
 
 const spriteColumns = 8;
@@ -31,9 +31,7 @@ function TickerMark({ slug }: { slug: string }) {
 
 function Side({ side, dim }: { side: ScoreSide; dim: boolean }) {
   const team = side.slug ? getTeam(side.slug) : undefined;
-  // The score feed's ARST is Arkansas State; spell it out so it cannot be
-  // mistaken for the Razorbacks, whose scoreboard abbreviation is ARK.
-  const abbr = side.name === "Arkansas St" ? "ARK ST" : side.slug === "arkansas" ? "ARK" : side.abbr;
+  const abbr = tickerAbbr(side);
   const body = (
     <span className={`flex items-center gap-1.5 ${dim ? "opacity-50" : ""}`}>
       {team ? (
