@@ -119,7 +119,9 @@ and is not changed by a weekly sports-data refresh.
 
 1. Confirm the latest AP poll is published. Add its 25 rows to
    `data/ap-poll-2026.csv`, update `# as_of:` and `# note:`, and verify names
-   and ranks against the AP source. Do not infer or silently replace a ballot.
+   and ranks against the AP source. Keep ranked programs outside our 68-team
+   budget set in the ballot; their rank numbers remain gaps in the app's team
+   list. Do not infer or silently replace a ballot.
 2. Capture current ESPN FPI played/remaining schedule-strength ranks in
    `data/espn-fpi-sos-2026.json`. Update its `as_of` and note, keep
    `season: 2026`, and retain one
@@ -153,10 +155,10 @@ publish on different days. A program with no scheduled event in that week is
 a bye, not an incomplete fetch. Fetch dates use UTC. No automated weekly
 publication is enabled.
 
-Snapshot dates at this implementation: AP Week 3 published 2026-09-20; FPI
-captured 2026-09-22; Week 3 scores fetched 2026-09-23; rosters refreshed
-2026-09-28. The score
-fetch found 48 final games, 68 participating programs, and no byes.
+Snapshot dates at this implementation: AP Week 5 published 2026-09-27; FPI
+captured 2026-09-28; Week 4 scores fetched 2026-09-28; rosters refreshed
+2026-09-28. The score fetch found 38 final games, 63 participating programs,
+and 5 byes.
 
 ## Project structure
 

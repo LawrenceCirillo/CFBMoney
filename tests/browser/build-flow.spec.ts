@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { scoreboard } from "../../lib/scores";
 
 test("gravity toggle carries from program setup into the season report", async ({ page }) => {
   await page.goto("/build?program=texas");
@@ -65,7 +66,7 @@ test("playsheet survives navigation and both sim modes render", async ({ page })
   await expect(page.getByRole("region", { name: "Your season scores, Final" })).toBeVisible();
   await expect(page.getByText(/A neutral plan against|No matchup adjustment against/).first()).toBeVisible();
   await page.getByRole("button", { name: "Quick sim" }).click();
-  await expect(page.getByRole("region", { name: /Week 3 scores/ })).toBeVisible();
+  await expect(page.getByRole("region", { name: new RegExp(`${scoreboard.label} scores`) })).toBeVisible();
   await expect(page.getByText(/Step 3 · Quick sim/)).toBeVisible();
   await page.getByRole("button", { name: "Sim season" }).click();
   await expect(page.getByText("Game log")).toBeVisible();

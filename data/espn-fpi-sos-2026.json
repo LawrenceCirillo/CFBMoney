@@ -1,281 +1,281 @@
 {
   "source": "ESPN FPI",
   "url": "https://www.espn.com/college-football/fpi",
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-28",
   "season": 2026,
   "note": "Ranks among FBS. 1 is the hardest schedule. Played is games already played, from the view of an average Top 25 team. Remaining is games left, from the view of an average FBS team.",
   "teams": {
     "2": {
-      "played": 48,
-      "remaining": 8
+      "played": 43,
+      "remaining": 2
     },
     "8": {
-      "played": 2,
-      "remaining": 14
+      "played": 5,
+      "remaining": 4
     },
     "9": {
-      "played": 24,
+      "played": 32,
       "remaining": 53
     },
     "12": {
-      "played": 52,
-      "remaining": 52
+      "played": 68,
+      "remaining": 47
     },
     "24": {
-      "played": 7,
-      "remaining": 36
+      "played": 14,
+      "remaining": 35
     },
     "25": {
-      "played": 79,
-      "remaining": 61
+      "played": 81,
+      "remaining": 59
     },
     "26": {
-      "played": 101,
-      "remaining": 39
+      "played": 107,
+      "remaining": 44
     },
     "30": {
-      "played": 108,
+      "played": 61,
       "remaining": 9
     },
     "38": {
-      "played": 46,
-      "remaining": 43
+      "played": 30,
+      "remaining": 45
     },
     "52": {
-      "played": 6,
-      "remaining": 35
+      "played": 25,
+      "remaining": 25
     },
     "57": {
-      "played": 61,
-      "remaining": 7
+      "played": 42,
+      "remaining": 12
     },
     "59": {
-      "played": 54,
-      "remaining": 34
+      "played": 69,
+      "remaining": 29
     },
     "61": {
-      "played": 120,
-      "remaining": 21
-    },
-    "66": {
-      "played": 68,
-      "remaining": 40
-    },
-    "77": {
-      "played": 117,
+      "played": 88,
       "remaining": 22
     },
+    "66": {
+      "played": 36,
+      "remaining": 52
+    },
+    "77": {
+      "played": 12,
+      "remaining": 30
+    },
     "84": {
-      "played": 135,
+      "played": 109,
       "remaining": 31
     },
     "87": {
-      "played": 93,
-      "remaining": 54
+      "played": 99,
+      "remaining": 55
     },
     "96": {
-      "played": 4,
-      "remaining": 18
+      "played": 10,
+      "remaining": 16
     },
     "97": {
-      "played": 16,
-      "remaining": 66
+      "played": 40,
+      "remaining": 64
     },
     "99": {
-      "played": 27,
-      "remaining": 15
+      "played": 23,
+      "remaining": 11
     },
     "103": {
-      "played": 88,
-      "remaining": 20
+      "played": 84,
+      "remaining": 19
     },
     "120": {
-      "played": 85,
-      "remaining": 28
+      "played": 95,
+      "remaining": 24
     },
     "127": {
-      "played": 14,
-      "remaining": 44
+      "played": 8,
+      "remaining": 43
     },
     "130": {
-      "played": 62,
+      "played": 63,
       "remaining": 17
     },
     "135": {
-      "played": 89,
-      "remaining": 27
+      "played": 83,
+      "remaining": 26
     },
     "142": {
-      "played": 112,
-      "remaining": 2
+      "played": 62,
+      "remaining": 3
     },
     "145": {
-      "played": 19,
-      "remaining": 11
+      "played": 4,
+      "remaining": 18
     },
     "150": {
-      "played": 75,
-      "remaining": 58
+      "played": 103,
+      "remaining": 46
     },
     "152": {
-      "played": 44,
-      "remaining": 68
+      "played": 54,
+      "remaining": 67
     },
     "153": {
-      "played": 55,
-      "remaining": 30
+      "played": 52,
+      "remaining": 27
     },
     "154": {
-      "played": 29,
-      "remaining": 62
+      "played": 13,
+      "remaining": 68
     },
     "158": {
-      "played": 138,
-      "remaining": 23
+      "played": 120,
+      "remaining": 20
     },
     "164": {
-      "played": 73,
-      "remaining": 29
+      "played": 102,
+      "remaining": 23
     },
     "183": {
-      "played": 59,
-      "remaining": 45
+      "played": 57,
+      "remaining": 50
     },
     "194": {
-      "played": 15,
-      "remaining": 16
+      "played": 24,
+      "remaining": 7
     },
     "197": {
-      "played": 50,
-      "remaining": 55
+      "played": 45,
+      "remaining": 56
     },
     "201": {
-      "played": 38,
-      "remaining": 1
+      "played": 3,
+      "remaining": 10
     },
     "213": {
-      "played": 125,
-      "remaining": 57
+      "played": 118,
+      "remaining": 60
     },
     "221": {
-      "played": 99,
+      "played": 119,
       "remaining": 49
     },
     "228": {
-      "played": 17,
+      "played": 22,
       "remaining": 51
     },
     "238": {
-      "played": 116,
-      "remaining": 3
+      "played": 71,
+      "remaining": 1
     },
     "239": {
-      "played": 58,
-      "remaining": 50
+      "played": 80,
+      "remaining": 42
     },
     "245": {
-      "played": 90,
-      "remaining": 6
+      "played": 21,
+      "remaining": 15
     },
     "248": {
-      "played": 42,
-      "remaining": 56
+      "played": 50,
+      "remaining": 54
     },
     "251": {
-      "played": 21,
-      "remaining": 5
+      "played": 2,
+      "remaining": 14
     },
     "252": {
-      "played": 102,
-      "remaining": 38
+      "played": 116,
+      "remaining": 40
     },
     "254": {
-      "played": 130,
-      "remaining": 59
+      "played": 106,
+      "remaining": 61
     },
     "258": {
-      "played": 100,
-      "remaining": 60
+      "played": 121,
+      "remaining": 58
     },
     "259": {
-      "played": 94,
-      "remaining": 48
+      "played": 122,
+      "remaining": 41
     },
     "264": {
-      "played": 136,
-      "remaining": 19
+      "played": 131,
+      "remaining": 13
     },
     "275": {
-      "played": 20,
-      "remaining": 47
+      "played": 6,
+      "remaining": 63
     },
     "277": {
       "played": 77,
-      "remaining": 42
+      "remaining": 37
     },
     "333": {
-      "played": 51,
-      "remaining": 13
+      "played": 46,
+      "remaining": 6
     },
     "344": {
-      "played": 41,
-      "remaining": 10
+      "played": 48,
+      "remaining": 5
     },
     "356": {
-      "played": 103,
-      "remaining": 26
+      "played": 16,
+      "remaining": 38
     },
     "2116": {
       "played": 64,
-      "remaining": 63
+      "remaining": 62
     },
     "2132": {
-      "played": 134,
-      "remaining": 33
-    },
-    "2294": {
-      "played": 119,
+      "played": 114,
       "remaining": 32
     },
+    "2294": {
+      "played": 67,
+      "remaining": 34
+    },
     "2305": {
-      "played": 80,
-      "remaining": 41
+      "played": 97,
+      "remaining": 48
     },
     "2306": {
-      "played": 126,
-      "remaining": 65
+      "played": 104,
+      "remaining": 66
     },
     "2390": {
-      "played": 92,
-      "remaining": 46
+      "played": 108,
+      "remaining": 36
     },
     "2483": {
-      "played": 67,
-      "remaining": 25
+      "played": 18,
+      "remaining": 28
     },
     "2509": {
-      "played": 65,
-      "remaining": 24
+      "played": 9,
+      "remaining": 33
     },
     "2567": {
-      "played": 26,
-      "remaining": 64
+      "played": 59,
+      "remaining": 57
     },
     "2579": {
-      "played": 86,
-      "remaining": 4
+      "played": 15,
+      "remaining": 8
     },
     "2628": {
-      "played": 111,
-      "remaining": 37
+      "played": 93,
+      "remaining": 39
     },
     "2633": {
-      "played": 104,
-      "remaining": 12
+      "played": 38,
+      "remaining": 21
     },
     "2641": {
-      "played": 76,
-      "remaining": 67
+      "played": 96,
+      "remaining": 65
     }
   }
 }

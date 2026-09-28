@@ -5,6 +5,7 @@
  * Run with: npx tsx scripts/test-spend-rank.ts
  */
 import { data } from "../lib/data";
+import { readFileSync } from "node:fs";
 import { bookStanding, competitionRank, conferenceSpendRank } from "../lib/spend-rank";
 import week3 from "./fixtures/week3-spend-rank-2026.json";
 
@@ -50,10 +51,19 @@ console.log("current AP and ESPN invariants");
   const ranked = data.teams.filter((team) => team.ap_rank != null);
   assert(Number.isInteger(data.poll.week) && data.poll.week >= 1, "current poll has a week");
   assert(/^\d{4}-\d{2}-\d{2}$/.test(data.poll.as_of), "current poll has an ISO date");
-  assert(ranked.length === 25, "exactly 25 AP-ranked teams", ranked.length);
+  const sourceRows = readFileSync("data/ap-poll-2026.csv", "utf8").split(/\r?\n/)
+    .filter((line) => line.startsWith(`${data.poll.week},`))
+    .map((line) => {
+      const [, team, rank] = line.split(",");
+      return { team, rank: Number(rank) };
+    });
+  const sourceByName = new Map(sourceRows.map((row) => [row.team, row.rank]));
+  assert(sourceRows.length === 25, "source AP ballot contains 25 teams", sourceRows.length);
+  assert(ranked.length === sourceRows.filter((row) => data.teams.some((team) => team.name === row.team)).length,
+    "AP-ranked count matches the tracked teams on the source ballot", ranked.length);
   assert(
-    ranked.map((team) => team.ap_rank).sort((a, b) => a! - b!).every((rank, i) => rank === i + 1),
-    "current AP ranks are unique 1–25"
+    ranked.every((team) => sourceByName.get(team.name) === team.ap_rank),
+    "tracked AP ranks retain their exact national ballot numbers"
   );
   const mids = data.teams.map((team) => team.budget_mid_m);
   assert(data.teams.every((team) => team.spend_rank === competitionRank(team.budget_mid_m, mids)),

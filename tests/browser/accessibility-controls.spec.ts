@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { tickerAbbr } from "../../lib/scores";
 
 function luminance(hex: string) {
   const fullHex = /^#[\da-f]{3}$/i.test(hex)
@@ -124,8 +125,9 @@ test("ticker does not move with reduced motion", async ({ page }) => {
 });
 
 test("ticker distinguishes Arkansas from Arkansas State", async ({ page }) => {
+  expect(tickerAbbr({ name: "Arkansas", slug: "arkansas", abbr: "ARST" })).toBe("ARK");
+  expect(tickerAbbr({ name: "Arkansas St", slug: null, abbr: "ARST" })).toBe("ARK ST");
   await page.goto("/");
   const ticker = page.locator(".score-ticker-window");
   await expect(ticker.getByText("ARK", { exact: true }).first()).toBeAttached();
-  await expect(ticker.getByText("ARK ST", { exact: true }).first()).toBeAttached();
 });

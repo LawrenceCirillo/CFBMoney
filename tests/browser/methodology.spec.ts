@@ -18,7 +18,7 @@ test("Moneyball and footer open the dated methodology and its sources", async ({
   }
   const labels = methodologySourceLabels(data);
   for (const label of Object.values(labels)) {
-    await expect(page.getByText(label, { exact: true })).toBeVisible();
+    await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
   }
   await expect(page.getByRole("link", { name: "The Athletic budget report" })).toHaveAttribute(
     "href",
