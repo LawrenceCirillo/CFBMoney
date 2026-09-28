@@ -138,7 +138,7 @@ export default async function ShareSeasonPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="mt-6 grid grid-cols-3 gap-3 text-center">
+          <div className="mt-6 grid gap-2 sm:grid-cols-3 sm:gap-3 sm:text-center">
             {[
               { label: "Season projection", value: projWins.toFixed(1) },
               {
@@ -150,9 +150,9 @@ export default async function ShareSeasonPage({ params }: Props) {
                 value: Math.round((season.off + season.def) / 2).toString(),
               },
             ].map((s) => (
-              <div key={s.label} className="rounded-xl bg-ink/60 p-4">
+              <div key={s.label} className="flex items-center justify-between gap-3 rounded-xl bg-ink/60 px-4 py-3 sm:block sm:p-4">
                 <p className="text-[11px] font-semibold text-fog">{s.label}</p>
-                <p className="font-display mt-1 text-2xl font-black tabular-nums text-paper">
+                <p className="font-display whitespace-nowrap text-2xl font-black tabular-nums text-paper sm:mt-1">
                   {s.value}
                 </p>
               </div>
@@ -266,36 +266,18 @@ export default async function ShareSeasonPage({ params }: Props) {
         <p className="border-b border-line bg-panel/60 px-5 py-3 text-[11px] font-semibold text-fog">
           Game log
         </p>
-        {season.games.map((g) => (
-          <div
-            key={g.week}
-            className="flex items-center gap-4 border-b border-line/60 px-5 py-3 last:border-0"
-          >
-            <span className="w-12 shrink-0 text-xs font-semibold text-fog">
-              {g.stage === "qf"
-                ? "QF"
-                : g.stage === "sf"
-                  ? "SF"
-                  : g.stage === "ncg"
-                    ? "NCG"
-                    : g.stage === "bowl"
-                      ? "Bowl"
-                      : `Wk ${g.week}`}
-            </span>
-            <TeamMark
-              slug={g.oppSlug}
-              name={g.oppName}
-              abbr={getTeam(g.oppSlug)?.abbr ?? g.oppName.slice(0, 4)}
-              color={g.oppColor}
-              size="sm"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-paper">
-                <span className="mr-2 text-xs font-normal text-fog">
-                  {g.isHome ? "vs" : "at"}
-                </span>
-                {g.oppName}
-              </p>
+        {season.games.map((g) => {
+          const weekLabel = g.stage === "qf"
+            ? "QF"
+            : g.stage === "sf"
+              ? "SF"
+              : g.stage === "ncg"
+                ? "NCG"
+                : g.stage === "bowl"
+                  ? "Bowl"
+                  : `Wk ${g.week}`;
+          const details = (
+            <>
               <p className="text-xs text-fog">{Math.round(g.winProb * 100)}% to win</p>
               {season.mode === "season" && g.gameplan && (
                 <>
@@ -304,13 +286,52 @@ export default async function ShareSeasonPage({ params }: Props) {
                     {tendencyLabel(g.gameplan.off)} / {tendencyLabel(g.gameplan.def)} ·{" "}
                     {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
                   </p>
-                  <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, g.won, g.oppName, g.winProb)}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-fog">{gameplanNarration(g.gameplan, g.won, g.oppName, g.winProb)}</p>
                 </>
               )}
+            </>
+          );
+          return (
+            <div key={g.week} className="border-b border-line/60 last:border-0">
+              <div className="px-4 py-4 sm:hidden">
+                <div className="flex items-start gap-2.5">
+                  <span className="w-9 shrink-0 pt-1 text-xs font-semibold text-fog">{weekLabel}</span>
+                  <TeamMark
+                    slug={g.oppSlug}
+                    name={g.oppName}
+                    abbr={getTeam(g.oppSlug)?.abbr ?? g.oppName.slice(0, 4)}
+                    color={g.oppColor}
+                    size="sm"
+                  />
+                  <p className="min-w-0 flex-1 break-words pt-0.5 font-semibold leading-snug text-paper">
+                    <span className="mr-1 text-xs font-normal text-fog">{g.isHome ? "vs" : "at"}</span>
+                    {g.oppName}
+                  </p>
+                  <span className="shrink-0 whitespace-nowrap pt-0.5 text-sm">{scoreLine(g)}</span>
+                </div>
+                <div className="mt-3 space-y-1">{details}</div>
+              </div>
+              <div className="hidden items-center gap-4 px-5 py-3 sm:flex">
+                <span className="w-12 shrink-0 text-xs font-semibold text-fog">{weekLabel}</span>
+                <TeamMark
+                  slug={g.oppSlug}
+                  name={g.oppName}
+                  abbr={getTeam(g.oppSlug)?.abbr ?? g.oppName.slice(0, 4)}
+                  color={g.oppColor}
+                  size="sm"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-semibold text-paper">
+                    <span className="mr-2 text-xs font-normal text-fog">{g.isHome ? "vs" : "at"}</span>
+                    {g.oppName}
+                  </p>
+                  {details}
+                </div>
+                {scoreLine(g)}
+              </div>
             </div>
-            {scoreLine(g)}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* CTAs */}

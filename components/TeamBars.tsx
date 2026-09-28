@@ -81,21 +81,21 @@ export default function TeamBars({ data, metricLabel }: { data: BarDatum[]; metr
                 <span className="min-w-0 truncate" title={d.conference}>{d.conference}</span>
               </span>
 
-              <span className="col-span-3 col-start-2 row-start-3 min-w-0 md:col-auto md:row-auto">
-                <span className="flex items-center gap-2">
-                  <span className="block h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-panel">
-                    <motion.span
-                      className="block h-full rounded-full"
-                      style={{ background: d.barColor ?? d.color }}
-                      initial={reduceMotion ? false : { width: "0%" }}
-                      animate={{ width: `${Math.max(2.5, d.frac * 100)}%` }}
-                      transition={{ ...barSpring, delay }}
-                    />
-                  </span>
-                  {showMetricValue && <span className="tnum shrink-0 text-xs font-semibold">{d.value}</span>}
+              <span className="col-span-3 col-start-2 row-start-3 min-w-0 md:relative md:col-auto md:row-auto">
+                <span className="block h-2 overflow-hidden rounded-full bg-panel">
+                  <motion.span
+                    className="block h-full rounded-full"
+                    style={{ background: d.barColor ?? d.color }}
+                    initial={reduceMotion ? false : { width: "0%" }}
+                    animate={{ width: `${Math.max(2.5, d.frac * 100)}%` }}
+                    transition={{ ...barSpring, delay }}
+                  />
                 </span>
-                {showMetricValue && d.sub && (
-                  <span className="mt-1 block truncate text-[11px] text-fog" title={d.sub}>{d.sub}</span>
+                {showMetricValue && (
+                  <span className="mt-1 flex min-w-0 items-baseline gap-2 md:absolute md:inset-x-0 md:top-full">
+                    <span className="tnum shrink-0 text-xs font-semibold">{d.value}</span>
+                    {d.sub && <span className="min-w-0 truncate text-[11px] text-fog" title={d.sub}>{d.sub}</span>}
+                  </span>
                 )}
               </span>
 

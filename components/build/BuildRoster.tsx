@@ -247,7 +247,7 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
           </div>
         </div>
 
-        <div className="relative w-full overflow-hidden rounded-xl border border-edge bg-panel/30 max-lg:aspect-[4/5] lg:h-[calc(100dvh-16rem)]">
+        <div className="relative hidden w-full overflow-hidden rounded-xl border border-edge bg-panel/30 max-lg:aspect-[4/5] min-[380px]:block lg:h-[calc(100dvh-16rem)]">
           <div className="absolute inset-3 sm:inset-4 lg:bottom-[3.75rem]">
             {[14, 28, 42, 58, 72, 86].map((y) => (
               <div
@@ -277,16 +277,16 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
                   style={{ left: `${p.x}%`, top: `${p.y}%` }}
                 >
                   <span
-                    className={`flex h-8 w-8 flex-col items-center justify-center rounded-full leading-none transition-transform sm:h-11 sm:w-11 ${
+                    className={`flex h-11 w-11 flex-col items-center justify-center rounded-full leading-none transition-transform ${
                       p.side === "off"
                         ? "bg-emerald-500 text-ink"
                         : "bg-sky-500 text-ink"
-                    } ${isSel ? "scale-110 ring-2 ring-paper ring-offset-2 ring-offset-ink" : "group-hover:scale-105"} ${val === 0 ? "opacity-45" : ""}`}
+                    } ${isSel ? "scale-110 ring-2 ring-paper ring-offset-2 ring-offset-ink" : "group-hover:scale-105"} ${val === 0 ? "opacity-80" : ""}`}
                   >
-                    <span className="text-[8px] font-black tracking-wide sm:text-[10px]">
+                    <span className="text-[11px] font-black tracking-wide">
                       {p.short}
                     </span>
-                    <span className="tnum mt-px text-[7px] font-bold sm:mt-0.5 sm:text-[9px]">
+                    <span className="tnum mt-0.5 text-[10px] font-bold">
                       {val > 0 ? `$${val.toFixed(1)}` : "—"}
                     </span>
                   </span>
@@ -295,6 +295,39 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
             })}
           </div>
           {groupStrip("absolute inset-x-0 bottom-0 hidden grid-cols-8 gap-px bg-line lg:grid")}
+        </div>
+        <div className="space-y-5 min-[380px]:hidden">
+          {([
+            { side: "off", label: "Offense" },
+            { side: "def", label: "Defense" },
+            { side: "st", label: "Special teams" },
+          ] as const).map(({ side, label }) => (
+            <section key={side} aria-label={`${label} positions`}>
+              <h3 className="text-sm font-bold text-paper">{label}</h3>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {POSITIONS.filter((p) => p.side === side).map((p) => {
+                  const val = pos[p.key] ?? 0;
+                  const isSel = p.key === selected;
+                  return (
+                    <button
+                      key={p.key}
+                      type="button"
+                      onClick={() => setSelected(p.key)}
+                      aria-label={`${p.label} (${p.key}), ${fmtMoney1(val)}`}
+                      aria-current={isSel ? "true" : undefined}
+                      className={`min-h-16 min-w-0 rounded-xl border p-3 text-left transition-ui ${isSel ? "border-paper bg-panel" : "border-line bg-panel/30 hover:bg-panel/60"}`}
+                    >
+                      <span className="flex items-start justify-between gap-1">
+                        <span className="text-xs font-black text-paper">{p.key}</span>
+                        <span className="tnum whitespace-nowrap text-xs font-bold text-paper">{fmtMoney1(val)}</span>
+                      </span>
+                      <span className="mt-1 block text-xs leading-snug text-fog">{p.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
         {groupStrip("mt-4 grid grid-cols-4 gap-px bg-line sm:grid-cols-8 lg:hidden")}
       </div>

@@ -22,10 +22,10 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
   const yTicks = [25, 20, 15, 10, 5];
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Roster spend vs. AP rank through Week ${data.poll.week}`}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="group" aria-label={`Roster spend vs. AP rank through Week ${data.poll.week}`}>
       {/* grid */}
       {xTicks.map((v) => (
-        <g key={v}>
+        <g key={v} aria-hidden="true">
           <line x1={X(v)} y1={m.t} x2={X(v)} y2={H - m.b} stroke="var(--chart-grid)" strokeWidth={1} />
           <text x={X(v)} y={H - m.b + 22} textAnchor="middle" fontSize={12} fill="var(--chart-text)" className="tnum">
             ${v}M
@@ -33,7 +33,7 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
         </g>
       ))}
       {yTicks.map((r) => (
-        <g key={r}>
+        <g key={r} aria-hidden="true">
           <line x1={m.l} y1={Y(r)} x2={W - m.r} y2={Y(r)} stroke="var(--chart-grid)" strokeWidth={1} />
           <text x={m.l - 12} y={Y(r) + 4} textAnchor="end" fontSize={12} fill="var(--chart-text)" className="tnum">
             #{r}
@@ -42,10 +42,11 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
       ))}
 
       {/* axis titles */}
-      <text x={(m.l + W - m.r) / 2} y={H - 8} textAnchor="middle" fontSize={12} fill="var(--chart-text)">
+      <text aria-hidden="true" x={(m.l + W - m.r) / 2} y={H - 8} textAnchor="middle" fontSize={12} fill="var(--chart-text)">
         Roster budget →
       </text>
       <text
+        aria-hidden="true"
         x={16}
         y={(m.t + H - m.b) / 2}
         textAnchor="middle"
@@ -62,7 +63,7 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
         const cy = Y(t.ap_rank!);
         const r = 14;
         return (
-          <a key={t.slug} href={`/team/${t.slug}`}>
+          <a key={t.slug} href={`/team/${t.slug}`} aria-label={`${t.name}, AP #${t.ap_rank}, estimated budget ${t.budget_low_m} to ${t.budget_high_m} million dollars`}>
             <title>{`${t.name} — ${t.budget_low_m}–${t.budget_high_m}M, AP #${t.ap_rank} through week ${data.poll.week}`}</title>
             <circle cx={cx} cy={cy} r={r} fill={markDisc(t.color)} />
             <image
