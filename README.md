@@ -131,6 +131,9 @@ and is not changed by a weekly sports-data refresh.
    participating programs, and byes.
 4. Run `npm run fetch:season`. It requires valid totals and rosters for all
    68 programs before writing and stamps the actual successful fetch date.
+   The importer removes exact duplicate records, applies the verified Kyle Alt
+   class correction, and adds the five QB1s in `data/payroll-inputs/roster-additions.csv`
+   only when ESPN still omits them.
 5. Run `npm run validate-data`, then `npm run build-data`. The validator
    checks all source coverage, dates, scores, rosters, and AP ranks. It reports
    normal publication skew between AP and ESPN dates.
@@ -145,13 +148,14 @@ and is not changed by a weekly sports-data refresh.
    or omits a known game, keep the last committed snapshot. If a bad snapshot
    is deployed, revert its data commit and redeploy the last known-good data.
 
-The score snapshot is the latest completed week, while AP and ESPN may
+The score snapshot is the last manually reviewed completed week, while AP and ESPN may
 publish on different days. A program with no scheduled event in that week is
 a bye, not an incomplete fetch. Fetch dates use UTC. No automated weekly
 publication is enabled.
 
 Snapshot dates at this implementation: AP Week 3 published 2026-09-20; FPI
-captured 2026-09-22; Week 3 scores and rosters fetched 2026-09-23. The score
+captured 2026-09-22; Week 3 scores fetched 2026-09-23; rosters refreshed
+2026-09-28. The score
 fetch found 48 final games, 68 participating programs, and no byes.
 
 ## Project structure
