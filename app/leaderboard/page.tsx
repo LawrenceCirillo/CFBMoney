@@ -117,7 +117,67 @@ export default async function LeaderboardPage({ searchParams }: Props) {
           </Link>
         </div>
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-2xl border border-edge">
+        <>
+          <ol className="mt-8 space-y-3 md:hidden" aria-label={`${SORTS.find((item) => item.key === sort)?.label} leaderboard`}>
+            {rows.map((r, i) => {
+              const diff = r.wins - r.expectedWins;
+              const diffColor = diff > 0.5
+                ? "text-status-success"
+                : diff < -0.5
+                  ? "text-status-loss"
+                  : "text-fog";
+              return (
+                <li key={r.id}>
+                  <Link href={`/s/${r.id}`} className="block rounded-2xl border border-edge bg-panel/40 p-4 transition-ui hover:border-fog focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper">
+                    <div className="flex items-start gap-3">
+                      <span className="w-7 shrink-0 text-center text-lg" aria-label={`Rank ${i + 1}`}>{medal(i + 1)}</span>
+                      <div className="min-w-0 flex-1">
+                        <p className="break-words text-sm font-semibold text-paper">{r.gmName || "Anonymous"}</p>
+                        <span className="mt-1 flex items-center gap-2 text-sm text-fog">
+                          <TeamMark
+                            slug={r.programSlug}
+                            name={r.programName}
+                            abbr={getTeam(r.programSlug)?.abbr ?? r.programName.slice(0, 4)}
+                            color={r.programColor}
+                            size="sm"
+                          />
+                          <span className="min-w-0 break-words">{r.programName}</span>
+                        </span>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="text-[11px] font-semibold text-fog">{sort === "overachieve" ? "+/− wins" : "Record"}</p>
+                        <p className={`font-display whitespace-nowrap text-2xl font-black tabular-nums ${sort === "overachieve" ? diffColor : "text-paper"}`}>
+                          {sort === "overachieve" ? `${diff > 0 ? "+" : ""}${diff.toFixed(1)}` : `${r.wins}–${r.losses}`}
+                        </p>
+                      </div>
+                    </div>
+                    <dl className="mt-4 grid grid-cols-3 gap-2 border-t border-line pt-3 text-sm">
+                      <div>
+                        <dt className="text-[11px] text-fog">{sort === "overachieve" ? "Record" : "+/− wins"}</dt>
+                        <dd className={`mt-0.5 whitespace-nowrap font-bold tabular-nums ${sort === "overachieve" ? "text-paper" : diffColor}`}>
+                          {sort === "overachieve" ? `${r.wins}–${r.losses}` : `${diff > 0 ? "+" : ""}${diff.toFixed(1)}`}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] text-fog">Exp.</dt>
+                        <dd className="mt-0.5 whitespace-nowrap font-bold tabular-nums text-paper">{r.expectedWins.toFixed(1)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] text-fog">Book</dt>
+                        <dd className="mt-0.5 whitespace-nowrap font-bold tabular-nums text-paper">{fmtMoney1(r.budgetM)}</dd>
+                      </div>
+                    </dl>
+                    <p className="mt-3 text-xs leading-relaxed text-fog">
+                      Best win: {r.bestWin ? `${r.bestWin.opponent} ${r.bestWin.scoreFor}–${r.bestWin.scoreAgainst}` : "—"}
+                      <span className="mx-1.5" aria-hidden="true">·</span>
+                      {new Date(r.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                    </p>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="mt-8 hidden overflow-x-auto rounded-2xl border border-edge md:block">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-panel/60 text-[11px] font-semibold text-fog">
@@ -200,7 +260,8 @@ export default async function LeaderboardPage({ searchParams }: Props) {
               })}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       )}
 
       {legacyTotal > 0 && (

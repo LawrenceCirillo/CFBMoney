@@ -161,7 +161,7 @@ export default function ProgramSelect({
             openMenu(event.key);
           }
         }}
-        className="mt-1 flex w-full items-center gap-2 rounded-lg border border-line bg-panel px-3 py-2.5 text-left text-sm text-paper"
+        className={`mt-1 flex w-full items-center gap-2 border border-line bg-panel px-3 py-2.5 text-left text-sm text-paper ${open ? "rounded-t-lg border-b-0" : "rounded-lg"}`}
       >
         <TeamMark
           slug={selected.slug}
@@ -176,7 +176,7 @@ export default function ProgramSelect({
         </svg>
       </button>
       {open ? (
-        <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-lg border border-edge bg-ink">
+        <div className="absolute top-full z-30 w-full overflow-hidden rounded-b-lg border border-t-0 border-line bg-panel">
           <input
             ref={inputRef}
             value={query}
@@ -194,7 +194,7 @@ export default function ProgramSelect({
               if (listRef.current) listRef.current.scrollTop = 0;
             }}
             onKeyDown={onQueryKey}
-            className="w-full border-b border-edge bg-transparent px-3 py-2.5 text-sm text-paper outline-none placeholder:text-fog focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-paper"
+            className="program-select-input w-full border-b border-line bg-transparent px-3 py-2.5 text-sm text-paper placeholder:text-fog"
           />
           <ul
             ref={listRef}
@@ -202,7 +202,7 @@ export default function ProgramSelect({
             role="listbox"
             tabIndex={-1}
             aria-labelledby={labelId}
-            className="max-h-72 overflow-auto py-1"
+            className="max-h-72 overflow-auto"
           >
             {flat.length === 0 ? (
               <li className="px-3 py-2 text-sm text-fog">No school matches</li>
@@ -224,8 +224,8 @@ export default function ProgramSelect({
                             data-slug={team.slug}
                             aria-selected={isSelected}
                             onClick={() => choose(team.slug)}
-                            className={`no-press flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-panel ${
-                              isActive ? "bg-panel" : ""
+                            className={`no-press flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-line/80 ${
+                              isActive ? "bg-line" : ""
                             } ${isSelected ? "font-semibold" : ""}`}
                           >
                             <TeamMark

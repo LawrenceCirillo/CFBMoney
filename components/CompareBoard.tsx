@@ -57,7 +57,7 @@ export default function CompareBoard({ initialA, initialB }: { initialA: string;
       <p className="text-xs font-semibold text-fog">Compare</p>
       <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-6xl">Settle the argument.</h1>
 
-      <div className="mt-8 grid max-w-xl grid-cols-2 gap-3">
+      <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-2">
         <ProgramSelect label="First program" value={A.slug} onChange={(slug) => go(slug, B.slug)} />
         <ProgramSelect label="Second program" value={B.slug} onChange={(slug) => go(A.slug, slug)} />
       </div>
@@ -70,13 +70,13 @@ export default function CompareBoard({ initialA, initialB }: { initialA: string;
       </button>
 
       <div className="mt-6 max-w-3xl overflow-hidden rounded-xl border border-edge">
-        <div className="grid grid-cols-[1fr_1fr_1fr] border-b border-line bg-panel/60 px-4 py-3 text-sm font-bold">
-          <span />
-          <span className="flex items-center gap-2" style={{ color: A.color }}>
+        <div className="grid grid-cols-2 gap-3 border-b border-line bg-panel/60 px-4 py-3 text-sm font-bold sm:grid-cols-[1fr_1fr_1fr]">
+          <span className="hidden sm:block" />
+          <span className="flex min-w-0 items-center gap-2 break-words" style={{ color: A.color }}>
             <TeamMark slug={A.slug} name={A.name} abbr={A.abbr} color={A.color} size="sm" />
             {A.name}
           </span>
-          <span className="flex items-center gap-2" style={{ color: B.color }}>
+          <span className="flex min-w-0 items-center gap-2 break-words" style={{ color: B.color }}>
             <TeamMark slug={B.slug} name={B.name} abbr={B.abbr} color={B.color} size="sm" />
             {B.name}
           </span>
@@ -84,11 +84,11 @@ export default function CompareBoard({ initialA, initialB }: { initialA: string;
         {rows.map((r) => (
           <div
             key={r.label}
-            className="tnum grid grid-cols-[1fr_1fr_1fr] border-b border-line/60 px-4 py-3 text-sm last:border-0"
+            className="tnum grid grid-cols-2 gap-x-3 gap-y-1 border-b border-line/60 px-4 py-3 text-sm last:border-0 sm:grid-cols-[1fr_1fr_1fr]"
           >
-            <span className="text-fog">{r.label}</span>
-            <span>{r.fa}</span>
-            <span>{r.fb}</span>
+            <span className="col-span-2 font-semibold text-fog sm:col-span-1 sm:font-normal">{r.label}</span>
+            <span className="min-w-0 break-words font-semibold sm:font-normal">{r.fa}</span>
+            <span className="min-w-0 break-words font-semibold sm:font-normal">{r.fb}</span>
           </div>
         ))}
       </div>

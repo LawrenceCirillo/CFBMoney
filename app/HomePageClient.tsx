@@ -228,7 +228,7 @@ export default function HomePageClient({ records }: { records: Record<string, st
       </section>
 
       <div className="mt-12 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid w-full grid-cols-3 gap-1 min-[400px]:flex min-[400px]:w-auto min-[400px]:flex-wrap min-[400px]:gap-2">
           {METRICS.map((m) => (
             <button
               key={m.key}
@@ -237,11 +237,13 @@ export default function HomePageClient({ records }: { records: Record<string, st
                 setSort(DEFAULT_SORT[m.key]);
               }}
               aria-pressed={metric === m.key}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-ui ${
+              aria-label={m.label}
+              className={`min-h-11 min-w-0 rounded-full px-2 py-2 text-xs font-semibold transition-ui min-[400px]:px-4 min-[400px]:text-sm ${
                 metric === m.key ? "bg-panel text-paper" : "text-fog hover:bg-panel hover:text-paper"
               }`}
             >
-              {m.label}
+              <span className="min-[400px]:hidden">{m.key === "spend" ? "Spend" : m.key === "value" ? "Value" : "AP Top 25"}</span>
+              <span className="hidden min-[400px]:inline">{m.label}</span>
             </button>
           ))}
         </div>

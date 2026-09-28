@@ -110,14 +110,45 @@ export default function Moneyball() {
         with #1 the hardest schedule; they are context, not an adjustment to the poll or budgets.
       </p>
 
-      <SectionHead kicker="Spend versus poll" title="See every AP-ranked team">
+      <SectionHead kicker="Spend versus poll" title="See every tracked AP-ranked team">
         Further left means a lower budget midpoint; higher up means a higher AP position.
         The budget midpoint is the average of a reported range, and the AP poll is a ranking
         of teams, not a measurement of financial return. Select a logo for its team page.
+        <span className="md:hidden"> You can also browse the tracked ranked teams below the chart.</span>
       </SectionHead>
       <div className="mt-6 rounded-xl border border-edge bg-panel/30 p-2 sm:p-4">
-        <Scatterplot teams={ranked} />
+        <div className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper" role="region" aria-label="Spend versus poll chart. Scroll horizontally to explore." tabIndex={0}>
+          <div className="min-w-[880px] md:min-w-0">
+            <Scatterplot teams={ranked} />
+          </div>
+        </div>
+        <p className="px-2 pb-1 pt-2 text-xs text-fog md:hidden">Swipe across the chart to inspect it at full size.</p>
       </div>
+      <section className="mt-4 md:hidden" aria-labelledby="ranked-team-list-heading">
+        <h4 id="ranked-team-list-heading" className="text-base font-bold text-paper">Browse {ranked.length} tracked AP-ranked teams</h4>
+        <p className="mt-1 text-xs text-fog">AP rank, estimated budget, and spend rank. Tap a team for its page.</p>
+        <ol className="mt-3 overflow-hidden rounded-xl border border-edge bg-panel/30">
+          {[...ranked].sort((a, b) => a.ap_rank! - b.ap_rank!).map((team) => (
+            <li key={team.slug} className="border-b border-line/60 last:border-0">
+              <Link
+                href={`/team/${team.slug}`}
+                aria-label={`${team.name}, AP #${team.ap_rank}, estimated budget ${fmtRange(team.budget_low_m, team.budget_high_m)}, spend rank #${team.spend_rank}`}
+                className="flex min-h-14 items-center gap-3 px-4 py-3 transition-ui hover:bg-panel/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper"
+              >
+                <span className="w-8 shrink-0 font-display text-lg font-black tabular-nums text-fog">#{team.ap_rank}</span>
+                <TeamMark slug={team.slug} name={team.name} abbr={team.abbr} color={team.color} size="sm" />
+                <span className="min-w-0 flex-1">
+                  <span className="block break-words text-sm font-semibold leading-snug text-paper">{team.name}</span>
+                  <span className="mt-0.5 block text-xs tabular-nums text-fog">
+                    {fmtRange(team.budget_low_m, team.budget_high_m)} · Spend #{team.spend_rank}
+                  </span>
+                </span>
+                <span className="shrink-0 text-fog" aria-hidden="true">→</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       <SectionHead kicker="Inside the Build game" title="What does another $10M change in the model?">
         Move the starting budget and compare it with a budget $10M higher. Both points stay

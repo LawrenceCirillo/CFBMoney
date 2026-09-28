@@ -135,14 +135,14 @@ function BuildPageInner() {
         )}
       </h1>
 
-        <div className={`flex flex-wrap items-center gap-2 ${step === "build" ? "mt-5 mb-6" : "mt-8 mb-10"}`}>
+        <div className={`grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:items-center sm:gap-2 ${step === "build" ? "mt-5 mb-6" : "mt-8 mb-10"}`}>
           {STEPS.map((s, i) => (
             <button
               key={s.key}
               onClick={() => i < stepIndex && setStep(s.key)}
               aria-current={i === stepIndex ? "step" : undefined}
               disabled={i >= stepIndex}
-              className={`flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-ui ${
+              className={`flex min-h-11 min-w-0 items-center justify-center gap-1 rounded-full px-2 py-2 text-xs font-semibold whitespace-nowrap transition-ui sm:gap-2 sm:px-4 sm:text-sm ${
                 i === stepIndex
                   ? "bg-panel text-paper"
                   : i < stepIndex
