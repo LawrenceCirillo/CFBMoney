@@ -1,0 +1,1012 @@
+{
+  "teamSlug": "texas-tech",
+  "budget": 40000000,
+  "qb1Name": "Will Hammond",
+  "anchorCount": 0,
+  "anchorSum": 0,
+  "floorHits": 0,
+  "residual": -4000,
+  "sum": 40000000,
+  "players": [
+    {
+      "name": "Ren Brown",
+      "jersey": "68",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Chase Campbell",
+      "jersey": "13",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 338000,
+      "source": "model"
+    },
+    {
+      "name": "Stephen Cannon",
+      "jersey": "12",
+      "originalPosition": "QB",
+      "position": "QB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 338000,
+      "source": "model"
+    },
+    {
+      "name": "Jett Carpenter",
+      "jersey": "85",
+      "originalPosition": "TE",
+      "position": "TE",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Terrance Carter Jr.",
+      "jersey": "7",
+      "originalPosition": "TE",
+      "position": "TE",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Connor Carty",
+      "jersey": "61",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Thomas Castellanos",
+      "jersey": "4",
+      "originalPosition": "QB",
+      "position": "QB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Jordan Church",
+      "jersey": "54",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Cash Cleveland",
+      "jersey": "52",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 416000,
+      "source": "model"
+    },
+    {
+      "name": "Jacob Crow",
+      "jersey": "76",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Ellis Davis",
+      "jersey": "78",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 416000,
+      "source": "model"
+    },
+    {
+      "name": "Michael Dever",
+      "jersey": "19",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Cameron Dickey",
+      "jersey": "8",
+      "originalPosition": "RB",
+      "position": "RB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Coy Eakin",
+      "jersey": "3",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Jack Esparza",
+      "jersey": "83",
+      "originalPosition": "TE",
+      "position": "TE",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Kirk Francis",
+      "jersey": "18",
+      "originalPosition": "QB",
+      "position": "QB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Tristian Gentry",
+      "jersey": "21",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Elias Gillen",
+      "jersey": "77",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Bryce Gilmore",
+      "jersey": "71",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Danilo Guberinich",
+      "jersey": "73",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Will Hammond",
+      "jersey": "15",
+      "originalPosition": "QB",
+      "position": "QB",
+      "class": "JR",
+      "qb1": true,
+      "valuation": 2422000,
+      "source": "model"
+    },
+    {
+      "name": "Michael Henderson III",
+      "jersey": "35",
+      "originalPosition": "RB",
+      "position": "RB",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 301000,
+      "source": "model"
+    },
+    {
+      "name": "Holton Hendrix",
+      "jersey": "53",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 416000,
+      "source": "model"
+    },
+    {
+      "name": "Jackson Hildebrand",
+      "jersey": "66",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 416000,
+      "source": "model"
+    },
+    {
+      "name": "Micah Hudson",
+      "jersey": "1",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 555000,
+      "source": "model"
+    },
+    {
+      "name": "Imari Jehiel",
+      "jersey": "84",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 338000,
+      "source": "model"
+    },
+    {
+      "name": "Kenny Johnson",
+      "jersey": "2",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Bryson Jones",
+      "jersey": "14",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Jalen Jones",
+      "jersey": "6",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Lloyd Jones III",
+      "jersey": "10",
+      "originalPosition": "QB",
+      "position": "QB",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Quintaelyn Joyner",
+      "jersey": "88",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Quinten Joyner",
+      "jersey": "0",
+      "originalPosition": "RB",
+      "position": "RB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Donte Lee Jr.",
+      "jersey": "9",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Jason Llewellyn",
+      "jersey": "89",
+      "originalPosition": "TE",
+      "position": "TE",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Matt Ludwig",
+      "jersey": "5",
+      "originalPosition": "TE",
+      "position": "TE",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 127000,
+      "source": "model"
+    },
+    {
+      "name": "Garin Maley",
+      "jersey": "75",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Jerald Mays",
+      "jersey": "56",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Patrick McMath",
+      "jersey": "50",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Felix Ojo",
+      "jersey": "51",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Holden Phillips",
+      "jersey": "16",
+      "originalPosition": "QB",
+      "position": "QB",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Jacob Ponton",
+      "jersey": "70",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 416000,
+      "source": "model"
+    },
+    {
+      "name": "Kai Powell",
+      "jersey": "80",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 675000,
+      "source": "model"
+    },
+    {
+      "name": "Ashton Rowden",
+      "jersey": "28",
+      "originalPosition": "RB",
+      "position": "RB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Howard Sampson",
+      "jersey": "79",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Daniel Sill",
+      "jersey": "74",
+      "originalPosition": "OL",
+      "position": "OL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Malcolm Simmons",
+      "jersey": "11",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 555000,
+      "source": "model"
+    },
+    {
+      "name": "Leyton Stone",
+      "jersey": "17",
+      "originalPosition": "WR",
+      "position": "WR",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 482000,
+      "source": "model"
+    },
+    {
+      "name": "Loic Tshibangu",
+      "jersey": "33",
+      "originalPosition": "RB",
+      "position": "RB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Charles Anderson Jr.",
+      "jersey": "97",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Kaegan Ash",
+      "jersey": "34",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Amier Boyd",
+      "jersey": "27",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Aaron Bradshaw",
+      "jersey": "26",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Christian Bruce",
+      "jersey": "95",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Bryce Butler",
+      "jersey": "92",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Jayden Cofield",
+      "jersey": "51",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "John Curry",
+      "jersey": "6",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Miquel Dingle Jr.",
+      "jersey": "21",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Malik Esquerra",
+      "jersey": "24",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Amarie Fleming",
+      "jersey": "56",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Brock Golwas",
+      "jersey": "45",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 301000,
+      "source": "model"
+    },
+    {
+      "name": "Tarrion Grant",
+      "jersey": "12",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Jamarn Grant II",
+      "jersey": "30",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "LaDamion Guyton",
+      "jersey": "32",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Luke Hamilton",
+      "jersey": "29",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Ashton Hampton",
+      "jersey": "16",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Mikal Harrison-Pilot",
+      "jersey": "0",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Adam Hill",
+      "jersey": "35",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "A.J. Holmes Jr.",
+      "jersey": "10",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Mateen Ibirogba",
+      "jersey": "98",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Ayden Johnson",
+      "jersey": "90",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Jojo Johnson",
+      "jersey": "99",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Krush Johnson",
+      "jersey": "91",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 253000,
+      "source": "model"
+    },
+    {
+      "name": "Brenden Jordan",
+      "jersey": "7",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Julien Laventure",
+      "jersey": "1",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 506000,
+      "source": "model"
+    },
+    {
+      "name": "Chris Lemons",
+      "jersey": "43",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Noah Lewis",
+      "jersey": "17",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Demarcus Marks",
+      "jersey": "36",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Davin Martin",
+      "jersey": "4",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "S'Vioarean Martin",
+      "jersey": "18",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Jamond Mathis",
+      "jersey": "8",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Braylan McDonald",
+      "jersey": "28",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 301000,
+      "source": "model"
+    },
+    {
+      "name": "Oliver Miles III",
+      "jersey": "5",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Peyton Morgan",
+      "jersey": "3",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "JR",
+      "qb1": false,
+      "valuation": 347000,
+      "source": "model"
+    },
+    {
+      "name": "Ansel Nedore",
+      "jersey": "33",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Cord Nolan",
+      "jersey": "31",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Corey Platt Jr.",
+      "jersey": "9",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Brice Pollock",
+      "jersey": "14",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Maddox Quiller",
+      "jersey": "23",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 211000,
+      "source": "model"
+    },
+    {
+      "name": "Marcus Ramon-Edwards",
+      "jersey": "22",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Ben Roberts",
+      "jersey": "13",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Sean Robinson",
+      "jersey": "86",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 301000,
+      "source": "model"
+    },
+    {
+      "name": "Jordan Rogers",
+      "jersey": "28",
+      "originalPosition": "S",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Austin Romaine",
+      "jersey": "15",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Dylan Singleton",
+      "jersey": "93",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SO",
+      "qb1": false,
+      "valuation": 362000,
+      "source": "model"
+    },
+    {
+      "name": "Wesley Smith",
+      "jersey": "40",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Adam Trick",
+      "jersey": "20",
+      "originalPosition": "LB",
+      "position": "LB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 422000,
+      "source": "model"
+    },
+    {
+      "name": "Jacob Hand",
+      "jersey": "39",
+      "originalPosition": "K",
+      "position": "K",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 169000,
+      "source": "model"
+    },
+    {
+      "name": "Stone Harrington",
+      "jersey": "48",
+      "originalPosition": "K",
+      "position": "K",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 169000,
+      "source": "model"
+    },
+    {
+      "name": "Ian Hershey",
+      "jersey": "37",
+      "originalPosition": "P",
+      "position": "P",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 169000,
+      "source": "model"
+    },
+    {
+      "name": "Will Karoll",
+      "jersey": "49",
+      "originalPosition": "P",
+      "position": "P",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 169000,
+      "source": "model"
+    }
+  ]
+}

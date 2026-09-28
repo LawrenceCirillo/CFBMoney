@@ -6,9 +6,12 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readCsv } from "./payroll-csv.mjs";
+import { matchingRosterPlayers } from "./payroll-names.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const teams = JSON.parse(readFileSync(join(root, "data/teams.json"), "utf8"));
+const verifiedRosterAdditions = readCsv(join(root, "data/payroll-inputs/roster-additions.csv"));
 
 const SIDES = {
   offense: "offense",
@@ -45,19 +48,24 @@ function recordOf(team) {
 
 function rosterOf(payload) {
   const players = [];
+  const seen = new Set();
   for (const group of payload.athletes ?? []) {
     const side = SIDES[group.position];
     if (!side) continue;
     for (const athlete of group.items ?? []) {
       if (!athlete.displayName) continue;
-      players.push({
+      const player = {
         name: athlete.displayName,
         jersey: athlete.jersey ?? "",
         // ESPN alternates between PK and K for the same kicker roster slot.
         pos: athlete.position?.abbreviation === "PK" ? "K" : athlete.position?.abbreviation ?? "",
         year: athlete.experience?.abbreviation ?? "",
         side,
-      });
+      };
+      const key = JSON.stringify(player);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      players.push(player);
     }
   }
   return players;
@@ -81,6 +89,25 @@ async function pull(team) {
     giveaways: num(categories, "miscellaneous", "totalGiveaways"),
     roster: rosterOf(roster),
   };
+  // CollegeFootballNetwork's 2026 Virginia roster verifies Kyle Alt as a senior;
+  // ESPN's class field was blank in the September snapshot.
+  if (team.slug === "virginia") {
+    const kyleAlt = season.roster.find((player) => player.name === "Kyle Alt" && player.pos === "WR");
+    if (kyleAlt) kyleAlt.year = "SR";
+  }
+  for (const addition of verifiedRosterAdditions.filter((row) => row.team_slug === team.slug)) {
+    const matches = matchingRosterPlayers(season.roster, addition.name);
+    if (matches.length > 1) throw new Error(`${team.slug}: ${addition.name} has multiple roster matches`);
+    if (!matches.length) {
+      season.roster.push({
+        name: addition.name,
+        jersey: "",
+        pos: addition.position,
+        year: addition.class,
+        side: "offense",
+      });
+    }
+  }
   for (const key of ["games", "points_for", "points_against", "pass_yards", "rush_yards", "takeaways", "giveaways"]) {
     if (typeof season[key] !== "number" || !Number.isFinite(season[key])) {
       throw new Error(`${team.name} missing ${key}`);

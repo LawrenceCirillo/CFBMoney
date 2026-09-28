@@ -1,0 +1,73 @@
+Payroll verification — 2026; roster snapshot 2026-09-28; mode build
+Teams: 68; On3 suffix-normalized roster matches: 3; eligible On3 anchors: 1; human review queue: 2
+alabama              budget=$40,000,000   QB1=Keelon Russell             anchors=0 PASS sum=$40,000,000 floor=0
+arizona              budget=$15,500,000   QB1=Noah Fifita                anchors=0 PASS sum=$15,500,000 floor=1
+arizona-state        budget=$21,000,000   QB1=Cutter Boley               anchors=0 PASS sum=$21,000,000 floor=0
+arkansas             budget=$23,500,000   QB1=KJ Jackson                 anchors=0 PASS sum=$23,500,000 floor=0
+auburn               budget=$33,000,000   QB1=Byrum Brown                anchors=0 PASS sum=$33,000,000 floor=0
+baylor               budget=$21,500,000   QB1=DJ Lagway                  anchors=0 PASS sum=$21,500,000 floor=0
+boston-college       budget=$10,500,000   QB1=Mason McKenzie             anchors=0 PASS sum=$10,500,000 floor=1
+byu                  budget=$22,500,000   QB1=Bear Bachmeier             anchors=0 PASS sum=$22,500,000 floor=0
+california           budget=$22,000,000   QB1=Jaron-Keawe Sagapolutele   anchors=0 PASS sum=$22,000,000 floor=0
+cincinnati           budget=$15,000,000   QB1=JC French IV               anchors=0 PASS sum=$15,000,000 floor=1
+clemson              budget=$30,500,000   QB1=Tait Reynolds              anchors=0 PASS sum=$30,500,000 floor=0
+colorado             budget=$19,500,000   QB1=Julian Lewis               anchors=0 PASS sum=$19,500,000 floor=0
+duke                 budget=$13,500,000   QB1=Walker Eget                anchors=0 PASS sum=$13,500,000 floor=0
+florida              budget=$36,000,000   QB1=Aaron Philo                anchors=0 PASS sum=$36,000,000 floor=0
+florida-state        budget=$26,500,000   QB1=Ashton Daniels             anchors=0 PASS sum=$26,500,000 floor=0
+georgia              budget=$32,500,000   QB1=Gunner Stockton            anchors=0 PASS sum=$32,500,000 floor=0
+georgia-tech         budget=$24,500,000   QB1=Alberto Mendoza            anchors=0 PASS sum=$24,500,000 floor=0
+houston              budget=$17,000,000   QB1=Conner Weigman             anchors=0 PASS sum=$17,000,000 floor=0
+illinois             budget=$21,000,000   QB1=Katin Houser               anchors=0 PASS sum=$21,000,000 floor=0
+indiana              budget=$38,000,000   QB1=Josh Hoover                anchors=0 PASS sum=$38,000,000 floor=0
+iowa                 budget=$19,000,000   QB1=Hank Brown                 anchors=1 PASS sum=$19,000,000 floor=1
+iowa-state           budget=$15,000,000   QB1=Jaylen Raynor              anchors=0 PASS sum=$15,000,000 floor=0
+kansas               budget=$16,000,000   QB1=Isaiah Marshall            anchors=0 PASS sum=$16,000,000 floor=0
+kansas-state         budget=$20,500,000   QB1=Avery Johnson              anchors=0 PASS sum=$20,500,000 floor=1
+kentucky             budget=$24,500,000   QB1=Kenny Minchey              anchors=0 PASS sum=$24,500,000 floor=0
+louisville           budget=$23,500,000   QB1=Lincoln Kienholz           anchors=0 PASS sum=$23,500,000 floor=0
+lsu                  budget=$48,500,000   QB1=Sam Leavitt                anchors=0 PASS sum=$48,500,000 floor=0
+maryland             budget=$23,000,000   QB1=Malik Washington           anchors=0 PASS sum=$23,000,000 floor=0
+miami                budget=$47,000,000   QB1=Darian Mensah              anchors=0 PASS sum=$47,000,000 floor=0
+michigan             budget=$38,000,000   QB1=Bryce Underwood            anchors=0 PASS sum=$38,000,000 floor=0
+michigan-state       budget=$23,000,000   QB1=Alessio Milivojevic        anchors=0 PASS sum=$23,000,000 floor=0
+minnesota            budget=$20,000,000   QB1=Drake Lindsey              anchors=0 PASS sum=$20,000,000 floor=0
+mississippi-state    budget=$27,500,000   QB1=Kamario Taylor             anchors=0 PASS sum=$27,500,000 floor=0
+missouri             budget=$28,500,000   QB1=Austin Simmons             anchors=0 PASS sum=$28,500,000 floor=0
+nc-state             budget=$24,000,000   QB1=CJ Bailey                  anchors=0 PASS sum=$24,000,000 floor=0
+nebraska             budget=$33,000,000   QB1=Anthony Colandrea          anchors=0 PASS sum=$33,000,000 floor=0
+north-carolina       budget=$22,500,000   QB1=Billy Edwards Jr.          anchors=0 PASS sum=$22,500,000 floor=0
+northwestern         budget=$23,000,000   QB1=Aidan Chiles               anchors=0 PASS sum=$23,000,000 floor=0
+notre-dame           budget=$44,500,000   QB1=CJ Carr                    anchors=0 PASS sum=$44,500,000 floor=0
+ohio-state           budget=$51,500,000   QB1=Julian Sayin               anchors=0 PASS sum=$51,500,000 floor=0
+oklahoma             budget=$31,000,000   QB1=John Mateer                anchors=0 PASS sum=$31,000,000 floor=0
+oklahoma-state       budget=$17,000,000   QB1=Drew Mestemaker            anchors=0 PASS sum=$17,000,000 floor=1
+ole-miss             budget=$42,000,000   QB1=Trinidad Chambliss         anchors=0 PASS sum=$42,000,000 floor=0
+oregon               budget=$51,000,000   QB1=Dante Moore                anchors=0 PASS sum=$51,000,000 floor=0
+penn-state           budget=$30,500,000   QB1=Rocco Becht                anchors=0 PASS sum=$30,500,000 floor=0
+pitt                 budget=$18,000,000   QB1=Mason Heintschel           anchors=0 PASS sum=$18,000,000 floor=1
+purdue               budget=$18,000,000   QB1=Ryan Browne                anchors=0 PASS sum=$18,000,000 floor=0
+rutgers              budget=$21,500,000   QB1=Dylan Lonergan             anchors=0 PASS sum=$21,500,000 floor=0
+smu                  budget=$22,000,000   QB1=Kevin Jennings             anchors=0 PASS sum=$22,000,000 floor=1
+south-carolina       budget=$33,500,000   QB1=LaNorris Sellers           anchors=0 PASS sum=$33,500,000 floor=0
+stanford             budget=$18,000,000   QB1=Davis Warren               anchors=0 PASS sum=$18,000,000 floor=1
+syracuse             budget=$19,500,000   QB1=Steve Angeli               anchors=0 PASS sum=$19,500,000 floor=1
+tcu                  budget=$23,500,000   QB1=Jaden Craig                anchors=0 PASS sum=$23,500,000 floor=0
+tennessee            budget=$42,000,000   QB1=Faizon Brandon             anchors=0 PASS sum=$42,000,000 floor=0
+texas                budget=$50,000,000   QB1=Arch Manning               anchors=0 PASS sum=$50,000,000 floor=0
+texas-am             budget=$47,500,000   QB1=Marcel Reed                anchors=0 PASS sum=$47,500,000 floor=0
+texas-tech           budget=$40,000,000   QB1=Will Hammond               anchors=0 PASS sum=$40,000,000 floor=0
+ucf                  budget=$17,500,000   QB1=Keyone Jenkins             anchors=0 PASS sum=$17,500,000 floor=1
+ucla                 budget=$28,000,000   QB1=Nico Iamaleava             anchors=0 PASS sum=$28,000,000 floor=0
+usc                  budget=$38,500,000   QB1=Jayden Maiava              anchors=0 PASS sum=$38,500,000 floor=0
+utah                 budget=$20,000,000   QB1=Devon Dampier              anchors=0 PASS sum=$20,000,000 floor=0
+vanderbilt           budget=$26,500,000   QB1=Jared Curtis               anchors=0 PASS sum=$26,500,000 floor=0
+virginia             budget=$22,000,000   QB1=Beau Pribula               anchors=0 PASS sum=$22,000,000 floor=0
+virginia-tech        budget=$27,500,000   QB1=Ethan Grunkemeyer          anchors=0 PASS sum=$27,500,000 floor=0
+wake-forest          budget=$18,000,000   QB1=Gio Lopez                  anchors=0 PASS sum=$18,000,000 floor=0
+washington           budget=$23,000,000   QB1=Demond Williams Jr.        anchors=0 PASS sum=$23,000,000 floor=1
+west-virginia        budget=$20,000,000   QB1=Michael Hawkins Jr.        anchors=0 PASS sum=$20,000,000 floor=0
+wisconsin            budget=$29,000,000   QB1=Colton Joseph              anchors=0 PASS sum=$29,000,000 floor=0
+REVIEW iowa / Tradon Bessinger / $310000: On3 model recency unverified
+REVIEW ohio-state / Jeremiah Smith / $5000000: name-match unverified; missing source URL
+BUILD PASSED: wrote 68 team payrolls to data/payrolls/
