@@ -72,11 +72,11 @@ export default function CompareBoard({ initialA, initialB }: { initialA: string;
       <div className="mt-6 max-w-3xl overflow-hidden rounded-xl border border-edge">
         <div className="grid grid-cols-2 gap-3 border-b border-line bg-panel/60 px-4 py-3 text-sm font-bold sm:grid-cols-[1fr_1fr_1fr]">
           <span className="hidden sm:block" />
-          <span className="flex min-w-0 items-center gap-2 break-words" style={{ color: A.color }}>
+          <span data-compare-name={A.slug} className="flex min-w-0 items-center gap-2 break-words text-paper">
             <TeamMark slug={A.slug} name={A.name} abbr={A.abbr} color={A.color} size="sm" />
             {A.name}
           </span>
-          <span className="flex min-w-0 items-center gap-2 break-words" style={{ color: B.color }}>
+          <span data-compare-name={B.slug} className="flex min-w-0 items-center gap-2 break-words text-paper">
             <TeamMark slug={B.slug} name={B.name} abbr={B.abbr} color={B.color} size="sm" />
             {B.name}
           </span>

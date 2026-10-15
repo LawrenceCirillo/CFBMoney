@@ -47,13 +47,14 @@
     "test:browser": "playwright test",
     "test:share": "tsx scripts/test-e2e-share.ts",
     "check:generated": "git diff --exit-code -- public/data/cfb-2026.json public/marks data/scheme-tags-client.json data/payrolls",
-    "check": "npm run validate-data && npm run build-data && npm run typecheck && npm run test:payrolls && npm run build:payrolls && npm run test:spend && npm run test:methodology && npm run test:season && npm run test:db && npm run test:route && npm run test:availability && npm run build && npm run test:browser && npm run test:share && npm run check:generated",
+    "check": "npm run validate-data && npm run build-data && npm run typecheck && npm run test:payrolls && npm run build:payrolls && npm run test:spend && npm run test:methodology && npm run test:season && npm run test:build-session && npm run test:db && npm run test:route && npm run test:availability && npm run build && npm run test:browser && npm run test:share && npm run check:generated",
     "dev": "next dev",
     "prebuild": "npm run build-data && npm run build:marks && node scripts/build-scheme-tags.mjs",
     "start": "next start",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "test:db": "tsx scripts/test-db.ts"
+    "test:db": "tsx scripts/test-db.ts",
+    "test:build-session": "tsx scripts/test-build-session.ts"
   },
   "version": "0.1.0"
 }

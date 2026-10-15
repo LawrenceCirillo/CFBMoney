@@ -18,6 +18,36 @@ function contrast(foreground: string, background: string) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+test("Oregon and Iowa Compare names meet contrast against the rendered panel in both themes", async ({ page }) => {
+  await page.goto("/compare/oregon-vs-iowa");
+  for (const theme of ["light", "dark"] as const) {
+    if (theme === "dark") await page.getByRole("button", { name: "Switch to dark mode" }).click();
+    for (const slug of ["oregon", "iowa"]) {
+      const name = page.locator(`[data-compare-name="${slug}"]`);
+      await expect(name).toBeVisible();
+      const colors = await name.evaluate((element) => {
+        const canvas = document.createElement("canvas"); canvas.width = canvas.height = 1;
+        const context = canvas.getContext("2d")!;
+        function rgba(color: string) {
+          context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1);
+          return Array.from(context.getImageData(0, 0, 1, 1).data);
+        }
+        const ancestors: Element[] = [];
+        for (let node: Element | null = element; node; node = node.parentElement) ancestors.unshift(node);
+        let background = [255, 255, 255];
+        for (const ancestor of ancestors) {
+          const layer = rgba(getComputedStyle(ancestor).backgroundColor);
+          const alpha = layer[3] / 255;
+          background = background.map((channel, i) => layer[i] * alpha + channel * (1 - alpha));
+        }
+        const hex = (channels: number[]) => `#${channels.slice(0, 3).map((n) => Math.round(n).toString(16).padStart(2, "0")).join("")}`;
+        return { foreground: hex(rgba(getComputedStyle(element).color)), background: hex(background) };
+      });
+      expect(contrast(colors.foreground, colors.background), `${theme} ${slug}`).toBeGreaterThanOrEqual(4.5);
+    }
+  }
+});
+
 test("status text tokens meet normal-text contrast in both themes", async ({ page }) => {
   await page.goto("/");
 

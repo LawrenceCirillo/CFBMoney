@@ -15,9 +15,11 @@ interface Props {
   setGravityOn: (on: boolean) => void;
   onBack: () => void;
   onNext: () => void;
+  nextLabel?: string;
+  nextDisabled?: boolean;
 }
 
-export default function PickProgram({ programSlug, setProgramSlug, budgetM, gravityOn, setGravityOn, onBack, onNext }: Props) {
+export default function PickProgram({ programSlug, setProgramSlug, budgetM, gravityOn, setGravityOn, onBack, onNext, nextLabel = "Continue", nextDisabled = false }: Props) {
   const program = getTeam(programSlug)!;
   const gravity = gravityTags(program.slug);
   const standing = useMemo(() => bookStanding(budgetM, data.teams), [budgetM]);
@@ -117,7 +119,7 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, grav
       <p className="mt-6 max-w-2xl text-sm text-fog">
         Twelve games — conference opponents, your rivalry, a tiered non-conference
         slate. Seven at home. Your {fmtMoney1(budgetM)} roster against their real
-        books: at the blue-bloods, you&rsquo;re the underdog. Taking over{" "}
+        books. Your roster and each opponent determine the odds. Taking over{" "}
         {program.name} does not change their payroll.
       </p>
       <p className="mt-2 max-w-2xl text-sm text-fog">
@@ -128,7 +130,8 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, grav
         . {program.name} spends #{program.spend_rank}.
       </p>
 
-      <div className="mt-10 flex gap-3">
+      {nextDisabled && <p className="mt-6 text-sm text-status-caution">Spend the exact selected book in your roster before starting a new season.</p>}
+      <div className="mt-10 flex flex-wrap gap-3">
         <button
           onClick={onBack}
           className="rounded-full border border-line px-6 py-3 font-semibold text-paper transition-ui hover:border-fog"
@@ -137,9 +140,10 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, grav
         </button>
         <button
           onClick={onNext}
-          className="rounded-xl bg-emerald-500 px-8 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400"
+          disabled={nextDisabled}
+          className="rounded-xl bg-emerald-500 px-8 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400 disabled:opacity-45"
         >
-          Continue
+          {nextLabel}
         </button>
       </div>
     </div>

@@ -7,10 +7,13 @@ import { dirname, resolve } from "node:path";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
+import { chromium, expect, type Browser, type Page, type Locator } from "@playwright/test";
 import { resetDb, setDb } from "../db/client";
 import { countSeasons, getSeason } from "../db/seasons";
 import * as schema from "../db/schema";
-import { GAME_BUDGET_M, cappedOptimalAllocation } from "../lib/simulator";
+import { GAME_BUDGET_M, cappedOptimalAllocation, distributeAllocationToSlots } from "../lib/simulator";
+import { ACTIVE_RUNS_KEY, emptySession, encodeBuildSession, type ActiveRun } from "../lib/build-session";
+import { gameplanNarration } from "../lib/gameplan";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-replay";
 import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 import { freePort, startTestPostgres } from "./test-postgres";
@@ -43,6 +46,7 @@ async function main() {
   const previousUrl = process.env.DATABASE_URL;
   let pool: Pool | undefined;
   let app: ChildProcess | undefined;
+  let browser: Browser | undefined;
   try {
     process.env.DATABASE_URL = testDb.url;
     pool = new Pool({ connectionString: testDb.url, max: 2 });
@@ -67,6 +71,7 @@ async function main() {
     await waitForServer(base, app, () => serverOutput);
 
     const ids: string[] = [];
+    const fixtures: { id: string; payload: SeasonPayload }[] = [];
     for (const [mode, seed] of [["quick", 24], ["season", 147]] as const) {
       const payload: SeasonPayload = {
         gmName: `HTTP ${mode} test`, mode, seed, simVersion: SIM_VERSION,
@@ -92,6 +97,7 @@ async function main() {
       assert.equal(posted.status, 201, `${mode}: ${posted.body.error}`);
       assert(posted.body.id);
       ids.push(posted.body.id);
+      fixtures.push({ id: posted.body.id, payload });
       const saved = await getSeason(posted.body.id);
       assert(saved);
       assert.equal(saved.verified, true);
@@ -150,7 +156,141 @@ async function main() {
     assert((await og.arrayBuffer()).byteLength > 10_000);
     assert.equal((await fetch(`${base}/s/doesnotexist`)).status, 404);
     console.log("  ok leaderboard, OG image, and unknown-share 404");
+
+    // This browser talks only to the disposable local server/database above.
+    browser = await chromium.launch();
+    const recoveryContext = await browser.newContext();
+    try {
+      const mixed = fixtures.find((fixture) => fixture.payload.mode === "season")!.payload;
+      const full = replaySeason(mixed);
+      const { gmName: _gmName, ...input } = mixed;
+      const run: ActiveRun = { id: randomUUID(), input, pos: distributeAllocationToSlots(input.alloc),
+        completedGames: full.games.length, featured: full.games.length - 1, pending: null, publish: null };
+      const raw = encodeBuildSession({ ...emptySession(), runs: { season: run } });
+      const page = await recoveryContext.newPage();
+      await page.goto(base);
+      await page.evaluate(({ key, raw }) => localStorage.setItem(key, raw), { key: ACTIVE_RUNS_KEY, raw });
+      await page.goto(base + "/build");
+      await page.getByRole("textbox", { name: "GM name (optional)" }).fill("Recovered mixed-call GM");
+      let lostId: string | undefined;
+      let lostKey: string | undefined;
+      let requests = 0;
+      await page.route("**/api/seasons", async (route) => {
+        requests++;
+        lostKey = route.request().headers()["idempotency-key"];
+        const response = await route.fetch();
+        assert.equal(response.status(), 201);
+        lostId = (await response.json()).id;
+        await route.abort("failed"); // Server committed; response never reached the client.
+      });
+      await page.getByRole("button", { name: "Publish season", exact: true }).click();
+      await expect.poll(() => lostId).toBeTruthy();
+      await expect(page.getByRole("button", { name: "Publish season", exact: true })).toBeEnabled();
+      await page.reload();
+      await expect(page.getByRole("button", { name: "Publish season", exact: true })).toBeVisible();
+      assert.equal(requests, 1, "restoring must not publish automatically");
+      const savedAttempt = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).runs.season.publish, ACTIVE_RUNS_KEY);
+      assert.equal(savedAttempt.key, lostKey);
+      assert.deepEqual(savedAttempt.payload.gameplan, mixed.gameplan);
+      assert.equal(savedAttempt.payload.gmName, "Recovered mixed-call GM");
+      await page.unroute("**/api/seasons");
+      const retryResponse = page.waitForResponse((response) => response.url() === base + "/api/seasons" && response.request().method() === "POST");
+      await page.getByRole("button", { name: "Publish season", exact: true }).click();
+      const retry = await retryResponse;
+      assert.equal(retry.request().headers()["idempotency-key"], lostKey);
+      assert.deepEqual(retry.request().postDataJSON(), savedAttempt.payload);
+      assert.equal((await retry.json()).id, lostId);
+      await expect(page.getByRole("link", { name: "Open recap", exact: true })).toHaveAttribute("href", `/s/${lostId}`);
+      await page.reload();
+      await expect(page.getByRole("link", { name: "Open recap", exact: true })).toHaveAttribute("href", `/s/${lostId}`);
+      await expect(page.getByRole("button", { name: "Publish season", exact: true })).toHaveCount(0);
+      assert.equal(await countSeasons(), 3, "lost response/reloaded retry creates one row");
+      const recovered = await getSeason(lostId!);
+      assert(recovered);
+      assert.deepEqual(recovered.gameplan, mixed.gameplan);
+      fixtures.push({ id: lostId!, payload: savedAttempt.payload });
+      console.log("  ok browser lost-response retry after reload reuses exact UUID/payload, one row, restored completed publication");
+    } finally { await recoveryContext.close(); }
+
+    // Fixed inputs exercise both signs and short/long margin and record values.
+    for (const [budgetM, seed] of [[55, 81], [55, 113], [10, 269], [10, 268]]) {
+      const payload: SeasonPayload = { mode: "quick", seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
+        programSlug: "texas", budgetM, alloc: cappedOptimalAllocation(budgetM), gameplan: [], autoGameplan: true,
+        gravityOn: false, gravityVersion: "v1", gmName: `Mobile ${budgetM}/${seed}` };
+      const posted = await publish(base, payload);
+      assert.equal(posted.status, 201);
+      fixtures.push({ id: posted.body.id!, payload });
+    }
+    const archived = await getSeason(ids[0]);
+    assert(archived);
+    await db.insert(schema.seasons).values({ ...archived, id: "archive-v3", publishKey: randomUUID(), simVersion: 3, gmName: "Archived model fixture" });
+    for (const width of [320, 390]) for (const theme of ["light", "dark"] as const) {
+      const context = await browser.newContext({ viewport: { width, height: 844 }, colorScheme: theme });
+      try {
+        const page = await context.newPage();
+        await page.addInitScript((theme) => localStorage.setItem("cfb-money-theme", theme), theme);
+        for (const fixture of fixtures) {
+          const saved = await getSeason(fixture.id);
+          assert(saved);
+          await page.goto(`${base}/s/${fixture.id}`);
+          await expect(page.getByRole("heading", { name: saved.programName, exact: true })).toBeVisible();
+          await expect(page.locator("html")).toHaveClass(theme === "dark" ? /dark/ : /^(?!.*dark)/);
+          await expect(page.getByText(`${saved.wins}–${saved.losses}`, { exact: true }).first()).toBeVisible();
+          const summary = page.getByText("Season projection", { exact: true }).locator("..");
+          await expect(summary.getByText(saved.expectedWins.toFixed(1), { exact: true })).toBeVisible();
+          await assertSingleLine(summary.getByText(saved.expectedWins.toFixed(1), { exact: true }));
+          await expect(page.getByText("Avg margin", { exact: true }).locator("..").getByText(`${saved.avgMargin > 0 ? "+" : ""}${saved.avgMargin.toFixed(1)}`, { exact: true })).toBeVisible();
+          await assertSingleLine(page.getByText("Avg margin", { exact: true }).locator("..").getByText(`${saved.avgMargin > 0 ? "+" : ""}${saved.avgMargin.toFixed(1)}`, { exact: true }));
+          await expect(page.getByText("Roster rating", { exact: true }).locator("..").getByText(String(Math.round((saved.off + saved.def) / 2)), { exact: true })).toBeVisible();
+          const gameLog = page.getByText("Game log", { exact: true }).locator("..");
+          for (const [index, game] of saved.games.entries()) {
+            const row = gameLog.locator(":scope > div").nth(index).locator(":scope > div").first();
+            await expect(row).toContainText(game.oppName);
+            await expect(row).toContainText(`${game.scoreFor}–${game.scoreAgainst}`);
+            const opponent = row.locator("p").first();
+            assert(await opponent.evaluate((element) => getComputedStyle(element).textOverflow !== "ellipsis" && element.scrollWidth <= element.clientWidth + 1), "full opponent name fits without truncation");
+            if (saved.mode === "season" && game.gameplan) {
+              const narration = row.getByText(gameplanNarration(game.gameplan, game.won, game.oppName, game.winProb), { exact: true });
+              await expect(narration).toBeVisible();
+              const textWidth = await narration.evaluate((element) => element.getBoundingClientRect().width);
+              const contentWidth = await row.evaluate((element) => {
+                const style = getComputedStyle(element);
+                return element.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+              });
+              assert(textWidth >= contentWidth * 0.95, "narration spans the game row rather than wrapping in the narrow opponent column");
+            }
+          }
+          await assertFits(page, `${width} ${theme} recap ${fixture.id}`);
+        }
+        for (const sort of ["overachieve", "wins"]) {
+          await page.goto(`${base}/leaderboard?sort=${sort}`);
+          const board = page.getByRole("list", { name: sort === "wins" ? "Most wins leaderboard" : "Biggest overachievers leaderboard" });
+          await expect(board).toBeVisible();
+          for (const fixture of fixtures) {
+            const saved = await getSeason(fixture.id);
+            assert(saved);
+            const card = board.getByRole("link").filter({ hasText: saved.gmName! });
+            await expect(card).toBeVisible();
+            await expect(card).toContainText(`${saved.wins}–${saved.losses}`);
+            await expect(card).toContainText(saved.expectedWins.toFixed(1));
+            const diff = saved.wins - saved.expectedWins;
+            await expect(card).toContainText(`${diff > 0 ? "+" : ""}${diff.toFixed(1)}`);
+            await expect(card).toContainText(`$${saved.budgetM.toFixed(1)}M`);
+            for (const numeric of await card.locator("p.tabular-nums, dd.tabular-nums").all()) await assertSingleLine(numeric);
+          }
+          await assertFits(page, `${width} ${theme} ${sort} leaderboard`);
+          await expect(page.getByRole("heading", { name: "Earlier seasons · unranked archive" })).toBeVisible();
+          await expect(page.getByRole("link", { name: /Archived model fixture/ })).toBeVisible();
+        }
+        await page.goto(`${base}/s/archive-v3`);
+        await expect(page.getByText(/Verified under an earlier game model/)).toBeVisible();
+        await expect(page.getByText("Season projection", { exact: true }).locator("..").getByText(archived.expectedWins.toFixed(1), { exact: true })).toBeVisible();
+        await assertFits(page, `${width} ${theme} archived recap`);
+      } finally { await context.close(); }
+    }
+    console.log("  ok populated recaps and both leaderboard sorts at 320/390 in both themes: values, opponents, narration and overflow");
   } finally {
+    if (browser) await browser.close();
     if (app && app.exitCode === null) {
       app.kill();
       await Promise.race([
@@ -165,6 +305,31 @@ async function main() {
     await testDb.close();
   }
   console.log("All isolated HTTP share tests passed.");
+}
+
+async function assertFits(page: Page, label: string) {
+  for (const numeric of await page.locator("main p.tabular-nums, main dd.tabular-nums").all()) {
+    if (await numeric.isVisible()) await assertSingleLine(numeric);
+  }
+  const problems = await page.evaluate(() => {
+    const errors: string[] = [];
+    if (document.documentElement.scrollWidth > innerWidth + 1) errors.push("page overflow");
+    for (const element of document.querySelectorAll("main p, main dd, main span")) {
+      const rect = element.getBoundingClientRect();
+      if (!rect.width || !rect.height || getComputedStyle(element).display === "none") continue;
+      if (rect.left < -1 || rect.right > innerWidth + 1 || element.scrollWidth > element.clientWidth + 1) errors.push(element.textContent?.trim().slice(0, 100) ?? "clipped text");
+    }
+    return errors;
+  });
+  assert.deepEqual(problems, [], label);
+}
+
+async function assertSingleLine(number: Locator) {
+  const lines = await number.evaluate((element) => {
+    const range = document.createRange(); range.selectNodeContents(element);
+    return [...new Set(Array.from(range.getClientRects()).filter((rect) => rect.width > 0 && rect.height > 0).map((rect) => Math.round(rect.top)))];
+  });
+  assert.equal(lines.length, 1, `Numeric value must occupy one visual line: ${await number.textContent()}`);
 }
 
 main().catch((error) => { console.error(error); process.exit(1); });

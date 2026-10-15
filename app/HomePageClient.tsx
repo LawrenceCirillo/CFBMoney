@@ -27,8 +27,8 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "spend-low", label: "Lowest Spend" },
   { value: "ap-rank", label: "Best AP Rank" },
   { value: "best-record", label: "Best Record" },
-  { value: "value-high", label: "Biggest Bargain" },
-  { value: "value-low", label: "Biggest Overpay" },
+  { value: "value-high", label: "Largest positive rank gap" },
+  { value: "value-low", label: "Largest negative rank gap" },
 ];
 const CONFERENCE_OPTIONS = [
   { value: "all", label: "All Conferences" },
@@ -187,7 +187,7 @@ export default function HomePageClient({ records }: { records: Record<string, st
   const stories: { label: string; big: string; sub: string; slug: string; tone: Tone }[] = [
     { label: "Biggest spender", big: fmtRange(biggest.budget_low_m, biggest.budget_high_m), sub: biggest.name, slug: biggest.slug, tone: "neutral" },
     { label: "Moneyball team", big: `#${bestValue.ap_rank}`, sub: `${bestValue.name} spends like #${bestValue.spend_rank}`, slug: bestValue.slug, tone: "up" },
-    { label: "Biggest overpayer", big: fmtGap(worstValue.value_gap!), sub: `${worstValue.name} spends #${worstValue.spend_rank}, ranked #${worstValue.ap_rank}`, slug: worstValue.slug, tone: "down" },
+    { label: "Largest negative rank gap", big: fmtGap(worstValue.value_gap!), sub: `${worstValue.name} spends #${worstValue.spend_rank}, ranked #${worstValue.ap_rank}`, slug: worstValue.slug, tone: "down" },
     { label: "Elite outlier", big: `#${elite.ap_rank}`, sub: `${elite.name} sits #${elite.ap_rank} on the #${elite.spend_rank} budget`, slug: elite.slug, tone: "neutral" },
   ];
 
