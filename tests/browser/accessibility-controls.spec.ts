@@ -85,9 +85,9 @@ test("metric and simulation mode announce their active choice", async ({ page })
   await expect(spend).toHaveAttribute("aria-pressed", "false");
 
   await page.goto("/build");
-  await page.getByRole("button", { name: "Auto-optimize" }).click();
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Whose season are you playing?" })).toBeVisible();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Auto-optimize" }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   const season = page.getByRole("button", { name: "Season mode" });
   const quick = page.getByRole("button", { name: "Quick sim" });

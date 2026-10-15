@@ -1,37 +1,52 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { data, getTeam } from "@/lib/data";
 import { fmtMoney1, fmtPollRank } from "@/lib/format";
 import { bookStanding } from "@/lib/spend-rank";
 import TeamMark from "@/components/TeamMark";
+import ProgramSelect from "@/components/ProgramSelect";
+import { AllocationFeedback } from "./BuildRoster";
+import { allocationAction, buildPreview, describeAllocationChange, type AllocationAction, type AllocationSnapshot } from "@/lib/build-preview";
+import { clampGameBudget, clampPlaysheetToBudget, GAME_BUDGET_MIN_M, GAME_BUDGET_MAX_M, type Playsheet } from "@/lib/simulator";
 import { gravityTags } from "@/lib/gravity";
 
 interface Props {
+  pos: Playsheet;
+  lastAction: AllocationAction | null;
+  seed: number;
   programSlug: string;
   setProgramSlug: (s: string) => void;
   budgetM: number;
   gravityOn: boolean;
   setGravityOn: (on: boolean) => void;
-  onBack: () => void;
+  setBudgetM: (n: number) => void;
+  onUndo?: () => void;
   onNext: () => void;
-  nextLabel?: string;
-  nextDisabled?: boolean;
 }
 
-export default function PickProgram({ programSlug, setProgramSlug, budgetM, gravityOn, setGravityOn, onBack, onNext, nextLabel = "Continue", nextDisabled = false }: Props) {
+export default function PickProgram({ pos: committedPos, seed, lastAction, programSlug, setProgramSlug, budgetM: committedBudget, gravityOn, setGravityOn, setBudgetM: commitBudget, onUndo, onNext }: Props) {
+  const [proposal, setProposal] = useState<AllocationSnapshot | null>(null);
+  const gesture = useRef<{ before: AllocationSnapshot; latest: AllocationSnapshot } | null>(null);
+  const pos = proposal?.pos ?? committedPos;
+  const budgetM = proposal?.budgetM ?? committedBudget;
+  const changeBudget = (value: number) => {
+    const budget = clampGameBudget(value);
+    if (gesture.current) {
+      const next = { budgetM: budget, pos: clampPlaysheetToBudget(gesture.current.before.pos, budget) };
+      gesture.current.latest = next; setProposal(next);
+    } else commitBudget(budget);
+  };
+  const finishGesture = () => {
+    const pending = gesture.current;
+    gesture.current = null; setProposal(null);
+    if (pending) commitBudget(pending.latest.budgetM);
+  };
+  const action = proposal ? allocationAction({ pos: committedPos, budgetM: committedBudget }, proposal, "Proposed book", { programSlug, gravityOn }) : lastAction;
+  const preview = useMemo(() => buildPreview({ pos, budgetM, gravityOn, programSlug }, seed), [pos, budgetM, gravityOn, programSlug, seed]);
   const program = getTeam(programSlug)!;
   const gravity = gravityTags(program.slug);
   const standing = useMemo(() => bookStanding(budgetM, data.teams), [budgetM]);
-
-  const conferences = useMemo(() => {
-    const map = new Map<string, typeof data.teams>();
-    for (const t of [...data.teams].sort((a, b) => a.name.localeCompare(b.name))) {
-      if (!map.has(t.conference)) map.set(t.conference, []);
-      map.get(t.conference)!.push(t);
-    }
-    return [...map.entries()];
-  }, []);
 
   const stats = [
     { label: "Your book", value: `#${standing.rank}`, sub: `of ${standing.of}` },
@@ -41,7 +56,7 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, grav
 
   return (
     <div>
-      <p className="text-xs font-semibold text-fog">Step 2 · Program</p>
+      <p className="text-xs font-semibold text-fog">Step 1 · Program</p>
       <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
         Whose season are you playing?
       </h2>
@@ -69,27 +84,26 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, grav
         </div>
       </div>
 
-      <label htmlFor="program-select" className="mt-8 block text-xs font-semibold text-fog">
-        Program
-      </label>
-      <select
-        id="program-select"
-        value={programSlug}
-        onChange={(e) => setProgramSlug(e.target.value)}
-        className="mt-2 w-full max-w-xl rounded-lg border border-line bg-panel px-3 py-2.5 text-sm text-paper outline-none focus:border-paper"
-      >
-        {conferences.map(([conf, teams]) => (
-          <optgroup key={conf} label={conf}>
-            {teams.map((t) => (
-              <option key={t.slug} value={t.slug}>
-                {t.name} — {fmtMoney1(t.budget_mid_m)}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </select>
+      <div className="mt-8 max-w-xl [&_.program-select-input]:text-base sm:[&_.program-select-input]:text-sm">
+        <ProgramSelect label="Program" value={programSlug} onChange={setProgramSlug} />
+      </div>
+      <fieldset className="mt-6 max-w-xl rounded-xl border border-line p-4">
+        <legend className="px-1 text-sm font-bold text-paper">Your NIL book</legend>
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={() => changeBudget(budgetM - 1)} disabled={budgetM <= GAME_BUDGET_MIN_M} aria-label="Decrease roster budget" className="h-11 w-11 rounded-full border border-line text-lg disabled:opacity-40">−</button>
+          <span className="tnum flex-1 text-center text-4xl font-black">{fmtMoney1(budgetM)}</span>
+          <button type="button" onClick={() => changeBudget(budgetM + 1)} disabled={budgetM >= GAME_BUDGET_MAX_M} aria-label="Increase roster budget" className="h-11 w-11 rounded-full border border-line text-lg disabled:opacity-40">+</button>
+        </div>
+        <input type="range" min={GAME_BUDGET_MIN_M} max={GAME_BUDGET_MAX_M} step={1} value={budgetM} onPointerDown={(e) => { const before = { pos: committedPos, budgetM: committedBudget }; gesture.current = { before, latest: before }; e.currentTarget.setPointerCapture(e.pointerId); }}
+          onPointerUp={finishGesture} onLostPointerCapture={finishGesture} onBlur={finishGesture}
+          onPointerCancel={() => { gesture.current = null; setProposal(null); }}
+          onChange={(e) => changeBudget(Number(e.target.value))} aria-label="Roster budget in millions" className="mt-3 w-full" />
+        <p className="mt-2 text-sm text-fog">A smaller book fits your current allocation to that book. A larger book leaves money to allocate. Program and gravity changes preserve your amounts.</p>
+        {onUndo && <button type="button" onClick={onUndo} className="mt-2 min-h-11 font-semibold text-paper">Undo last allocation</button>}
+      </fieldset>
 
-      <fieldset className="mt-6 max-w-xl rounded-xl border border-edge bg-panel/40 p-4">
+      <div className="mt-6 grid max-w-4xl gap-4 lg:grid-cols-2 lg:items-start">
+      <fieldset className="min-w-0 rounded-xl border border-edge bg-panel/40 p-4">
         <legend className="px-1 text-sm font-bold text-paper">Program gravity</legend>
         <p className="mb-3 text-sm text-fog">The program can make your dollars work harder in its strongest position groups.</p>
         <div className="flex flex-wrap gap-2">
@@ -106,45 +120,45 @@ export default function PickProgram({ programSlug, setProgramSlug, budgetM, grav
         </p>
       </fieldset>
 
+      <section aria-label="Modeled schedule" data-setup-seed={seed} className="min-w-0 rounded-xl border border-line p-4">
+        <h3 className="text-xl font-black">Your modeled schedule</h3>
+        <p className="mt-2 text-sm text-fog">12 opponents · {preview.homeGames} at home · {fmtMoney1(preview.averageOpponentBudgetM)} average opponent estimated budget.</p>
+        <p className="mt-2 text-sm text-fog">Fixed for this program and challenge. This is the game&rsquo;s modeled slate, separate from the real ESPN schedule.</p>
+        <p className="mt-3 font-semibold text-paper">{preview.expectedWins === null ? "Allocate the exact book to see neutral expected wins." : `${preview.expectedWins.toFixed(1)} / 12 neutral expected wins with your current roster`}</p>
+        <p className="mt-1 text-xs text-fog">Neutral weekly gameplans; includes your selected gravity setting.</p>
+        <details className="mt-3">
+        <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold text-paper">View all 12 opponents and venues</summary>
+        <ol className="mt-2 grid gap-x-6">
+          {preview.games.map((game) => <li key={game.week} data-preview-week={game.week} data-opponent={game.opponent.slug} data-home={game.isHome} className="flex min-w-0 items-center justify-between gap-2 border-t border-line py-2 text-sm">
+            <span className="min-w-0"><span className="tnum text-fog">{game.week} · {game.isHome ? "vs" : "at"}</span> {game.opponent.name}</span>
+            <span className="tnum shrink-0 text-fog">{fmtMoney1(game.opponent.budget_mid_m)}</span>
+          </li>)}
+        </ol>
+        </details>
+      </section>
+      </div>
+
+      <div className="max-w-3xl"><AllocationFeedback change={action ? describeAllocationChange(action) : null} proposed={proposal !== null} /></div>
       <div className="mt-8 grid max-w-3xl grid-cols-3 gap-px bg-edge">
         {stats.map((s) => (
-          <div key={s.label} className="bg-ink px-5 py-6">
+          <div key={s.label} className="min-w-0 bg-ink px-2 py-5 sm:px-5">
             <p className="text-[11px] font-semibold text-fog">{s.label}</p>
-            <p className="tnum mt-2 text-3xl font-black tracking-tight">{s.value}</p>
+            <p className="tnum mt-2 text-2xl font-black tracking-tight sm:text-3xl">{s.value}</p>
             <p className="mt-1 text-sm text-fog">{s.sub}</p>
           </div>
         ))}
       </div>
 
-      <p className="mt-6 max-w-2xl text-sm text-fog">
-        Twelve games — conference opponents, your rivalry, a tiered non-conference
-        slate. Seven at home. Your {fmtMoney1(budgetM)} roster against their real
-        books. Your roster and each opponent determine the odds. Taking over{" "}
-        {program.name} does not change their payroll.
-      </p>
       <p className="mt-2 max-w-2xl text-sm text-fog">
-        Your {fmtMoney1(budgetM)} book sits #{standing.rank} of {standing.of}
+        Your modeled {fmtMoney1(budgetM)} book compared with estimated real program budgets: #{standing.rank} of {standing.of}
         {standing.tiedWith.length > 0
           ? ` — tied with ${standing.tiedWith.map((t) => t.name).join(" and ")}`
           : ` — closest to ${standing.nearest.name}`}
-        . {program.name} spends #{program.spend_rank}.
+        . Taking over {program.name} leaves opponent budgets unchanged.
       </p>
 
-      {nextDisabled && <p className="mt-6 text-sm text-status-caution">Spend the exact selected book in your roster before starting a new season.</p>}
-      <div className="mt-10 flex flex-wrap gap-3">
-        <button
-          onClick={onBack}
-          className="rounded-full border border-line px-6 py-3 font-semibold text-paper transition-ui hover:border-fog"
-        >
-          Back to roster
-        </button>
-        <button
-          onClick={onNext}
-          disabled={nextDisabled}
-          className="rounded-xl bg-emerald-500 px-8 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400 disabled:opacity-45"
-        >
-          {nextLabel}
-        </button>
+      <div className="mt-10">
+        <button onClick={onNext} className="rounded-xl bg-emerald-500 px-8 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400">Continue</button>
       </div>
     </div>
   );

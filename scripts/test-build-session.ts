@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import {
-  ACTIVE_RUNS_KEY, createRun, decodeBuildDraft, decodeBuildSession, emptySession,
+  ACTIVE_RUNS_KEY, BUILD_SETUP_KEY, restoreBuildSetup, createRun, decodeBuildDraft, decodeBuildSession, emptySession,
   encodeBuildSession, readBuildStorage, validateRun, writeBuildStorage, type ActiveRun,
 } from "../lib/build-session";
 import { distributeAllocationToSlots } from "../lib/simulator";
@@ -100,4 +100,19 @@ const storage = () => ({ getItem: (key: string) => memory.get(key) ?? null, setI
 assert(writeBuildStorage(storage, ACTIVE_RUNS_KEY, encodeBuildSession(session)));
 assert.deepEqual(decodeBuildSession(readBuildStorage(storage, ACTIVE_RUNS_KEY).raw).session, session);
 console.log("  ok independent mode saves, pending picks, frozen publish attempts/results, storage denial and quota");
+let seedsCreated = 0;
+const seedOnce = () => { seedsCreated += 1; return 248; };
+for (const raw of [null, "{", "null", JSON.stringify({ version: 1, seed: -1, complete: true }), JSON.stringify({ version: 1, seed: 4.2, complete: true }), JSON.stringify({ version: 1, seed: 2 ** 31, complete: true }), JSON.stringify({ version: 1, seed: 8, complete: "yes" })]) {
+  const before = seedsCreated;
+  const migrated = restoreBuildSetup(raw, seedOnce);
+  assert.equal(seedsCreated, before + 1);
+  assert.deepEqual(migrated, { version: 1, seed: 248, complete: false });
+  assert(writeBuildStorage(storage, BUILD_SETUP_KEY, JSON.stringify(migrated)));
+  assert.deepEqual(restoreBuildSetup(readBuildStorage(storage, BUILD_SETUP_KEY).raw, seedOnce), migrated);
+  assert.equal(seedsCreated, before + 1, "reload retains seed without another RNG call");
+  assert.deepEqual(decodeBuildDraft(JSON.stringify(partialDraft)), partialDraft, "migration preserves every legacy roster amount");
+  assert.deepEqual(decodeBuildSession(encodeBuildSession(session)).session, session, "migration preserves active seeds, calls and results");
+}
+assert.deepEqual(restoreBuildSetup(JSON.stringify({ version: 1, seed: 147, complete: true }), () => { throw new Error("Seed must not regenerate"); }), { version: 1, seed: 147, complete: true });
+console.log("  ok one-time/idempotent setup migration, retained setup seeds/completion and untouched legacy drafts/010 runs");
 console.log("All build session tests passed.");

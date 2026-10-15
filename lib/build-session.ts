@@ -7,6 +7,17 @@ import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput, type Rep
 import { allocationFromPlaysheet, GAME_BUDGET_M, GAME_BUDGET_MIN_M, PLAYSHEET_SLOTS, type Playsheet } from "./simulator";
 
 export const BUILD_DRAFT_KEY = "cfb-money-build-draft-v1-55m";
+// Setup is separate so the legacy four-field roster and 010 run envelope stay readable.
+export const BUILD_SETUP_KEY = "cfb-money-build-setup-v1";
+export type BuildSetup = { version: 1; seed: number; complete: boolean };
+const setupSchema = z.object({ version: z.literal(1), seed: z.number().int().min(0).max(2 ** 31 - 1), complete: z.boolean() }).strict();
+export function restoreBuildSetup(raw: string | null, createSeed: () => number): BuildSetup {
+  try {
+    const parsed = setupSchema.safeParse(JSON.parse(raw ?? "null"));
+    if (parsed.success) return parsed.data;
+  } catch { /* Recover only setup metadata; never discard the saved roster or run. */ }
+  return setupSchema.parse({ version: 1, seed: createSeed(), complete: false });
+}
 export const ACTIVE_RUNS_KEY = "cfb-money-active-runs-v1";
 export type BuildDraft = { pos: Playsheet; budgetM: number; gravityOn: boolean; programSlug: string };
 export type PublishAttempt = { key: string; payload: SeasonPayload; result?: { id: string } };
