@@ -1,0 +1,166 @@
+CFB Money season refresh - October 15, 2026
+Base: origin/main d0cb3d0 (September 28 release)
+Scope: season data, generated payrolls, and refresh documentation. Prepared for review; not deployed.
+
+SNAPSHOT SUMMARY
+AP: Week 5 (2026-09-27) -> Week 7 (2026-10-11). Added both Week 6 and Week 7; 25 exact national ranks per ballot.
+Current ballot: 24 tracked programs. Boise State is retained in the 25-team source ballot at #23; it is outside the 68-team budget set.
+ESPN scores: Week 4 -> Week 6 (Oct 5–11); 28 finals, 54 participating programs, 14 byes. Latest ended ESPN calendar week; current Week 7 remains in progress.
+ESPN rosters and team totals: 2026-09-28 -> 2026-10-15; 68/68 successful.
+ESPN FPI played and remaining SOS: 2026-09-28 -> 2026-10-15; 68/68 matched by ESPN ID. Source page lastUpdated: 2026-10-15T08:00Z.
+Independently checked all 68 ESPN team schedules: 0 mismatches in W-L, games played, points for, or points against.
+Budgets: unchanged at $1,851,000,000 across 68 programs. Locked valuation weights, class multipliers, anchors, and floor are unchanged.
+Replay fingerprint inputs are byte-identical to the previous release. SIM_VERSION remains 4; this data refresh does not archive current model-v4 seasons.
+
+AP MOVERS SINCE THE LAST COMMITTED POLL (WEEK 5 -> WEEK 7)
+Numeric changes below compare teams ranked in both ballots. Unranked teams are not assigned a fictitious #26.
+Biggest climbs:
+  Missouri: #25 -> #13 (+12)
+  UCLA: #23 -> #12 (+11)
+  Kentucky: #24 -> #15 (+9)
+  Tennessee: #17 -> #14 (+3)
+  BYU: #10 -> #8 (+2)
+Biggest falls:
+  LSU: #11 -> #22 (-11)
+  Texas: #1 -> #7 (-6)
+  Iowa: #14 -> #17 (-3)
+  SMU: #21 -> #24 (-3)
+  USC: #18 -> #19 (-1)
+New to the current Top 25 since that snapshot: Wake Forest #21; Northwestern #25
+Dropped out since that snapshot: Florida (was #8); Oregon (was #15)
+
+ROSTER CHURN BY TEAM (EXACT NAMES AS ESPN LISTS THEM)
+Team                 Added Removed Fields Count Before->After Record Before->After
+alabama              0     0       0      100->100            4-0->5-1
+arizona              0     0       0      100->100            3-1->5-1
+arizona-state        0     0       0      100->100            2-1->3-2
+arkansas             0     0       0      100->100            2-2->2-4
+auburn               1     1       0      100->100            3-1->3-2
+baylor               0     0       0      100->100            3-1->4-1
+boston-college       0     0       0      100->100            2-2->2-3
+byu                  0     0       0      99->99              3-0->5-0
+california           0     0       0      100->100            2-2->3-3
+cincinnati           0     0       0      100->100            4-0->4-1
+clemson              0     0       0      100->100            3-1->3-2
+colorado             0     0       0      100->100            2-2->2-3
+duke                 0     0       0      100->100            4-0->4-1
+florida              0     0       0      100->100            4-0->4-2
+florida-state        1     1       0      100->100            2-2->3-3
+georgia              0     0       0      101->101            4-0->6-0
+georgia-tech         0     0       0      100->100            1-3->2-3
+houston              0     0       0      101->101            3-1->5-1
+illinois             0     0       0      100->100            2-2->3-3
+indiana              0     0       0      100->100            4-0->6-0
+iowa                 0     0       0      100->100            4-0->5-1
+iowa-state           0     0       0      100->100            2-2->3-3
+kansas               1     1       0      100->100            1-2->2-3
+kansas-state         0     0       0      100->100            3-1->3-2
+kentucky             0     0       0      100->100            3-1->5-1
+louisville           0     0       0      100->100            2-2->3-3
+lsu                  0     0       0      100->100            3-1->4-2
+maryland             1     1       0      100->100            2-2->2-4
+miami                0     0       0      100->100            4-0->5-0
+michigan             0     0       0      101->101            3-1->3-2
+michigan-state       0     0       0      100->100            2-2->2-4
+minnesota            0     0       0      100->100            3-1->4-2
+mississippi-state    0     0       0      100->100            4-0->4-1
+missouri             0     0       0      100->100            3-1->5-1
+nc-state             1     1       1      100->100            2-2->3-3
+nebraska             0     0       0      100->100            4-0->5-1
+north-carolina       1     1       0      100->100            2-1->3-2
+northwestern         0     0       0      100->100            2-1->4-1
+notre-dame           0     0       0      100->100            4-0->6-0
+ohio-state           0     0       0      100->100            3-1->5-1
+oklahoma             0     0       0      100->100            2-2->3-2
+oklahoma-state       0     0       0      100->100            3-1->4-1
+ole-miss             0     0       0      100->100            3-1->4-1
+oregon               0     0       0      100->100            3-1->3-2
+penn-state           0     0       0      100->100            3-1->3-3
+pitt                 0     0       0      100->100            4-0->5-1
+purdue               0     0       0      100->100            1-3->3-3
+rutgers              0     0       0      100->100            1-3->1-4
+smu                  0     0       0      100->100            3-1->4-1
+south-carolina       0     0       0      100->100            2-2->3-3
+stanford             0     0       0      101->101            2-2->2-4
+syracuse             0     0       0      100->100            1-2->2-3
+tcu                  0     0       0      100->100            2-2->2-3
+tennessee            0     0       0      100->100            3-1->5-1
+texas                0     0       0      100->100            4-0->4-1
+texas-am             0     0       0      100->100            2-2->3-3
+texas-tech           0     0       0      100->100            4-0->5-0
+ucf                  0     0       0      100->100            3-1->3-3
+ucla                 0     0       0      100->100            4-0->5-0
+usc                  0     0       0      100->100            4-1->6-1
+utah                 0     0       0      99->99              4-0->5-0
+vanderbilt           0     0       0      100->100            3-1->3-3
+virginia             0     0       0      100->100            3-1->4-2
+virginia-tech        0     0       0      100->100            4-0->4-2
+wake-forest          0     0       0      100->100            3-1->5-1
+washington           0     0       0      101->101            3-1->3-3
+west-virginia        0     0       0      100->100            3-1->3-3
+wisconsin            0     0       0      100->100            3-1->4-1
+
+Roster details:
+auburn:
+  Removed from ESPN listing: De'marcus Riddick (LB, JR)
+  Added to ESPN listing: De'Marcus Riddick (LB, JR)
+florida-state:
+  Removed from ESPN listing: Chuck Kennon (DB, FR)
+  Added to ESPN listing: Darin Townsend (DB, FR)
+kansas:
+  Removed from ESPN listing: Eamon Smalls (DT, JR)
+  Added to ESPN listing: Chase Belcher (RB, SR)
+maryland:
+  Removed from ESPN listing: Cardell Williams (QB, SR)
+  Added to ESPN listing: John Boley (RB, FR)
+nc-state:
+  Removed from ESPN listing: Da'Karri Nelson (LB, SR)
+  Added to ESPN listing: Da'Kaari Nelson (LB, SR)
+  Fields: {"name":"Katron Evans","jersey":"55","pos":"OL","year":"SR","side":"offense"} -> {"name":"Katron Evans","jersey":"55","pos":"DL","year":"SR","side":"defense"}
+north-carolina:
+  Removed from ESPN listing: Greg Smith (DB, SO)
+  Added to ESPN listing: Greg Smith III (DB, SO)
+No team has more than one name added or removed. Auburn and NC State spelling changes and North Carolina generational-suffix change appear as add/remove pairs. FSU, Kansas, and Maryland each have one other listing replacement. These are source listing changes, not verified transfers or departures.
+
+ROSTER CORRECTIONS AND PATCHES
+All five verified CSV QBs remain absent from their native ESPN roster response and were re-added by the existing importer:
+  Georgia: Gunner Stockton; Houston: Conner Weigman; Michigan: Bryce Underwood; Stanford: Davis Warren; Washington: Demond Williams Jr.
+Each appears exactly once in the resulting 101-player team snapshot. West Virginia lists Michael Hawkins Jr. Virginia WR Kyle Alt retains the verified SR correction. BYU and Utah retain 99 distinct entries after exact-duplicate removal.
+Louisville has two pre-existing Marlon Harbin entries with different jersey fields (45 and blank). Both records are unchanged from September and are not exact duplicates under the approved deduplication rule. Retained the source records; this is a source-review item, not new roster churn.
+
+QB1 INPUT REVIEW
+Updated Pitt: Mason Heintschel -> Holden Geriner. School confirmed Geriner as the replacement starter after Heintschel was ruled out for the remainder of the season; Geriner exists on the repo roster.
+Source: https://pittsburghpanthers.com/news/2026/10/5/football-narduzzi-notebook-pitt-looks-ahead-to-north-carolina
+Syracuse remains an explicit review item. Odom started at UConn, Nelson started at Virginia, and the October 14 school preview says the next starter is unknown among Angeli, Odom, and Nelson. Retained the user-selected Steve Angeli working input rather than guessing.
+Source: https://cuse.com/news/2026/10/14/football-5-things-to-know-cuse-vs-louisville
+Other eight September watchlist inputs retained after checking their most recent ESPN passing boxscores:
+  Arkansas KJ Jackson (401856713); Baylor DJ Lagway (401856817); Michigan Bryce Underwood (401858474); UNC Billy Edwards Jr. (401858256); Texas Tech Will Hammond (401856821); UCF Keyone Jenkins (401856824); Vanderbilt Jared Curtis (401856718); Wake Forest Gio Lopez (401858260).
+Latest game participation supports retaining these working inputs; it is not a new announcement of a future starting role. The other QB1 selections were not all re-researched in this refresh.
+
+PAYROLL VERIFICATION
+Valid: 68/68. Blocked: 0. Players: 6803. Every roster count and integer-dollar sum matches its production input.
+On3 roster matches: 3. Eligible pinned anchors: 1. Human review queue: 2 (Bessinger and Smith remain unpinned).
+All 68 payrolls regenerated; 7 have semantic changes: auburn, florida-state, kansas, maryland, north-carolina, nc-state, pitt.
+Full per-team budget/QB1/floor report: docs/payroll-verification-report.txt
+Pilot fixtures: 300/300 player rows match exactly; Iowa $19M, Boston College $10.5M, Ohio State $60M fixture budgets are preserved. Production Ohio State uses the unchanged $51.5M repo midpoint.
+
+VERIFICATION COMPLETED
+npm run validate-data: PASSED
+npm run build-data: PASSED
+npm run typecheck: PASSED
+npm run test:payrolls: PASSED (300/300 fixtures plus fail-loud validation checks)
+npm run test:spend: PASSED
+npm run test:methodology: PASSED
+npm run test:season: ALL SEASON-MODE TESTS PASSED
+npm run build (CFB_NEXT_DIST_DIR=.next-e2e): PASSED; all 77 pages generated.
+Repeat generation: PASSED; public/data/cfb-2026.json and all 68 payroll files are byte-identical after rebuilding.
+Production source check: live site still serves AP Week 5 (2026-09-27) and FPI 2026-09-28. This branch has not been deployed.
+
+SOURCES
+Current AP ballot (all 25 ranks checked): https://apnews.com/live/top-25-college-football-poll-10-11-2026
+Previous-week AP primary report: https://www.ap.org/news-highlights/spotlights/2026/missouri-makes-big-jump-to-no-14-in-ap-top-25-with-rout-of-gators-texas-no-1-for-4th-week-in-row/
+AP data feed: https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings?seasons=2026&weeks=7&seasontypes=2 (also week 6)
+FPI: https://www.espn.com/college-football/fpi/_/view/resume
+Scores: https://www.espn.com/college-football/scoreboard
+Rosters and records: https://www.espn.com/college-football/teams
+Independent schedule cross-check: ESPN site API /teams/{espn_id}/schedule?season=2026&seasontype=2 for all 68 team IDs.

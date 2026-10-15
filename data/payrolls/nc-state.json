@@ -199,16 +199,6 @@
       "source": "model"
     },
     {
-      "name": "Katron Evans",
-      "jersey": "55",
-      "originalPosition": "OL",
-      "position": "OL",
-      "class": "SR",
-      "qb1": false,
-      "valuation": 320000,
-      "source": "model"
-    },
-    {
       "name": "Ian Flynt",
       "jersey": "87",
       "originalPosition": "TE",
@@ -659,6 +649,16 @@
       "source": "model"
     },
     {
+      "name": "Katron Evans",
+      "jersey": "55",
+      "originalPosition": "DL",
+      "position": "DL",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 320000,
+      "source": "model"
+    },
+    {
       "name": "Ondre Evans",
       "jersey": "20",
       "originalPosition": "DB",
@@ -859,7 +859,7 @@
       "source": "model"
     },
     {
-      "name": "Da'Karri Nelson",
+      "name": "Da'Kaari Nelson",
       "jersey": "8",
       "originalPosition": "LB",
       "position": "LB",

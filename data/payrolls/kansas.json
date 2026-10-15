@@ -5,7 +5,7 @@
   "anchorCount": 0,
   "anchorSum": 0,
   "floorHits": 0,
-  "residual": -4000,
+  "residual": -7000,
   "sum": 16000000,
   "players": [
     {
@@ -46,6 +46,16 @@
       "class": "FR",
       "qb1": false,
       "valuation": 153000,
+      "source": "model"
+    },
+    {
+      "name": "Chase Belcher",
+      "jersey": "26",
+      "originalPosition": "RB",
+      "position": "RB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 191000,
       "source": "model"
     },
     {
@@ -305,7 +315,7 @@
       "position": "QB",
       "class": "SO",
       "qb1": true,
-      "valuation": 951000,
+      "valuation": 948000,
       "source": "model"
     },
     {
@@ -931,16 +941,6 @@
     {
       "name": "Grady Seyfert",
       "jersey": "71",
-      "originalPosition": "DT",
-      "position": "DL",
-      "class": "JR",
-      "qb1": false,
-      "valuation": 188000,
-      "source": "model"
-    },
-    {
-      "name": "Eamon Smalls",
-      "jersey": "99",
       "originalPosition": "DT",
       "position": "DL",
       "class": "JR",

@@ -155,10 +155,14 @@ publish on different days. A program with no scheduled event in that week is
 a bye, not an incomplete fetch. Fetch dates use UTC. No automated weekly
 publication is enabled.
 
-Snapshot dates at this implementation: AP Week 5 published 2026-09-27; FPI
-captured 2026-09-28; Week 4 scores fetched 2026-09-28; rosters refreshed
-2026-09-28. The score fetch found 38 final games, 63 participating programs,
-and 5 byes.
+Latest reviewed snapshots: AP Week 7 published 2026-10-11; FPI captured
+2026-10-15; Week 6 scores fetched 2026-10-15; rosters refreshed 2026-10-15.
+The score fetch found 28 final games, 54 participating programs, and 14 byes.
+AP Week 6 was also backfilled. The refresh report is in
+`docs/season-refresh-2026-10-15.txt` and the payroll verification is in
+`docs/payroll-verification-report.txt`. Pitt's QB1 input now uses school-confirmed
+starter Holden Geriner; Syracuse's working designation remains flagged because
+the school has not named its next starter.
 
 ## Project structure
 

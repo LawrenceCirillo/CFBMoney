@@ -719,16 +719,6 @@
       "source": "model"
     },
     {
-      "name": "Chuck Kennon",
-      "jersey": "23",
-      "originalPosition": "DB",
-      "position": "DB",
-      "class": "FR",
-      "qb1": false,
-      "valuation": 153000,
-      "source": "model"
-    },
-    {
       "name": "K.J. Kirkland",
       "jersey": "24",
       "originalPosition": "DB",
@@ -936,6 +926,16 @@
       "class": "SR",
       "qb1": false,
       "valuation": 306000,
+      "source": "model"
+    },
+    {
+      "name": "Darin Townsend",
+      "jersey": "40",
+      "originalPosition": "DB",
+      "position": "DB",
+      "class": "FR",
+      "qb1": false,
+      "valuation": 153000,
       "source": "model"
     },
     {
