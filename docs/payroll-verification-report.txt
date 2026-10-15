@@ -1,4 +1,4 @@
-Payroll verification — 2026; roster snapshot 2026-09-28; mode build
+Payroll verification — 2026; roster snapshot 2026-10-15; mode build
 Teams: 68; On3 suffix-normalized roster matches: 3; eligible On3 anchors: 1; human review queue: 2
 alabama              budget=$40,000,000   QB1=Keelon Russell             anchors=0 PASS sum=$40,000,000 floor=0
 arizona              budget=$15,500,000   QB1=Noah Fifita                anchors=0 PASS sum=$15,500,000 floor=1
@@ -45,7 +45,7 @@ oklahoma-state       budget=$17,000,000   QB1=Drew Mestemaker            anchors
 ole-miss             budget=$42,000,000   QB1=Trinidad Chambliss         anchors=0 PASS sum=$42,000,000 floor=0
 oregon               budget=$51,000,000   QB1=Dante Moore                anchors=0 PASS sum=$51,000,000 floor=0
 penn-state           budget=$30,500,000   QB1=Rocco Becht                anchors=0 PASS sum=$30,500,000 floor=0
-pitt                 budget=$18,000,000   QB1=Mason Heintschel           anchors=0 PASS sum=$18,000,000 floor=1
+pitt                 budget=$18,000,000   QB1=Holden Geriner             anchors=0 PASS sum=$18,000,000 floor=1
 purdue               budget=$18,000,000   QB1=Ryan Browne                anchors=0 PASS sum=$18,000,000 floor=0
 rutgers              budget=$21,500,000   QB1=Dylan Lonergan             anchors=0 PASS sum=$21,500,000 floor=0
 smu                  budget=$22,000,000   QB1=Kevin Jennings             anchors=0 PASS sum=$22,000,000 floor=1
