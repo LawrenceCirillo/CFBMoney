@@ -56,7 +56,7 @@ iowa-state           0     0       0      100->100            2-2->3-3
 kansas               1     1       0      100->100            1-2->2-3
 kansas-state         0     0       0      100->100            3-1->3-2
 kentucky             0     0       0      100->100            3-1->5-1
-louisville           0     0       1      100->100            2-2->3-3
+louisville           0     0       0      100->100            2-2->3-3
 lsu                  0     0       0      100->100            3-1->4-2
 maryland             1     1       0      100->100            2-2->2-4
 miami                0     0       0      100->100            4-0->5-0
@@ -110,8 +110,6 @@ florida-state:
 kansas:
   Removed from ESPN listing: Eamon Smalls (DT, JR)
   Added to ESPN listing: Chase Belcher (RB, SR)
-louisville:
-  Fields: {"name":"Marlon Harbin","jersey":"45","pos":"WR","year":"FR","side":"offense"} -> {"name":"Marlon Harbin","jersey":"45","pos":"WR","year":"FR","side":"offense"}
 maryland:
   Removed from ESPN listing: Cardell Williams (QB, SR)
   Added to ESPN listing: John Boley (RB, FR)
@@ -128,6 +126,7 @@ ROSTER CORRECTIONS AND PATCHES
 All five verified CSV QBs remain absent from their native ESPN roster response and were re-added by the existing importer:
   Georgia: Gunner Stockton; Houston: Conner Weigman; Michigan: Bryce Underwood; Stanford: Davis Warren; Washington: Demond Williams Jr.
 Each appears exactly once in the resulting 101-player team snapshot. West Virginia lists Michael Hawkins Jr. Virginia WR Kyle Alt retains the verified SR correction. BYU and Utah retain 99 distinct entries after exact-duplicate removal.
+Louisville has two pre-existing Marlon Harbin entries with different jersey fields (45 and blank). Both records are unchanged from September and are not exact duplicates under the approved deduplication rule. Retained the source records; this is a source-review item, not new roster churn.
 
 QB1 INPUT REVIEW
 Updated Pitt: Mason Heintschel -> Holden Geriner. School confirmed Geriner as the replacement starter after Heintschel was ruled out for the remainder of the season; Geriner exists on the repo roster.
