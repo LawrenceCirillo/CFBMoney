@@ -1,14 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   POSITION_GROUPS,
-  GAME_BUDGET_MIN_M,
-  GAME_BUDGET_MAX_M,
   allocationFromPlaysheet,
   cappedOptimalAllocation,
   clampGameBudget,
-  clampPlaysheetToBudget,
   distributeAllocationToSlots,
   emptyPlaysheet,
   ratingsFromAllocation,
@@ -19,18 +16,21 @@ import {
   type Playsheet,
   type PlaysheetKey,
 } from "@/lib/simulator";
-import { fmtM, fmtMoney1 } from "@/lib/format";
+import { fmtMoney1 } from "@/lib/format";
 import { data } from "@/lib/data";
-import { bookStanding } from "@/lib/spend-rank";
+import { allocationAction, describeAllocationChange, buildPreview, type AllocationAction, type AllocationChange } from "@/lib/build-preview";
 import { gravityTags } from "@/lib/gravity";
 
 interface Props {
   pos: Playsheet;
-  setPos: (p: Playsheet) => void;
+  seed: number;
+  setPos: (p: Playsheet, label: string) => void;
+  lastAction: AllocationAction | null;
   budgetM: number;
   programSlug: string;
   gravityOn: boolean;
-  setBudgetM: (n: number) => void;
+  onEditSetup: () => void;
+  onUndo?: () => void;
   onNext: () => void;
 }
 
@@ -96,7 +96,11 @@ function nextKeyInGroup(group: PositionKey, current: PlaysheetKey): PlaysheetKey
   return members[idx === -1 ? 0 : (idx + 1) % members.length].key;
 }
 
-export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravityOn, setBudgetM, onNext }: Props) {
+export default function BuildRoster({ pos: committedPos, seed, setPos, lastAction, budgetM, programSlug, gravityOn, onEditSetup, onUndo, onNext }: Props) {
+  const [proposal, setProposal] = useState<Playsheet | null>(null);
+  const gesture = useRef<{ before: Playsheet; latest: Playsheet } | null>(null);
+  const [highlighted, setHighlighted] = useState<string[]>([]);
+  const pos = proposal ?? committedPos;
   const [selected, setSelected] = useState<PlaysheetKey>("QB");
 
   const budget = clampGameBudget(budgetM);
@@ -110,13 +114,27 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
   const canContinue = remainingD === 0;
   const groups = useMemo(() => allocationFromPlaysheet(pos), [pos]);
   const ratings = useMemo(() => ratingsFromAllocation(groups, { programSlug, gravityOn }), [groups, programSlug, gravityOn]);
+  const preview = useMemo(() => buildPreview({ pos, budgetM, gravityOn, programSlug }, seed), [pos, budgetM, gravityOn, programSlug, seed]);
   const tags = gravityOn ? gravityTags(programSlug) : [];
-  const standing = useMemo(() => bookStanding(budget, data.teams), [budget]);
   const sel = POSITIONS.find((p) => p.key === selected)!;
   const selCap = slotMarketCap(sel.key);
   const selVal = pos[sel.key] ?? 0;
 
-  const commit = (next: Playsheet) => setPos(next);
+  const change = proposal
+    ? describeAllocationChange(allocationAction({ pos: committedPos, budgetM }, { pos: proposal, budgetM }, "Proposed change", { programSlug, gravityOn }))
+    : lastAction ? describeAllocationChange(lastAction) : null;
+  useEffect(() => {
+    setHighlighted(lastAction ? describeAllocationChange(lastAction).slots.map((slot) => slot.key) : []);
+    const timer = window.setTimeout(() => setHighlighted([]), 1600);
+    return () => window.clearTimeout(timer);
+  }, [lastAction]);
+
+  const commit = (next: Playsheet, label: string) => { setProposal(null); setPos(next, label); };
+  const finishGesture = () => {
+    const pending = gesture.current;
+    gesture.current = null;
+    if (pending) commit(pending.latest, "Position adjusted");
+  };
 
   /**
    * The budget mechanic: a slider can always grow up to its market cap.
@@ -124,21 +142,15 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
    * (largest-remainder, integer dimes). The chosen book is never breached.
    */
   const setPosition = (key: PlaysheetKey, v: number) => {
-    commit(setPlaysheetPosition(pos, budget, key, v));
-  };
-
-  const changeBudget = (raw: number) => {
-    const nextBudget = clampGameBudget(raw);
-    if (nextBudget === budget) return;
-    const fitted = clampPlaysheetToBudget(pos, nextBudget);
-    setBudgetM(nextBudget);
-    commit(fitted);
+    const next = setPlaysheetPosition(gesture.current?.before ?? committedPos, budget, key, v);
+    if (gesture.current) { gesture.current.latest = next; setProposal(next); }
+    else commit(next, "Position adjusted");
   };
 
   const optimize = () =>
-    commit(distributeAllocationToSlots(cappedOptimalAllocation(budget, { programSlug, gravityOn })));
+    commit(distributeAllocationToSlots(cappedOptimalAllocation(budget, { programSlug, gravityOn })), "Auto-optimize");
   const reset = () => {
-    commit(emptyPlaysheet());
+    commit(emptyPlaysheet(), "Reset");
   };
 
   const groupStrip = (className: string) => (
@@ -150,7 +162,8 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
           <button
             key={g.key}
             type="button"
-            aria-label={
+            data-slot-key={g.key === "ST" ? "ST" : undefined}
+            aria-label={g.key === "ST" ? `${g.label}, ${fmtMoney1(pos.ST)}` :
               members.length > 1
                 ? `${g.label}, cycle ${members.map((p) => p.short).join(", ")}`
                 : g.label
@@ -208,6 +221,14 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
         max={selCap}
         step={0.1}
         value={selVal}
+        onPointerDown={(e) => {
+          gesture.current = { before: committedPos, latest: committedPos };
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }}
+        onPointerUp={finishGesture}
+        onLostPointerCapture={finishGesture}
+        onPointerCancel={() => { gesture.current = null; setProposal(null); }}
+        onBlur={finishGesture}
         onChange={(e) => setPosition(sel.key, Number(e.target.value))}
         className="mt-3 w-full"
         aria-label={`${sel.label} spend in millions`}
@@ -216,6 +237,14 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
         <span>$0</span>
         <span>{fmtMoney1(selCap)} market cap</span>
       </div>
+      {change && <section aria-label="Funding beside editor" className="mt-2 border-t border-line pt-2 text-xs leading-relaxed text-fog">
+        <p><strong className="text-paper">{proposal ? "Proposed" : "Last change"}</strong> · {fmtMoney1(change.increasedM)} added · {fmtMoney1(change.reducedM)} reduced</p>
+        <p>Unallocated: {fmtMoney1(change.unspentBeforeM)} → {fmtMoney1(change.unspentAfterM)}</p>
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+          <p className="text-paper">OFF {signed(change.ratingDelta.off, 2)} · DEF {signed(change.ratingDelta.def, 2)} · ST {signed(change.ratingDelta.st, 2)}</p>
+          <a href="#allocation-tradeoff" aria-label="Details of allocation change" className="inline-flex min-h-9 items-center font-semibold text-paper underline underline-offset-4">Details</a>
+        </div>
+      </section>}
     </>
   );
 
@@ -224,7 +253,7 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
       <div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs font-semibold text-fog">
-            Playsheet · tap a position to allocate
+            Step 2 · Playsheet · tap a position to allocate
           </p>
           {tags.length > 0 && (
             <p className="text-xs text-fog">
@@ -270,6 +299,7 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
               return (
                 <button
                   key={p.key}
+                  data-slot-key={p.key}
                   onClick={() => setSelected(p.key)}
                   aria-label={`${p.label}, ${fmtMoney1(val)}`}
                   aria-current={isSel ? "true" : undefined}
@@ -281,7 +311,7 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
                       p.side === "off"
                         ? "bg-emerald-500 text-ink"
                         : "bg-sky-500 text-ink"
-                    } ${isSel ? "scale-110 ring-2 ring-paper ring-offset-2 ring-offset-ink" : "group-hover:scale-105"} ${val === 0 ? "opacity-80" : ""}`}
+                    } ${highlighted.includes(p.key) || proposal && change?.slots.some((slot) => slot.key === p.key) ? "ring-2 ring-status-caution motion-reduce:transition-none" : ""} ${isSel ? "scale-110 ring-2 ring-paper ring-offset-2 ring-offset-ink" : "group-hover:scale-105"} ${val === 0 ? "opacity-80" : ""}`}
                   >
                     <span className="text-[11px] font-black tracking-wide">
                       {p.short}
@@ -311,11 +341,12 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
                   return (
                     <button
                       key={p.key}
+                      data-slot-key={p.key}
                       type="button"
                       onClick={() => setSelected(p.key)}
                       aria-label={`${p.label} (${p.key}), ${fmtMoney1(val)}`}
                       aria-current={isSel ? "true" : undefined}
-                      className={`min-h-16 min-w-0 rounded-xl border p-3 text-left transition-ui ${isSel ? "border-paper bg-panel" : "border-line bg-panel/30 hover:bg-panel/60"}`}
+                      className={`min-h-16 min-w-0 rounded-xl border p-3 ${highlighted.includes(p.key) ? "ring-2 ring-status-caution motion-reduce:transition-none" : ""} text-left transition-ui ${isSel ? "border-paper bg-panel" : "border-line bg-panel/30 hover:bg-panel/60"}`}
                     >
                       <span className="flex items-start justify-between gap-1">
                         <span className="text-xs font-black text-paper">{p.key}</span>
@@ -329,6 +360,7 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
             </section>
           ))}
         </div>
+        <AllocationFeedback change={change} proposed={proposal !== null} />
         {groupStrip("mt-4 grid grid-cols-4 gap-px bg-line sm:grid-cols-8 lg:hidden")}
       </div>
 
@@ -336,48 +368,10 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
         <div className="max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-30 max-lg:border-t max-lg:border-line max-lg:bg-ink/95 max-lg:px-4 max-lg:py-3 max-lg:backdrop-blur max-lg:pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:mb-5 lg:border-b lg:border-line lg:pb-4">
           {editor}
         </div>
-        <p className="text-xs font-semibold text-fog">NIL book</p>
-        <div className="mt-2 flex items-center gap-2">
-          <button
-            onClick={() => changeBudget(budget - 1)}
-            disabled={budget <= GAME_BUDGET_MIN_M}
-            aria-label="Decrease roster budget"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-lg font-bold text-paper transition-ui hover:border-fog disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            −
-          </button>
-          <span className="tnum flex-1 text-center text-4xl font-black tracking-tight">{fmtM(budget)}</span>
-          <button
-            onClick={() => changeBudget(budget + 1)}
-            disabled={budget >= GAME_BUDGET_MAX_M}
-            aria-label="Increase roster budget"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-lg font-bold text-paper transition-ui hover:border-fog disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            +
-          </button>
-        </div>
-        <input
-          type="range"
-          min={GAME_BUDGET_MIN_M}
-          max={GAME_BUDGET_MAX_M}
-          step={1}
-          value={budget}
-          onChange={(e) => changeBudget(Number(e.target.value))}
-          className="mt-2 w-full"
-          aria-label="Roster budget in millions"
-        />
-        <div className="tnum mt-1 flex justify-between text-xs text-fog">
-          <span>{fmtM(GAME_BUDGET_MIN_M)}</span>
-          <span>{fmtM(GAME_BUDGET_MAX_M)}</span>
-        </div>
-        <p className="mt-2 text-xs text-fog">
-          <span className="font-semibold text-paper">
-            #{standing.rank} of {standing.of}
-          </span>
-          {standing.tiedWith.length > 0
-            ? ` · tied with ${standing.tiedWith.map((t) => t.name).join(" and ")}`
-            : ` · nearest ${standing.nearest.name}`}
-        </p>
+        <h2 className="text-xl font-black">{data.teams.find((team) => team.slug === programSlug)!.name}</h2>
+        <p className="mt-1 text-sm text-fog">{fmtMoney1(budget)} book · {gravityOn ? "Gravity on" : "Pure parity"}</p>
+        <button type="button" onClick={onEditSetup} className="min-h-11 text-sm font-semibold text-paper">Edit setup</button>
+        {onUndo && <button type="button" onClick={onUndo} className="ml-3 min-h-11 text-sm font-semibold text-paper">Undo last allocation</button>}
 
         <div className="mt-4 grid grid-cols-2 gap-px bg-line">
           <div className="bg-ink py-3 pr-3">
@@ -415,6 +409,8 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
           ))}
         </div>
 
+        <p className="mt-4 text-sm text-fog">{preview.expectedWins === null ? "Allocate the exact book for a season forecast." : `${preview.expectedWins.toFixed(1)} / 12 neutral expected wins`}</p>
+        <p className="mt-1 text-xs text-fog">Modeled slate · 7 home · {fmtMoney1(preview.averageOpponentBudgetM)} average opponent book. Edit setup to view all 12.</p>
         <button
           onClick={() => { if (canContinue) onNext(); }}
           disabled={!canContinue}
@@ -426,4 +422,25 @@ export default function BuildRoster({ pos, setPos, budgetM, programSlug, gravity
       </aside>
     </div>
   );
+}
+
+const signed = (value: number, digits = 1) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${Math.abs(value).toFixed(digits)}`;
+
+export function AllocationFeedback({ change, proposed = false }: { change: AllocationChange | null; proposed?: boolean }) {
+  if (!change) return null;
+  return <section id="allocation-tradeoff" tabIndex={-1} aria-label="Allocation tradeoff" className="mt-5 scroll-mt-24 rounded-xl border border-line bg-panel/30 p-4">
+    <h3 className="font-bold text-paper">{proposed ? "Proposed allocation" : "Last allocation change"}</h3>
+    <p className="mt-2 text-sm text-fog">${change.increasedM.toFixed(1)}M in increases · ${change.reducedM.toFixed(1)}M in decreases · Net funded {signed(change.netFundingM)}M.</p>
+    <p className="mt-1 text-sm text-fog">Unallocated: {fmtMoney1(change.unspentBeforeM)} → {fmtMoney1(change.unspentAfterM)}.</p>
+    {change.increasedM > 0 && <p className="mt-1 text-sm text-fog">Funding: {fmtMoney1(change.reducedM)} from other funded slots + {fmtMoney1(Math.max(0, change.netFundingM))} from unallocated money.</p>}
+    <div className="mt-3 space-y-2">
+      {change.groups.map((group) => <p key={group.key} className="text-sm text-paper"><strong>{group.key}</strong> actual {fmtMoney1(group.beforeM)} → {fmtMoney1(group.afterM)} ({signed(group.deltaM)}M); effective ${group.effectiveBeforeM.toFixed(2)}M → ${group.effectiveAfterM.toFixed(2)}M ({signed(group.effectiveDeltaM, 2)}M).</p>)}
+    </div>
+    <p className="mt-3 text-sm text-paper">Ratings: OFF {signed(change.ratingDelta.off, 2)} · DEF {signed(change.ratingDelta.def, 2)} · ST {signed(change.ratingDelta.st, 2)}</p>
+    <p className="mt-1 text-xs text-fog">The model rates group totals. Moving money within one group leaves that group&rsquo;s rating unchanged.</p>
+    <details className="mt-3 text-sm text-fog">
+      <summary className="min-h-11 cursor-pointer py-2 font-semibold text-paper">Changed slots ({change.slots.length})</summary>
+      <ul className="grid gap-x-4 gap-y-1 sm:grid-cols-2">{change.slots.map((slot) => <li key={slot.key}>{slot.key}: {fmtMoney1(slot.beforeM)} → {fmtMoney1(slot.afterM)} ({signed(slot.deltaM)}M)</li>)}</ul>
+    </details>
+  </section>;
 }

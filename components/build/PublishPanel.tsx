@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { PublishAttempt } from "@/lib/build-session";
 import type { TeamBudget } from "@/lib/types";
 import {
   type Allocation,
@@ -21,6 +22,8 @@ interface Props {
   seed: number;
   gameplan?: GameplanPick[];
   autoGameplan?: boolean;
+  attempt: PublishAttempt | null;
+  onAttemptChange: (attempt: PublishAttempt) => void;
 }
 
 /**
@@ -28,16 +31,17 @@ interface Props {
  * Builds the payload from the finished season, validates it client-side,
  * then POSTs to /api/seasons.
  */
-export default function PublishPanel({ mode, games, program, alloc, budgetM, gravityOn, seed, gameplan = [], autoGameplan = true }: Props) {
-  const attempt = useRef<{ key: string; payload: SeasonPayload } | null>(null);
-  const [gmName, setGmName] = useState("");
+export default function PublishPanel({ mode, games, program, alloc, budgetM, gravityOn, seed, gameplan = [], autoGameplan = true, attempt, onAttemptChange }: Props) {
+  const [gmName, setGmName] = useState(attempt?.payload.gmName ?? "");
   const [publishState, setPublishState] = useState<"idle" | "saving" | "done" | "error">("idle");
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const shareUrl = attempt?.result ? `/s/${attempt.result.id}` : null;
   const [linkCopied, setLinkCopied] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (copyTimer.current) clearTimeout(copyTimer.current); }, []);
 
   const publish = async () => {
-    if (publishState === "saving" || publishState === "done") return;
+    if (publishState === "saving" || attempt?.result) return;
     setPublishError(null);
 
     if (games.some((g) => !g.result)) {
@@ -46,7 +50,7 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, gra
       return;
     }
 
-    const payload: SeasonPayload = attempt.current?.payload ?? {
+    const payload: SeasonPayload = attempt?.payload ?? {
       gmName: gmName.trim() || undefined,
       mode,
       simVersion: SIM_VERSION,
@@ -68,14 +72,16 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, gra
       return;
     }
 
-    if (!attempt.current) attempt.current = { key: crypto.randomUUID(), payload: valid.data };
+    const publishAttempt = attempt ?? { key: crypto.randomUUID(), payload: valid.data };
+    // Persist the UUID and exact payload before the request can reach the server.
+    if (!attempt) onAttemptChange(publishAttempt);
 
     setPublishState("saving");
     try {
       const res = await fetch("/api/seasons", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Idempotency-Key": attempt.current.key },
-        body: JSON.stringify(attempt.current.payload),
+        headers: { "Content-Type": "application/json", "Idempotency-Key": publishAttempt.key },
+        body: JSON.stringify(publishAttempt.payload),
       });
       const body = await res.json().catch(() => null);
       if (!res.ok) {
@@ -88,7 +94,8 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, gra
               : body?.error || `Publish failed (${res.status})`;
         throw new Error(message);
       }
-      setShareUrl(`${window.location.origin}/s/${body.id}`);
+      if (typeof body?.id !== "string" || !/^[a-zA-Z0-9_-]{1,64}$/.test(body.id)) throw new Error("Publish returned an invalid link. Try again.");
+      onAttemptChange({ ...publishAttempt, result: { id: body.id } });
       setPublishState("done");
     } catch (e) {
       setPublishError(e instanceof Error ? e.message : "Publish failed.");
@@ -99,9 +106,9 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, gra
   const copyLink = async () => {
     if (!shareUrl) return;
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(`${window.location.origin}${shareUrl}`);
       setLinkCopied(true);
-      setTimeout(() => setLinkCopied(false), 2000);
+      copyTimer.current = setTimeout(() => setLinkCopied(false), 2000);
     } catch {
       /* clipboard unavailable */
     }
@@ -112,7 +119,7 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, gra
       <p className="text-xs font-semibold text-fog">
         Share this season
       </p>
-      {publishState === "done" && shareUrl ? (
+      {shareUrl ? (
         <div>
           <p className="mt-3 text-sm text-fog">
             Published to the leaderboard. Send this link anywhere.
@@ -152,7 +159,7 @@ export default function PublishPanel({ mode, games, program, alloc, budgetM, gra
               id="gm-name"
               value={gmName}
               onChange={(e) => setGmName(e.target.value.slice(0, 24))}
-              disabled={!!attempt.current}
+              disabled={!!attempt}
               placeholder="GM name (optional)"
               autoComplete="nickname"
               className="min-w-0 flex-1 rounded-lg border border-line bg-panel px-3 py-2.5 text-sm text-paper placeholder:text-fog focus:border-paper focus:outline-none"

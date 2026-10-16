@@ -3,13 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { data } from "@/lib/data";
-import type { TeamBudget } from "@/lib/types";
 import {
   archetype,
   groupRanks,
   ratingsFromAllocation,
   summarizeSeason,
-  type Allocation,
   type Ratings,
   type ScheduledGame,
 } from "@/lib/simulator";
@@ -22,8 +20,8 @@ import {
   storylineFor,
   type PostseasonStage,
 } from "@/lib/season-mode";
-import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
-import { GRAVITY_VERSION } from "@/lib/gravity";
+import { SIM_VERSION, replaySeason } from "@/lib/season-replay";
+import type { ActiveRun } from "@/lib/build-session";
 import { fmtMoney1 } from "@/lib/format";
 import PublishPanel from "./PublishPanel";
 import PlayoffPath from "./PlayoffPath";
@@ -33,14 +31,13 @@ import { useSeasonTicker } from "@/components/SeasonTickerContext";
 import {
   DEFENSIVE_OPTIONS, OFFENSIVE_OPTIONS, defTagLabel, gameplanNarration,
   gameplanRecord, neutralPick, offTagLabel, resolveGameplan,
-  tendencyLabel, type DefensiveTendency, type GameplanPick, type OffensiveTendency,
+  tendencyLabel,
 } from "@/lib/gameplan";
 
 interface Props {
-  alloc: Allocation;
-  budgetM: number;
-  gravityOn: boolean;
-  program: TeamBudget;
+  run: ActiveRun;
+  onRunChange: (run: ActiveRun) => void;
+  onNew: () => void;
   onBack: () => void;
 }
 
@@ -113,7 +110,11 @@ function ratingBars(you: Ratings, opp: Ratings) {
   );
 }
 
-export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack }: Props) {
+export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
+  const { input, featured } = run;
+  const { alloc, budgetM, gravityOn, seed, gameplan, autoGameplan } = input;
+  const replay = useMemo(() => replaySeason(input, run.completedGames), [input, run.completedGames]);
+  const { program, games } = replay;
   const { setSeason: setTickerSeason } = useSeasonTicker();
   const userR = useMemo(() => ratingsFromAllocation(alloc, { programSlug: program.slug, gravityOn }), [alloc, program.slug, gravityOn]);
   const field = useMemo(() => fieldRatings(), []);
@@ -125,20 +126,16 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
     [program.slug, field]
   );
 
-  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const [gameplan, setGameplan] = useState<GameplanPick[]>([]);
-  const [autoGameplan, setAutoGameplan] = useState(false);
-  const [offPick, setOffPick] = useState<OffensiveTendency | null>(null);
-  const [defPick, setDefPick] = useState<DefensiveTendency | null>(null);
-  const input: ReplayInput = { mode: "season", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan, autoGameplan, gravityOn, gravityVersion: GRAVITY_VERSION };
+  const offPick = run.pending?.off ?? null;
+  const defPick = run.pending?.def ?? null;
+  const setOffPick = (off: NonNullable<ActiveRun["pending"]>["off"]) => onRunChange({ ...run, pending: { week: games[featured].week, off, def: defPick } });
+  const setDefPick = (def: NonNullable<ActiveRun["pending"]>["def"]) => onRunChange({ ...run, pending: { week: games[featured].week, off: offPick, def } });
+  const setAutoGameplan = (auto: boolean) => onRunChange({ ...run, input: { ...input, autoGameplan: auto } });
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
-  const [rankHistory, setRankHistory] = useState<number[]>(() => [
-    rankOf(replaySeason(input, 0).games, fieldProj),
-  ]);
-  // index into games[] of the matchup featured in the big card
-  const [featured, setFeatured] = useState(0);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Rebuild from canonical prefixes only when committed inputs/progress change.
+  const rankHistory = useMemo(() => Array.from({ length: run.completedGames + 1 }, (_, count) =>
+    rankOf(replaySeason(input, count).games, fieldProj)), [input, run.completedGames, fieldProj]);
   const [revealing, setRevealing] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -171,6 +168,10 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
   }, [games, featured, done, program.slug, program.abbr, setTickerSeason]);
 
   useEffect(() => () => setTickerSeason(null), [setTickerSeason]);
+  useEffect(() => () => {
+    if (revealTimer.current) clearTimeout(revealTimer.current);
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+  }, []);
 
   const rank = rankHistory[rankHistory.length - 1];
   const prevRank = rankHistory.length > 1 ? rankHistory[rankHistory.length - 2] : null;
@@ -185,19 +186,7 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
   })));
 
   const newSeason = () => {
-    if (revealTimer.current) clearTimeout(revealTimer.current);
-    const s = Math.floor(Math.random() * 2 ** 31);
-    setSeed(s);
-    const g = replaySeason({ ...input, seed: s, gameplan: [], autoGameplan: false }, 0).games;
-    setGames(g);
-    setRankHistory([rankOf(g, fieldProj)]);
-    setFeatured(0);
-    setRevealing(false);
-    setCopied(false);
-    setGameplan([]);
-    setAutoGameplan(false);
-    setOffPick(null);
-    setDefPick(null);
+    onNew();
   };
 
   /** Simulate the featured game with a short beat, then schedule what's next. */
@@ -209,22 +198,16 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
     const pick = autoGameplan ? neutralPick(g.week) : { week: g.week, off: offPick!, def: defPick! };
     const nextCalls = [...gameplan, pick];
     const nextInput = { ...input, gameplan: nextCalls };
-    setGameplan(nextCalls);
+    onRunChange({ ...run, input: nextInput, completedGames: played + 1, pending: null });
     setRevealing(true);
     revealTimer.current = setTimeout(() => {
-      const next = replaySeason(nextInput, played + 1).games;
-      const snapshot = rankOf(next, fieldProj);
-      setGames(next);
-      setRankHistory((h) => [...h, snapshot]);
       setRevealing(false);
     }, 450);
   };
 
   const advance = () => {
     const i = games.findIndex((g) => !g.result);
-    setFeatured(i === -1 ? games.length - 1 : i);
-    setOffPick(null);
-    setDefPick(null);
+    onRunChange({ ...run, featured: i === -1 ? games.length - 1 : i, pending: null });
   };
 
   /** Skip the theater: simulate every remaining game instantly. */
@@ -232,10 +215,8 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
     if (revealing || !autoGameplan) return;
     if (revealTimer.current) clearTimeout(revealTimer.current);
     const next = replaySeason(input).games;
-    setGames(next);
-    setGameplan(next.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })));
-    setRankHistory((h) => [...h, rankOf(next, fieldProj)]);
-    setFeatured(next.length - 1);
+    onRunChange({ ...run, input: { ...input, gameplan: next.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })) },
+      completedGames: next.length, featured: next.length - 1, pending: null });
   };
 
   const copySummary = async () => {
@@ -251,7 +232,7 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copyTimer.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       /* clipboard unavailable */
     }
@@ -285,7 +266,7 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
   );
 
   return (
-    <div>
+    <div data-run-id={run.id} data-run-seed={seed}>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="flex items-center gap-4">
           <TeamMark
@@ -452,7 +433,7 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
             <div>{ratingBars(userR, fg.oppRatings)}</div>
             <div>
               <AnimatePresence mode="wait" initial={false}>
-                {fg.result ? (
+                {fg.result && !revealing ? (
                   <motion.div
                     key={`final-${featured}-${seed}`}
                     initial={{ opacity: 0, y: 8 }}
@@ -501,7 +482,7 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
         </div>
       )}
 
-      <div className="border-t border-line">
+      <div role="region" aria-label="Season game log" className="border-t border-line">
         {games
           .filter((g) => g.result)
           .map((g) => {
@@ -679,6 +660,8 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
             seed={seed}
             gameplan={gameplan}
             autoGameplan={autoGameplan}
+            attempt={run.publish}
+            onAttemptChange={(publish) => onRunChange({ ...run, publish })}
           />
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -715,9 +698,9 @@ export default function SeasonMode({ alloc, budgetM, gravityOn, program, onBack 
           </p>
           <p>
             Your slate is fixed — the same exam for every GM at your program.
-            Beat your projected wins; that&rsquo;s the job. The money doesn&rsquo;t buy a
-            playoff roster at a blue-blood, so an 8–4 season with a bowl trophy
-            is a triumph, not a consolation.
+            Your selected book, roster allocation, opponent and weekly calls
+            determine your odds. Compare your results with the roster&rsquo;s
+            projected wins across the season.
           </p>
           <p>
             Finish in the projected top {PLAYOFF_CUT} and you&rsquo;re in the playoff:

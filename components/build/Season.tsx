@@ -1,38 +1,36 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { data } from "@/lib/data";
-import type { TeamBudget } from "@/lib/types";
 import {
   archetype,
   groupRanks,
   ratingsFromAllocation,
   summarizeSeason,
-  type Allocation,
-  type ScheduledGame,
 } from "@/lib/simulator";
-import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "@/lib/season-replay";
-import { GRAVITY_VERSION } from "@/lib/gravity";
+import { SIM_VERSION, replaySeason } from "@/lib/season-replay";
+import type { ActiveRun } from "@/lib/build-session";
 import { fmtMoney1 } from "@/lib/format";
 import TeamMark from "@/components/TeamMark";
 import ProbabilityPill from "./ProbabilityPill";
 import PublishPanel from "./PublishPanel";
 
 interface Props {
-  alloc: Allocation;
-  budgetM: number;
-  gravityOn: boolean;
-  program: TeamBudget;
+  run: ActiveRun;
+  onRunChange: (run: ActiveRun) => void;
+  onNew: () => void;
   onBack: () => void;
 }
 
-export default function Season({ alloc, budgetM, gravityOn, program, onBack }: Props) {
+export default function Season({ run, onRunChange, onNew, onBack }: Props) {
+  const { input } = run;
+  const { alloc, budgetM, gravityOn, seed } = input;
+  const { program, games } = useMemo(() => replaySeason(input, run.completedGames), [input, run.completedGames]);
   const userR = useMemo(() => ratingsFromAllocation(alloc, { programSlug: program.slug, gravityOn }), [alloc, program.slug, gravityOn]);
-  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 2 ** 31));
-  const input: ReplayInput = { mode: "quick", simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, seed, programSlug: program.slug, budgetM, alloc, gameplan: [], autoGameplan: true, gravityOn, gravityVersion: GRAVITY_VERSION };
-  const [games, setGames] = useState<ScheduledGame[]>(() => replaySeason(input, 0).games);
   const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (copyTimer.current) clearTimeout(copyTimer.current); }, []);
 
   const summary = useMemo(() => summarizeSeason(games), [games]);
   const played = games.filter((g) => g.result).length;
@@ -42,14 +40,11 @@ export default function Season({ alloc, budgetM, gravityOn, program, onBack }: P
   const qbDna = dna.find((d) => d.key === "QB")!;
 
   const newSeason = () => {
-    const s = Math.floor(Math.random() * 2 ** 31);
-    setSeed(s);
-    setGames(replaySeason({ ...input, seed: s }, 0).games);
-    setCopied(false);
+    onNew();
   };
 
-  const simWeek = () => setGames(replaySeason(input, played + 1).games);
-  const simSeason = () => setGames(replaySeason(input).games);
+  const simWeek = () => onRunChange({ ...run, completedGames: played + 1 });
+  const simSeason = () => onRunChange({ ...run, completedGames: replaySeason(input).games.length });
 
   const copySummary = async () => {    const s = summary;
     const text =
@@ -62,14 +57,14 @@ export default function Season({ alloc, budgetM, gravityOn, program, onBack }: P
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copyTimer.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       /* clipboard unavailable */
     }
   };
 
   return (
-    <div>
+    <div data-run-id={run.id} data-run-seed={seed}>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="flex items-center gap-4">
           <TeamMark
@@ -140,7 +135,7 @@ export default function Season({ alloc, budgetM, gravityOn, program, onBack }: P
         ))}
       </div>
 
-      <div className="border-t border-line">
+      <div role="region" aria-label="Quick sim game log" className="border-t border-line">
         {games.map((g) => {
           const r = g.result;
           const upset =
@@ -294,6 +289,8 @@ export default function Season({ alloc, budgetM, gravityOn, program, onBack }: P
             budgetM={budgetM}
             gravityOn={gravityOn}
             seed={seed}
+            attempt={run.publish}
+            onAttemptChange={(publish) => onRunChange({ ...run, publish })}
           />
 
           <div className="mt-8 flex flex-wrap gap-3">
