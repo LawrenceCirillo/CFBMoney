@@ -134,7 +134,7 @@ and is not changed by a weekly sports-data refresh.
 4. Run `npm run fetch:season`. It requires valid totals and rosters for all
    68 programs before writing and stamps the actual successful fetch date.
    The importer removes exact duplicate records, applies the verified Kyle Alt
-   class correction, and adds the five QB1s in `data/payroll-inputs/roster-additions.csv`
+   class correction, and adds verified roster supplements in `data/payroll-inputs/roster-additions.csv`
    only when ESPN still omits them.
 5. Run `npm run validate-data`, then `npm run build-data`. The validator
    checks all source coverage, dates, scores, rosters, and AP ranks. It reports
@@ -155,14 +155,17 @@ publish on different days. A program with no scheduled event in that week is
 a bye, not an incomplete fetch. Fetch dates use UTC. No automated weekly
 publication is enabled.
 
-Latest reviewed snapshots: AP Week 7 published 2026-10-11; FPI captured
-2026-10-15; Week 6 scores fetched 2026-10-15; rosters refreshed 2026-10-15.
-The score fetch found 28 final games, 54 participating programs, and 14 byes.
-AP Week 6 was also backfilled. The refresh report is in
-`docs/season-refresh-2026-10-15.txt` and the payroll verification is in
-`docs/payroll-verification-report.txt`. Pitt's QB1 input now uses school-confirmed
-starter Holden Geriner; Syracuse's working designation remains flagged because
-the school has not named its next starter.
+Latest reviewed snapshots: AP Week 8 published 2026-10-18; FPI captured
+2026-10-19; Week 7 scores fetched 2026-10-19; rosters refreshed 2026-10-19.
+The score fetch found 31 final games, 59 participating programs, and nine byes.
+All 68 team records and point totals match their completed ESPN schedules.
+The refresh report is in `docs/season-refresh-2026-10-19.txt` and the full payroll
+verification is in `docs/payroll-verification-report.txt` (68 valid, zero blocked).
+Miami's school-confirmed Malachi Toney joins the five existing QB supplements;
+all six are restored only when ESPN omits them. Pitt's QB1 input now uses
+school-confirmed starter Corey Dailey. Nine other working QB1 designations have
+latest-game participation discrepancies documented for review; temporary injury
+replacements and unsettled competitions are not silently promoted into the CSV.
 
 ## Project structure
 
