@@ -1,0 +1,206 @@
+CFB Money season refresh - October 19, 2026
+Base: origin/main 5fa521215ff9af68dc621f2af75584f675db56ee (plans 010/011 release)
+Scope: weekly sports data, regenerated payrolls/site data, source review, and the supplement validation expectation. Prepared on codex/020-october-19-season-refresh; not deployed.
+
+SNAPSHOT SUMMARY
+AP: Week 7 (2026-10-11) -> Week 8 (2026-10-18), through completed Week 7. All 25 ranks agree between AP primary coverage and the ESPN AP feed. Historical ballots retained unchanged.
+Current ballot: 24 tracked programs. Boise State remains in the national source ballot at #21 outside the 68-team budget set.
+Scores: Week 6 -> Week 7 (Oct 12-18), 31 finals, 59 participating programs, nine byes. This is the latest fully ended ESPN regular-season calendar week.
+ESPN rosters/team totals: 2026-10-15 -> 2026-10-19; 68/68 successful. Final roster count: 6,804 (previously 6,803).
+FPI played/remaining schedule ranks: 2026-10-15 -> 2026-10-19; 68/68 ESPN IDs matched against the 138-row resume table. Source footer: Last Updated October 19, 2026. All 68 tracked rank pairs changed.
+Independent schedule checks: 68/68 completed; zero mismatches in W-L, games played, points for, or points against. All Week 7 schedule events match saved scoreboard IDs, sides, winners and final scores; zero missing or unexpected games.
+Budgets unchanged: $1,851,000,000 across 68 programs. All locked valuation weights, class multipliers, floor and anchor values/flags are unchanged.
+SIM_VERSION remains 4; DATA_FINGERPRINT remains v4-660333c47c4c5130. This refresh does not archive model-v4 seasons.
+
+AP MOVERS (WEEK 7 -> WEEK 8)
+Numeric movement compares teams ranked in both polls; unranked teams are never assigned a fictitious #26. Ties are sorted alphabetically.
+Five biggest climbs:
+  BYU: #8 -> #2 (+6)
+  Houston: #20 -> #14 (+6)
+  LSU: #22 -> #18 (+4)
+  Wake Forest: #21 -> #17 (+4)
+  Kentucky: #15 -> #12 (+3)
+Other teams tied at the fifth-place climb: Tennessee #14 -> #11; UCLA #12 -> #9; USC #19 -> #16
+Five biggest falls:
+  Texas: #7 -> #19 (-12)
+  Missouri: #13 -> #22 (-9)
+  Alabama: #6 -> #13 (-7)
+  Georgia: #1 -> #5 (-4)
+  Notre Dame: #2 -> #4 (-2)
+Entered: Florida #20; Arizona #25
+Dropped: Mississippi State (was #16); Oklahoma State (was #18)
+
+ROSTER CHURN BY TEAM (EXACT ESPN NAMES; FIELD CHANGES COUNT PLAYERS)
+Team                 Added Removed Fields Count Before->After Record Before->After
+alabama              0     0       0      100->100           5-1->5-2
+arizona              0     0       0      100->100           5-1->5-1
+arizona-state        0     0       0      100->100           3-2->3-3
+arkansas             0     0       0      100->100           2-4->3-4
+auburn               0     0       0      100->100           3-2->4-2
+baylor               0     0       0      100->100           4-1->4-2
+boston-college       0     0       0      100->100           2-3->3-3
+byu                  0     0       0      99->99             5-0->6-0
+california           0     0       0      100->100           3-3->3-4
+cincinnati           0     0       0      100->100           4-1->4-2
+clemson              0     0       0      100->100           3-2->4-2
+colorado             0     0       0      100->100           2-3->2-4
+duke                 0     0       0      100->100           4-1->4-2
+florida              0     0       0      100->100           4-2->5-2
+florida-state        0     0       0      100->100           3-3->3-4
+georgia              0     0       0      101->101           6-0->6-1
+georgia-tech         0     0       0      100->100           2-3->2-4
+houston              0     0       0      101->101           5-1->6-1
+illinois             0     0       0      100->100           3-3->3-3
+indiana              0     0       0      100->100           6-0->6-1
+iowa                 0     0       0      100->100           5-1->5-1
+iowa-state           0     0       0      100->100           3-3->3-3
+kansas               0     0       0      100->100           2-3->2-4
+kansas-state         0     0       0      100->100           3-2->4-2
+kentucky             0     0       0      100->100           5-1->6-1
+lsu                  0     0       0      100->100           4-2->5-2
+louisville           0     0       0      100->100           3-3->4-3
+maryland             0     0       0      100->100           2-4->2-5
+miami                1     0       1      100->101           5-0->6-0
+michigan             0     0       0      101->101           3-2->4-2
+michigan-state       0     0       0      100->100           2-4->2-5
+minnesota            0     0       0      100->100           4-2->4-2
+missouri             0     0       0      100->100           5-1->5-2
+mississippi-state    0     0       0      100->100           4-1->4-2
+nebraska             0     0       0      100->100           5-1->5-2
+north-carolina       0     0       0      100->100           3-2->4-2
+nc-state             0     0       0      100->100           3-3->3-3
+northwestern         0     0       0      100->100           4-1->5-1
+notre-dame           0     0       0      100->100           6-0->6-1
+ohio-state           0     0       0      100->100           5-1->6-1
+oklahoma             0     0       0      100->100           3-2->3-3
+oklahoma-state       0     0       0      100->100           4-1->4-2
+ole-miss             0     0       0      100->100           4-1->5-1
+oregon               0     0       0      100->100           3-2->4-2
+penn-state           0     0       0      100->100           3-3->3-4
+pitt                 0     0       0      100->100           5-1->5-2
+smu                  0     0       0      100->100           4-1->5-1
+purdue               0     0       0      100->100           3-3->3-4
+rutgers              0     0       0      100->100           1-4->2-4
+south-carolina       0     0       0      100->100           3-3->3-3
+stanford             0     0       0      101->101           2-4->3-4
+syracuse             0     0       0      100->100           2-3->2-4
+tcu                  0     0       0      100->100           2-3->3-3
+tennessee            0     0       0      100->100           5-1->6-1
+texas                0     0       28     100->100           4-1->4-2
+texas-am             0     0       0      100->100           3-3->4-3
+texas-tech           0     0       0      100->100           5-0->6-0
+ucf                  0     0       0      100->100           3-3->3-3
+ucla                 0     0       0      100->100           5-0->6-0
+usc                  0     0       0      100->100           6-1->6-1
+utah                 0     0       0      99->99             5-0->6-0
+vanderbilt           0     0       0      100->100           3-3->3-4
+virginia             0     0       0      100->100           4-2->4-3
+virginia-tech        0     0       0      100->100           4-2->5-2
+wake-forest          0     0       0      100->100           5-1->6-1
+washington           0     0       0      101->101           3-3->4-3
+west-virginia        0     0       0      100->100           3-3->4-3
+wisconsin            0     0       0      100->100           4-1->4-2
+
+ROSTER REVIEW / SOURCE EXCEPTIONS
+Miami: ESPN removed Malachi Toney and added Micheleau Frederique (WR, FR, #38). Miami still lists Toney as a sophomore WR, #1. Added Toney to the existing verified supplement CSV; importer restores him only while ESPN omits him. Miami now has 101 players; no arbitrary 100-player limit is imposed. Native Frederique record retained as received, not represented as a verified transfer.
+Toney supplement uses the existing four-column format, so its fallback jersey is blank, as with the five QB supplements. This is the one retained player field change on Miami.
+Texas: 28 class-label corrections in the ESPN feed, with no name additions/removals. 27 match the current school roster directly; Karle Lacey Jr. could not be matched by exact name to that school table, so its ESPN SO label is retained without guessing a nickname. The current school roster lists Arch Manning SR. These class changes affect modeled Texas valuations; the multiplier table itself is unchanged.
+Texas class changes:
+  Jaydon Chatman: JR -> SR
+  Jackson Christian: FR -> SO
+  Andre Cojoe: SO -> SR
+  Devin Coleman: FR -> SO
+  Jordan Coleman: FR -> SO
+  Trevor Goosby: JR -> SR
+  Karle Lacey Jr.: FR -> SO
+  Kaliq Lockett: FR -> SO
+  Arch Manning: JR -> SR
+  Jonte Newman: FR -> SO
+  Ryan Niblett: JR -> SR
+  Paris Patterson: JR -> SR
+  Will Randle: JR -> SR
+  Spencer Shannon: JR -> SR
+  Dylan Sikorski: SO -> JR
+  James Simon: FR -> SO
+  Hollywood Smothers: JR -> SR
+  Michael Terry III: FR -> SO
+  Myron Charles: FR -> SO
+  Isaiah Coleman: FR -> SO
+  Jonathan Cunningham: FR -> SO
+  Zelus Hicks: FR -> SO
+  Wardell Mack: SO -> JR
+  Smith Orogbo: FR -> SO
+  Warren Roberson: JR -> SR
+  Josiah Sharma: FR -> SO
+  Spencer Barnett: SO -> JR
+  Trey Dubuc: JR -> SR
+All other teams: zero added/removed names and zero changed player fields.
+BYU and Utah remain at 99 records after exact duplicate removal. Louisville retains two non-identical Marlon Harbin records (different jerseys); no fuzzy deduplication.
+Original five CSV QBs: all five still absent natively from the freshly fetched ESPN roster feeds; all five were restored exactly once by the CSV supplement:
+  georgia: Gunner Stockton; native matches 0, final matches 1
+  houston: Conner Weigman; native matches 0, final matches 1
+  michigan: Bryce Underwood; native matches 0, final matches 1
+  stanford: Davis Warren; native matches 0, final matches 1
+  washington: Demond Williams Jr.; native matches 0, final matches 1
+Georgia, Houston, Michigan, Stanford and Washington each retain 101 players. West Virginia includes Michael Hawkins Jr. as a QB; no supplement needed.
+Virginia Kyle Alt remains WR/SR after the existing verified class correction.
+
+QB1 INPUT REVIEW
+Pitt: Holden Geriner -> Corey Dailey. The school explicitly announced the quarterback change for October 17. Dailey is already present as a freshman QB in the repo roster; no new player was invented or scraped into the payroll pipeline.
+A latest-game passing-participation scan covered all 68 programs. Nine remaining working QB1 designations did not appear in their latest completed game. A missing passing line is a review signal, not automatic proof of a permanent QB1 change. Inputs below remain unchanged pending an unambiguous designation:
+  colorado: working Julian Lewis; latest UTAH @ COLO (2026-10-18), passing: Isaac Wilson; https://www.espn.com/college-football/recap/_/gameId/401856833
+  florida: working Aaron Philo; latest FLA @ TEX (2026-10-17), passing: Tramell Jones Jr.; https://www.espn.com/college-football/recap/_/gameId/401856724
+  iowa: working Hank Brown; latest IOWA @ WASH (2026-10-10), passing: Jeremy Hecklinski; https://www.espn.com/college-football/recap/_/gameId/401858487
+  mississippi-state: working Kamario Taylor; latest MSST @ LSU (2026-10-17), passing: Parker Puckett; https://www.espn.com/college-football/recap/_/gameId/401856720
+  oregon: working Dante Moore; latest NEB @ ORE (2026-10-18), passing: Dylan Raiola, Brock Thomas; https://www.espn.com/college-football/recap/_/gameId/401858492
+  syracuse: working Steve Angeli; latest LOU @ SYR (2026-10-17), passing: Malachi Nelson, Danny Lauter; https://www.espn.com/college-football/recap/_/gameId/401858265
+  tennessee: working Faizon Brandon; latest ALA @ TENN (2026-10-17), passing: George MacIntyre; https://www.espn.com/college-football/recap/_/gameId/401856723
+  ucla: working Nico Iamaleava; latest WIS @ UCLA (2026-10-17), passing: Ty Dieffenbach, Semaj Morgan; https://www.espn.com/college-football/recap/_/gameId/401858494
+  washington: working Demond Williams Jr.; latest WASH @ PUR (2026-10-17), passing: Elijah Brown; https://www.espn.com/college-football/recap/_/gameId/401858493
+Context: AP/ESPN recaps identify injury replacements for Florida, Iowa, Mississippi State, Oregon and UCLA; Washington also used Elijah Brown after Williams was hurt. UCLA requires follow-up: national reporting says Iamaleava is out for the season, but no new school QB1 designation was established in this pass. Colorado and Tennessee require a clear current designation. Syracuse remains uncertain: the school recap confirms Nelson played, while AP/ESPN reports Nelson also exited hurt, with Angeli and Odom already out. Do not silently promote a passer into the locked QB1 CSV.
+These are source-review follow-ups, not payroll validation failures. The pipeline still has exactly one uniquely matched designated QB1 per team.
+
+BYE / RECORD VERIFICATION
+Nine Week 7 byes: arizona, illinois, iowa, iowa-state, minnesota, nc-state, south-carolina, ucf, usc.
+Each saved record agrees with all completed 2026 regular-season games on its ESPN team schedule, not just the latest score. Record mismatches: zero.
+Score event source snapshots are compared independently against all 68 schedules; duplicate tracked-vs-tracked games are counted once.
+
+PAYROLL VERIFICATION
+Valid: 68/68; blocked: 0. Every sum equals its exact budget_mid_m dollar amount. No unknown position/class labels or missing QB1 matches.
+Regenerated all 68 outputs; only Miami, Pitt and Texas have changed player valuations. The other 65 outputs remain byte-equivalent after Git line-ending normalization.
+On3 matches: 3; eligible pinned On3 anchors: 1; human review queue: 2, unchanged.
+Unpinned: Iowa Tradon Bessinger ($310,000, On3 model recency unverified); Ohio State Jeremiah Smith ($5,000,000, name-match unverified and missing source URL).
+Full per-team verification output: docs/payroll-verification-report.txt.
+
+VERIFICATION
+Full npm run check: PASSED (exit 0).
+  validate-data / build-data: AP Week 8, score Week 7, all 68 source teams.
+  TypeScript: clean (tsc --noEmit --incremental false).
+  Payroll fixtures: 300/300 exact rows across Iowa, Boston College and Ohio State; no fixtures changed.
+  Payroll validation: unknown labels/classes, missing QB1, invalid anchors, floor failures and supplements passed.
+  Production payroll build: 68 valid, zero blocked, all exact sums.
+  Spending-rank and methodology tests: passed.
+  Season-mode determinism, gameplan, gravity, neutral expectations and publish validation tests: passed.
+  Build-session fixed-v4 goldens, recovery and setup migration tests: passed.
+  Preview/allocation tests: all programs x four seeds, invariant schedules and exact Undo passed.
+  Disposable PostgreSQL, publish-route and availability tests: passed.
+  Next.js production build: passed.
+  Browser suite: 34/34 passed.
+  Isolated HTTP/browser share tests: Quick/Season replay, canonical rows, retry idempotency after reload, stale/forged rejection, leaderboard, OG/404 and mobile recaps at 320/390 in light/dark passed.
+  Generated-artifact drift check: passed.
+Model fingerprint independently checked: v4-660333c47c4c5130 (unchanged).
+
+SOURCE LINKS
+AP Week 8 complete poll: https://apnews.com/live/top-25-college-football-poll-10-18-2026
+AP dated poll analysis: https://apnews.com/article/college-football-rankings-337c6bb6c1c58e83c36ab7742d2b8d41
+ESPN AP feed: https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings
+ESPN FPI: https://www.espn.com/college-football/fpi/_/view/resume
+ESPN scoreboard: https://site.web.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard
+ESPN team schedule pattern: https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{espn_id}/schedule?season=2026&seasontype=2
+Miami Toney verification: https://miamihurricanes.com/sports/football/roster/player/malachi-toney
+Texas class verification: https://texaslonghorns.com/sports/football/roster
+Pitt starter confirmation: https://pittsburghpanthers.com/news/2026/10/17/follow-live-pitt-football-boston-college
+Syracuse game recap: https://cuse.com/news/2026/10/17/football-orange-rally-comes-up-short-to-louisville
+Oregon injury/rotation context: https://goducks.com/news/2026/10/18/football-raiola-sparks-ducks-to-comeback-victory
+Florida injury context: https://floridagators.com/news/2026/10/15/football-carters-corner-philo-questionable-jones-ready-as-gators-prepare-for-texas-jon-sumrall-aaron-philo-tramell-jones
+UCLA follow-up report: https://www.usatoday.com/story/sports/ncaaf/bigten/2026/10/17/ty-dieffenbach-new-ucla-starting-qb-nico-iamaleava-injury/92240587007/

@@ -43,7 +43,7 @@ for (const [teamSlug, qb1Name, budget] of [
   assert.equal(valueRoster({ teamSlug, roster, budget, qb1Name }).sum, budget);
 }
 const additions = readCsv(resolve(root, "data/payroll-inputs/roster-additions.csv"));
-assert.equal(additions.length, 5);
+assert.equal(additions.length, 6);
 for (const addition of additions) {
   const roster = snapshot.teams[addition.team_slug].roster;
   assert.equal(roster.length, 101, `${addition.team_slug}: verified addition retained`);
@@ -51,4 +51,4 @@ for (const addition of additions) {
 }
 console.log("PASS: unknown position, unknown class, missing QB1, anchor over budget, unverified anchor, and post-correction floor fail loudly");
 console.log("PASS: BYU and Utah use 99 distinct roster records after exact duplicate removal");
-console.log("PASS: five verified QB1 additions are present in their 101-player rosters");
+console.log("PASS: six verified roster supplements are present in their 101-player rosters");
