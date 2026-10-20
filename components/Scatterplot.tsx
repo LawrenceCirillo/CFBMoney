@@ -1,9 +1,41 @@
+"use client";
+
+import { useEffect, useId, useRef, useState } from "react";
 import type { TeamBudget } from "@/lib/types";
-import { data } from "@/lib/data";
 import { logoSrc, markDisc } from "@/lib/mark";
+import { comparisonLabel, movementLabel, movementSummary, type TeamMovement } from "@/lib/moneyball-movement";
 
 /** Spend (x) vs. the current AP rank (y, inverted). */
-export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
+export default function Scatterplot({ teams, week, movements, previousWeek }: {
+  teams: TeamBudget[];
+  week: number;
+  movements: Record<string, TeamMovement>;
+  previousWeek: number | null;
+}) {
+  const tooltipId = useId();
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [focused, setFocused] = useState<string | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(hoverTimer.current), []);
+  const clearHoverTimer = () => clearTimeout(hoverTimer.current);
+  const hideHover = () => {
+    clearHoverTimer();
+    hoverTimer.current = setTimeout(() => setHovered(null), 120);
+  };
+  const active = teams.find((team) => team.slug === (hovered ?? focused));
+  const tooltipOpen = active !== undefined;
+  useEffect(() => {
+    if (!tooltipOpen) return;
+    const dismiss = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        clearTimeout(hoverTimer.current);
+        setHovered(null);
+        setFocused(null);
+      }
+    };
+    document.addEventListener("keydown", dismiss);
+    return () => document.removeEventListener("keydown", dismiss);
+  }, [tooltipOpen]);
   const W = 880;
   const H = 560;
   const m = { t: 46, r: 34, b: 56, l: 56 };
@@ -22,7 +54,8 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
   const yTicks = [25, 20, 15, 10, 5];
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="group" aria-label={`Roster spend vs. AP rank through Week ${data.poll.week}`}>
+    <div className="relative" onPointerLeave={hideHover}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" role="group" aria-label={`Roster spend vs. AP rank through Week ${week}`}>
       {/* grid */}
       {xTicks.map((v) => (
         <g key={v} aria-hidden="true">
@@ -63,8 +96,13 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
         const cy = Y(t.ap_rank!);
         const r = 14;
         return (
-          <a key={t.slug} href={`/team/${t.slug}`} aria-label={`${t.name}, AP #${t.ap_rank}, estimated budget ${t.budget_low_m} to ${t.budget_high_m} million dollars`}>
-            <title>{`${t.name} — ${t.budget_low_m}–${t.budget_high_m}M, AP #${t.ap_rank} through week ${data.poll.week}`}</title>
+          <a key={t.slug} href={`/team/${t.slug}`} tabIndex={0} className="moneyball-point outline-none"
+            aria-label={`${t.name}, spend #${t.spend_rank}, AP #${t.ap_rank}, estimated budget ${t.budget_low_m} to ${t.budget_high_m} million dollars. ${movementSummary(movements[t.slug], previousWeek)}`}
+            aria-describedby={active?.slug === t.slug ? tooltipId : undefined}
+            onPointerEnter={(event) => { if (event.pointerType !== "touch") { clearHoverTimer(); setHovered(t.slug); } }}
+            onPointerLeave={hideHover}
+            onFocus={() => { clearHoverTimer(); setHovered(null); setFocused(t.slug); }} onBlur={() => setFocused(null)}>
+            <circle className="moneyball-point-ring" cx={cx} cy={cy} r={r + 3} fill="none" stroke="var(--color-paper)" strokeWidth={2} opacity={active?.slug === t.slug ? 1 : 0} />
             <circle cx={cx} cy={cy} r={r} fill={markDisc(t.color)} />
             <image
               href={logoSrc(t.slug)}
@@ -78,5 +116,19 @@ export default function Scatterplot({ teams }: { teams: TeamBudget[] }) {
         );
       })}
     </svg>
+    {active && (
+      <div id={tooltipId} role="tooltip" onPointerEnter={clearHoverTimer} onPointerLeave={hideHover}
+        className="absolute z-10 w-60 rounded-lg border border-line bg-ink p-3 text-sm text-paper shadow-sm"
+        style={{
+          left: `${X(active.budget_mid_m) / W * 100}%`, top: `${Y(active.ap_rank!) / H * 100}%`,
+          transform: `translate(${X(active.budget_mid_m) > W / 2 ? "calc(-100% - 16px)" : "16px"}, ${Y(active.ap_rank!) < 180 ? "16px" : "calc(-100% - 16px)"})`,
+        }}>
+        <p className="font-bold">{active.name}</p>
+        <p className="mt-1 tabular-nums">Spend #{active.spend_rank} · AP #{active.ap_rank}</p>
+        <p className="mt-2 text-xs text-fog">{comparisonLabel(previousWeek)}</p>
+        <p className="mt-1 text-xs leading-relaxed tabular-nums">AP {movementLabel(movements[active.slug].ap)} · Spend {movementLabel(movements[active.slug].spend)}</p>
+      </div>
+    )}
+    </div>
   );
 }

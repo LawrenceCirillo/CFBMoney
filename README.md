@@ -117,7 +117,13 @@ Keep this process human-reviewed during 2026. [AP Top 25](https://apnews.com/hub
 The budget estimate file comes from [The Athletic](https://www.nytimes.com/athletic/interactive/college-football-nil-spending-budgets/)
 and is not changed by a weekly sports-data refresh.
 
-1. Confirm the latest AP poll is published. Add its 25 rows to
+1. Before changing the poll, archive the current spend book in
+   `data/spend-rank-history-2026.json` if that week is not already saved. Keep
+   its actual capture date, original poll date, source commit, and every
+   team's `slug`, `budget_mid_m`, and `spend_rank`. The generated Moneyball
+   history's `currentSpend` also retains the current book for this purpose.
+   Never reconstruct historical spend ranks from a later budget file.
+   Confirm the latest AP poll is published. Add its 25 rows to
    `data/ap-poll-2026.csv`, update `# as_of:` and `# note:`, and verify names
    and ranks against the AP source. Keep ranked programs outside our 68-team
    budget set in the ballot; their rank numbers remain gaps in the app's team
@@ -168,6 +174,17 @@ latest-game participation discrepancies documented for review; temporary injury
 replacements and unsettled competitions are not silently promoted into the CSV.
 
 ## Project structure
+
+Moneyball's weekly comparisons are generated in
+`public/data/moneyball-history-2026.json` by `npm run build-data` from the saved
+AP CSV and `data/spend-rank-history-2026.json`. The predecessor is the greatest
+saved week before the current poll. New Top 25 entries and exits have no numeric
+AP delta; unranked is never treated as #26. Missing dates or a matching spend
+baseline remain explicitly unavailable. Identical budget midpoints share a
+competition rank (1, 2, 2, 4). The original Week 7 spend baseline is copied from
+production commit `5fa5212`, captured October 15; its AP poll was dated October 11.
+No earlier budget or publication dates are inferred. Run `npm run test:moneyball-history`
+for arithmetic, saved-history validation, and deterministic artifact checks.
 
 ```
 app/
