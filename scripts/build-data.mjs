@@ -14,6 +14,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateData } from "./validate-data.mjs";
+import { buildMoneyballHistory } from "./moneyball-history.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const validation = validateData(root);
@@ -192,8 +193,14 @@ const out = {
   teams: [...teams].sort((a, b) => b.budget_mid_m - a.budget_mid_m),
 };
 
+const history = buildMoneyballHistory(
+  readFileSync(join(root, "data/ap-poll-2026.csv"), "utf8"),
+  out,
+  JSON.parse(readFileSync(join(root, "data/spend-rank-history-2026.json"), "utf8")),
+);
 mkdirSync(join(root, "public/data"), { recursive: true });
 writeFileSync(join(root, "public/data/cfb-2026.json"), JSON.stringify(out, null, 2) + "\n");
+writeFileSync(join(root, "public/data/moneyball-history-2026.json"), JSON.stringify(history, null, 2) + "\n");
 const ranked = teams.filter((t) => t.ap_rank != null).length;
 console.log(
   `cfb-money: wrote public/data/cfb-2026.json — ${teams.length} teams, $${totalMid.toFixed(1)}M total, ${ranked} AP-ranked through week ${poll.week}`

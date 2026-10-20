@@ -8,6 +8,11 @@ import { fmtPollDate, fmtRange } from "@/lib/format";
 import { selectMoneyballQuestions } from "@/lib/moneyball-questions";
 import { getTeamSeason, seasonSnapshot } from "@/lib/season-snapshot";
 import type { TeamBudget } from "@/lib/types";
+import rawHistory from "@/public/data/moneyball-history-2026.json";
+import { comparisonLabel, movementLabel, movementSummary, type MoneyballHistory } from "@/lib/moneyball-movement";
+
+const history = rawHistory as MoneyballHistory;
+const movementBySlug = Object.fromEntries(history.teams.map((team) => [team.slug, team]));
 
 export const metadata: Metadata = {
   title: "Moneyball · CFB Money",
@@ -24,7 +29,7 @@ function SectionHead({ kicker, title, children }: { kicker: string; title: strin
   );
 }
 
-function QuestionCard({ question, teams, observation }: { question: string; teams: TeamBudget[]; observation: (team: TeamBudget) => string }) {
+function QuestionCard({ question, teams }: { question: string; teams: TeamBudget[] }) {
   return (
     <article className="rounded-2xl border border-edge bg-panel/40 p-5 sm:p-6">
       <h4 className="min-h-12 text-sm font-semibold leading-snug text-fog">{question}</h4>
@@ -37,7 +42,9 @@ function QuestionCard({ question, teams, observation }: { question: string; team
               <TeamMark slug={team.slug} name={team.name} abbr={team.abbr} color={team.color} size="lg" />
               {team.name}
             </Link>
-            <p className="mt-3 text-sm leading-relaxed text-fog">{observation(team)}</p>
+            <p className="mt-3 text-sm leading-relaxed text-fog">
+              AP #{team.ap_rank} versus spend #{team.spend_rank}: {Math.abs(team.value_gap!)} rank places apart.
+            </p>
             <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
               <div>
                 <dt className="text-xs text-fog">Estimated budget</dt>
@@ -70,17 +77,14 @@ export default function Moneyball() {
     {
       question: "Which AP-ranked programs sit furthest above their estimated spend rank?",
       teams: above,
-      observation: (team: TeamBudget) => `AP #${team.ap_rank} versus spend #${team.spend_rank}: ${team.value_gap} rank places apart.`,
     },
     {
       question: "Which AP-ranked programs sit furthest below their estimated spend rank?",
       teams: below,
-      observation: (team: TeamBudget) => `AP #${team.ap_rank} versus spend #${team.spend_rank}: ${Math.abs(team.value_gap!)} rank places apart.`,
     },
     {
       question: "Which other AP-ranked programs have faced the toughest schedule?",
       teams: hardestOther,
-      observation: (team: TeamBudget) => `ESPN ranks its played schedule #${team.sos_played_rank} among FBS teams; 1 is hardest.`,
     },
   ].filter((card) => card.teams.length > 0);
 
@@ -114,33 +118,54 @@ export default function Moneyball() {
         Further left means a lower budget midpoint; higher up means a higher AP position.
         The budget midpoint is the average of a reported range, and the AP poll is a ranking
         of teams, not a measurement of financial return. Select a logo for its team page.
-        <span className="md:hidden"> You can also browse the tracked ranked teams below the chart.</span>
+        {" "}You can also browse the tracked ranked teams and their weekly movement below the chart.
       </SectionHead>
       <div className="mt-6 rounded-xl border border-edge bg-panel/30 p-2 sm:p-4">
-        <div className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper" role="region" aria-label="Spend versus poll chart. Scroll horizontally to explore." tabIndex={0}>
+        <div className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper" role="region" aria-label="Spend versus poll chart" tabIndex={0}>
           <div className="min-w-[880px] md:min-w-0">
-            <Scatterplot teams={ranked} />
+            <Scatterplot teams={ranked} week={data.poll.week} movements={Object.fromEntries(ranked.map((team) => [team.slug, movementBySlug[team.slug]]))} previousWeek={history.previousPoll?.week ?? null} />
           </div>
         </div>
-        <p className="px-2 pb-1 pt-2 text-xs text-fog md:hidden">Swipe across the chart to inspect it at full size.</p>
+        <p className="moneyball-touch-hint px-2 pb-1 pt-2 text-xs text-fog">Swipe across the chart to inspect it at full size.</p>
       </div>
-      <section className="mt-4 md:hidden" aria-labelledby="ranked-team-list-heading">
+      <section className="mt-6" aria-labelledby="ranked-team-list-heading">
         <h4 id="ranked-team-list-heading" className="text-base font-bold text-paper">Browse {ranked.length} tracked AP-ranked teams</h4>
-        <p className="mt-1 text-xs text-fog">AP rank, estimated budget, and spend rank. Tap a team for its page.</p>
-        <ol className="mt-3 overflow-hidden rounded-xl border border-edge bg-panel/30">
+        <p className="mt-1 text-sm text-fog">
+          {comparisonLabel(history.previousPoll?.week ?? null)}: AP position and spend rank. Select a team for its page.
+          {" "}Equal budget midpoints share a spend rank (1, 2, 2, 4).
+        </p>
+        {history.previousPoll && (
+          <p className="mt-2 text-xs leading-relaxed text-fog">
+            AP: {history.previousPoll.week === 0 ? "preseason" : `Week ${history.previousPoll.week}`}
+            {history.previousPoll.as_of ? ` (${fmtPollDate(history.previousPoll.as_of)})` : " (publication date not captured)"}
+            {" → "}Week {history.currentPoll.week} ({fmtPollDate(history.currentPoll.as_of)}).
+            {" "}{history.spendBaseline ? `Spend compares with the saved Week ${history.spendBaseline.week} book (${fmtPollDate(history.spendBaseline.captured_as_of)}).` : "No matching saved spend baseline is available."}
+            {" "}The budgets remain September {data.season} estimates; an unchanged spend rank is not a new spending report.
+          </p>
+        )}
+        {history.currentPoll.ballot.filter((row) => row.slug === null).map((row) => (
+          <p key={row.name} className="mt-2 text-xs text-fog">#{row.rank} {row.name} is outside the {data.totals.teams} tracked programs and is omitted from this chart and list.</p>
+        ))}
+        <ol className="mt-3 grid overflow-hidden rounded-xl border border-edge bg-panel/30 md:grid-cols-2 xl:grid-cols-3">
           {[...ranked].sort((a, b) => a.ap_rank! - b.ap_rank!).map((team) => (
             <li key={team.slug} className="border-b border-line/60 last:border-0">
               <Link
                 href={`/team/${team.slug}`}
-                aria-label={`${team.name}, AP #${team.ap_rank}, estimated budget ${fmtRange(team.budget_low_m, team.budget_high_m)}, spend rank #${team.spend_rank}`}
+                aria-label={`${team.name}, AP #${team.ap_rank}, estimated budget ${fmtRange(team.budget_low_m, team.budget_high_m)}, spend rank #${team.spend_rank}. ${movementSummary(movementBySlug[team.slug], history.previousPoll?.week ?? null)}`}
                 className="flex min-h-14 items-center gap-3 px-4 py-3 transition-ui hover:bg-panel/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper"
               >
-                <span className="w-8 shrink-0 font-display text-lg font-black tabular-nums text-fog">#{team.ap_rank}</span>
+                <span className="w-10 shrink-0 whitespace-nowrap font-display text-lg font-black tabular-nums text-fog">#{team.ap_rank}</span>
                 <TeamMark slug={team.slug} name={team.name} abbr={team.abbr} color={team.color} size="sm" />
                 <span className="min-w-0 flex-1">
                   <span className="block break-words text-sm font-semibold leading-snug text-paper">{team.name}</span>
                   <span className="mt-0.5 block text-xs tabular-nums text-fog">
                     {fmtRange(team.budget_low_m, team.budget_high_m)} · Spend #{team.spend_rank}
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed tabular-nums text-fog">
+                    <span className={movementBySlug[team.slug].ap.status === "up" ? "text-status-success" : movementBySlug[team.slug].ap.status === "down" ? "text-status-loss" : ""}>
+                      AP {movementLabel(movementBySlug[team.slug].ap)}
+                    </span>
+                    {" · "}Spend {movementLabel(movementBySlug[team.slug].spend)}
                   </span>
                 </span>
                 <span className="shrink-0 text-fog" aria-hidden="true">→</span>
@@ -179,8 +204,8 @@ export default function Moneyball() {
 
       <div className="mt-16 border-t border-line pb-4 pt-6">
         <p className="max-w-4xl text-xs leading-relaxed text-fog">
-          Methodology — Budget ranges come from The Athletic. Spend ranks compare the {data.totals.teams}
-          tracked budget midpoints. AP ranks use the Week {data.poll.week} poll; records and ESPN FPI
+          {`Methodology — Budget ranges come from The Athletic. Spend ranks compare the ${data.totals.teams} tracked budget midpoints; ties share a rank. `}
+          AP ranks use the Week {data.poll.week} poll; records and ESPN FPI
           played schedule ranks are separately dated snapshots. The $10M comparison is an output
           of the Build game model, not an observed cost or a forecast of a team’s season.
         </p>
