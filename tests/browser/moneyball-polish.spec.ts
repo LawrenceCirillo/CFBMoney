@@ -95,12 +95,15 @@ for (const theme of ["light", "dark"]) {
 
 test.describe("touch chart", () => {
   test.use({ isMobile: true, hasTouch: true });
-  for (const width of [320, 390]) {
-    test(`preserves the full-size horizontal chart and browse list at ${width}px`, async ({ page }) => {
+  for (const width of [320, 390]) for (const theme of ["light", "dark"]) {
+    test(`preserves the full-size horizontal chart and browse list at ${width}px in ${theme}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 850 });
       await page.goto("/moneyball");
+      if (theme === "dark") await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
       await expect(page.getByText("Swipe across the chart to inspect it at full size.", { exact: true })).toBeVisible();
       const region = page.getByRole("region", { name: "Spend versus poll chart", exact: true });
+      await expect(region.locator(".moneyball-parity-line")).toBeVisible();
+      await expect(page.getByText("Line = spend rank at that budget; distance from the line is the rank gap.", { exact: true })).toBeVisible();
       expect(await region.evaluate((element) => element.scrollWidth)).toBeGreaterThan(await region.evaluate((element) => element.clientWidth));
       await region.evaluate((element) => element.scrollTo({ left: element.scrollWidth }));
       await expect.poll(() => region.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);

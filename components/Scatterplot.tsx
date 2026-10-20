@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { TeamBudget } from "@/lib/types";
 import { logoSrc, markDisc } from "@/lib/mark";
 import { comparisonLabel, movementLabel, movementSummary, type TeamMovement } from "@/lib/moneyball-movement";
+import { moneyballChartLayout } from "@/lib/moneyball-chart";
 
 /** Spend (x) vs. the current AP rank (y, inverted). */
 export default function Scatterplot({ teams, week, movements, previousWeek }: {
@@ -36,22 +37,7 @@ export default function Scatterplot({ teams, week, movements, previousWeek }: {
     document.addEventListener("keydown", dismiss);
     return () => document.removeEventListener("keydown", dismiss);
   }, [tooltipOpen]);
-  const W = 880;
-  const H = 560;
-  const m = { t: 46, r: 34, b: 56, l: 56 };
-
-  const xs = teams.map((t) => t.budget_mid_m);
-  const x0 = Math.floor(Math.min(...xs)) - 2;
-  const x1 = Math.ceil(Math.max(...xs)) + 2;
-  const yTop = 0;
-  const yBottom = 26;
-
-  const X = (v: number) => m.l + ((v - x0) / (x1 - x0)) * (W - m.l - m.r);
-  const Y = (r: number) => m.t + ((r - yTop) / (yBottom - yTop)) * (H - m.t - m.b);
-
-  const xTicks: number[] = [];
-  for (let v = Math.ceil(x0 / 10) * 10; v <= x1; v += 10) xTicks.push(v);
-  const yTicks = [25, 20, 15, 10, 5];
+  const { W, H, m, X, Y, xTicks, yTicks, parityPath } = moneyballChartLayout(teams);
 
   return (
     <div className="relative" onPointerLeave={hideHover}>
@@ -60,7 +46,7 @@ export default function Scatterplot({ teams, week, movements, previousWeek }: {
       {xTicks.map((v) => (
         <g key={v} aria-hidden="true">
           <line x1={X(v)} y1={m.t} x2={X(v)} y2={H - m.b} stroke="var(--chart-grid)" strokeWidth={1} />
-          <text x={X(v)} y={H - m.b + 22} textAnchor="middle" fontSize={12} fill="var(--chart-text)" className="tnum">
+          <text x={X(v)} y={H - m.b + 24} textAnchor="middle" fontSize={14} fontWeight={500} fill="var(--chart-text)" className="tabular-nums moneyball-axis-tick">
             ${v}M
           </text>
         </g>
@@ -68,7 +54,7 @@ export default function Scatterplot({ teams, week, movements, previousWeek }: {
       {yTicks.map((r) => (
         <g key={r} aria-hidden="true">
           <line x1={m.l} y1={Y(r)} x2={W - m.r} y2={Y(r)} stroke="var(--chart-grid)" strokeWidth={1} />
-          <text x={m.l - 12} y={Y(r) + 4} textAnchor="end" fontSize={12} fill="var(--chart-text)" className="tnum">
+          <text x={m.l - 12} y={Y(r) + 5} textAnchor="end" fontSize={14} fontWeight={500} fill="var(--chart-text)" className="tabular-nums moneyball-axis-tick">
             #{r}
           </text>
         </g>
@@ -87,10 +73,12 @@ export default function Scatterplot({ teams, week, movements, previousWeek }: {
         fill="var(--chart-text)"
         transform={`rotate(-90 16 ${(m.t + H - m.b) / 2})`}
       >
-        ↑ Better rank
+        ↑ AP / spend rank
       </text>
 
-      {/* teams */}
+      <path className="moneyball-parity-line" d={parityPath} fill="none" stroke="var(--chart-dim)" strokeWidth={1.5} strokeOpacity={0.6} strokeDasharray="5 5" pointerEvents="none" aria-hidden="true" />
+
+      {/* teams — painted after the reference so logos keep their white circular backing */}
       {teams.map((t) => {
         const cx = X(t.budget_mid_m);
         const cy = Y(t.ap_rank!);

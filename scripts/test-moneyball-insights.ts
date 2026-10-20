@@ -6,6 +6,7 @@ import rawHistory from "../public/data/moneyball-history-2026.json";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { CostPerWin } from "../components/moneyball/MoneyStories";
+import { moneyballChartLayout } from "../lib/moneyball-chart";
 
 const ballot = rawHistory.currentPoll.ballot;
 const current = buildMoneyballInsights(data.teams, seasonSnapshot.teams, ballot);
@@ -48,6 +49,8 @@ assert.equal(buildMoneyballInsights(data.teams, records, ballot).facts.houston.c
 const zeroWinMarkup = renderToStaticMarkup(createElement(CostPerWin, { value: null }));
 assert(zeroWinMarkup.includes("No wins yet") && !zeroWinMarkup.includes("$"), "Zero wins must never render a dollar figure");
 assert(zeroWinMarkup.includes("partial-season"));
+const browseMarkup = renderToStaticMarkup(createElement(CostPerWin, { value: 17 / 6, showCaveat: false }));
+assert(browseMarkup.includes("$2.83M") && !browseMarkup.includes("partial-season"));
 for (const record of ["", "Unknown", "6"])
   assert.throws(() => buildMoneyballInsights(data.teams, { ...records, oregon: { record } }, ballot), /valid snapshot record for oregon/);
 assert.throws(() => buildMoneyballInsights(data.teams, { ...records, oregon: undefined }, ballot), /valid snapshot record for oregon/);
@@ -62,4 +65,19 @@ const cutoffTie = buildMoneyballInsights(data.teams, seasonSnapshot.teams, [...b
 assert.equal(cutoffTie.field.length, 13, "Do not silently discard a cutoff tie");
 const cheaperFirstOut = data.teams.map((t) => t.ap_rank === 13 ? { ...t, budget_mid_m: 1 } : t);
 assert.equal(buildMoneyballInsights(cheaperFirstOut, seasonSnapshot.teams, ballot).firstOut.length, 0);
+const chart = moneyballChartLayout(current.ranked);
+assert(chart.yBottom >= Math.max(...current.ranked.map((team) => team.spend_rank)), "Do not clip spend ranks to the AP Top 25 domain");
+const pixelsPerRank = (chart.H - chart.m.t - chart.m.b) / chart.yBottom;
+for (const team of current.ranked) {
+  const expectedRank = 1 + data.teams.filter((other) => other.budget_mid_m > team.budget_mid_m).length;
+  assert(chart.parity.some((point) => point.budget_mid_m === team.budget_mid_m && point.spend_rank === expectedRank), "Parity uses global spend rank, never rank within the charted subset");
+  assert(Math.abs(chart.Y(team.spend_rank) - chart.Y(team.ap_rank!) - team.value_gap! * pixelsPerRank) < 1e-8, "Vertical separation is the actual rank gap on one linear scale");
+  assert(chart.Y(team.spend_rank) <= chart.H - chart.m.b);
+}
+assert.equal(chart.parity.length, new Set(current.ranked.map((team) => `${team.budget_mid_m}/${team.spend_rank}`)).size, "Tied midpoints share one parity vertex");
+assert(chart.parity.every((team, index) => !index || team.budget_mid_m > chart.parity[index - 1].budget_mid_m));
+assert.equal(moneyballChartLayout([...current.ranked].reverse()).parityPath, chart.parityPath, "Input ordering cannot change the line");
+assert.equal(moneyballChartLayout(current.ranked.map((team) => ({ ...team, ap_rank: 1 }))).parityPath, chart.parityPath, "AP movement cannot change the spend reference");
+assert(!/NaN|Infinity/.test(moneyballChartLayout([]).parityPath));
 console.log("Moneyball insights passed: current arithmetic, changed snapshots, tied leaders, all unranked top spenders, zero/missing records, AP proxy coverage/cutoff ties and first-out comparisons.");
+console.log("Moneyball parity passed: global competition ranks, complete linear domain, proportional gaps, tied vertices and order-independent geometry.");

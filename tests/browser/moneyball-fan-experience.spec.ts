@@ -60,7 +60,7 @@ test("all unranked top spenders and the AP proxy have snapshot-based budgets and
   }
 });
 
-test("every browse row shows its signed gap, record and qualified cost per win", async ({ page }) => {
+test("every browse row shows its signed gap, record and cost with one shared qualification", async ({ page }) => {
   await page.goto("/moneyball");
   const browse = page.getByRole("region", { name: `Browse ${insights.ranked.length} tracked AP-ranked teams` });
   for (const team of insights.ranked) {
@@ -69,9 +69,11 @@ test("every browse row shows its signed gap, record and qualified cost per win",
     await expect(row.getByLabel(`Rank gap ${fmtGap(team.value_gap!)}`, { exact: true })).toBeVisible();
     await expect(row).toContainText(fact.record);
     await expect(row).toContainText(fact.costPerWinM == null ? "No wins yet" : `${fmtMoney2(fact.costPerWinM)} / win`);
-    await expect(row).toContainText("At the budget midpoint · crude, partial-season");
-    await expect(row).toHaveAttribute("aria-label", /at the budget midpoint; crude, partial-season/);
+    await expect(row).not.toContainText("At the budget midpoint · crude, partial-season");
+    await expect(row).not.toHaveAttribute("aria-label", /crude, partial-season/);
   }
+  await expect(browse.getByText("At the budget midpoint · crude, partial-season", { exact: true })).toHaveCount(1);
+  await expect(browse).toHaveAttribute("aria-describedby", "browse-cost-note");
 });
 
 for (const width of [320, 390]) {

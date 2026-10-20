@@ -4,11 +4,11 @@ import TeamMark from "@/components/TeamMark";
 import { fmtGap, fmtMoney2, fmtRange } from "@/lib/format";
 import type { MoneyballTeam } from "@/lib/moneyball-insights";
 
-export function CostPerWin({ value }: { value: number | null }) {
+export function CostPerWin({ value, showCaveat = true }: { value: number | null; showCaveat?: boolean }) {
   return (
     <span className="block text-xs leading-relaxed text-fog">
       <span className="tabular-nums">{value == null ? "No wins yet" : `${fmtMoney2(value)} / win`}</span>
-      <span className="block">At the budget midpoint · crude, partial-season</span>
+      {showCaveat && <span className="block">At the budget midpoint · crude, partial-season</span>}
     </span>
   );
 }
