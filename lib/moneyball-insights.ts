@@ -10,8 +10,9 @@ export interface MoneyballTeam {
   costPerWinM: number | null;
 }
 
-export function costPerWinDescription(value: number | null): string {
-  return `${value == null ? "No wins yet" : `${fmtMoney2(value)} per win`}, at the budget midpoint; crude, partial-season.`;
+export function costPerWinDescription(value: number | null, includeCaveat = true): string {
+  const label = value == null ? "No wins yet" : `${fmtMoney2(value)} per win`;
+  return includeCaveat ? `${label}, at the budget midpoint; crude, partial-season.` : label;
 }
 
 /** A descriptive snapshot calculation. No game-model ratings or projections. */

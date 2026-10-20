@@ -51,19 +51,21 @@ export default function Moneyball() {
         Further left = smaller budget; higher = better AP rank.
       </SectionHead>
       <div className="mt-6 rounded-xl border border-edge bg-panel/30 p-2 sm:p-4">
-        <div className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper" role="region" aria-label="Spend versus poll chart" tabIndex={0}>
+        <div id="spend-poll-chart" className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper" role="region" aria-label="Spend versus poll chart" aria-describedby="spend-parity-caption" tabIndex={0}>
           <div className="min-w-[880px] md:min-w-0">
             <Scatterplot teams={ranked} week={data.poll.week} movements={Object.fromEntries(ranked.map((team) => [team.slug, movementBySlug[team.slug]]))} previousWeek={history.previousPoll?.week ?? null} />
           </div>
         </div>
+        <p id="spend-parity-caption" className="px-2 pb-1 pt-2 text-xs leading-relaxed text-fog">Line = spend rank at that budget; distance from the line is the rank gap.</p>
         <p className="moneyball-touch-hint px-2 pb-1 pt-2 text-xs text-fog">Swipe across the chart to inspect it at full size.</p>
       </div>
-      <section className="mt-6" aria-labelledby="ranked-team-list-heading">
+      <section className="mt-6" aria-labelledby="ranked-team-list-heading" aria-describedby="browse-cost-note">
         <h4 id="ranked-team-list-heading" className="text-base font-bold text-paper">Browse {ranked.length} tracked AP-ranked teams</h4>
         <p className="mt-1 text-sm text-fog">
           {comparisonLabel(history.previousPoll?.week ?? null)}: AP position and spend rank. Select a team for its page.
           {" "}Equal budget midpoints share a spend rank (1, 2, 2, 4).
         </p>
+        <p id="browse-cost-note" className="mt-2 text-xs leading-relaxed text-fog">Cost per win: <span>At the budget midpoint · crude, partial-season</span>.</p>
         {history.previousPoll && (
           <p className="mt-2 text-xs leading-relaxed text-fog">
             AP: {history.previousPoll.week === 0 ? "preseason" : `Week ${history.previousPoll.week}`}
@@ -81,7 +83,7 @@ export default function Moneyball() {
             <li key={team.slug} className="border-b border-line/60 last:border-0">
               <Link
                 href={`/team/${team.slug}`}
-                aria-label={`${team.name}, AP #${team.ap_rank}, estimated budget ${fmtRange(team.budget_low_m, team.budget_high_m)}, record ${facts[team.slug].record}, spend rank #${team.spend_rank}, rank gap ${fmtGap(team.value_gap!)}. ${costPerWinDescription(facts[team.slug].costPerWinM)} ${movementSummary(movementBySlug[team.slug], history.previousPoll?.week ?? null)}`}
+                aria-label={`${team.name}, AP #${team.ap_rank}, estimated budget ${fmtRange(team.budget_low_m, team.budget_high_m)}, record ${facts[team.slug].record}, spend rank #${team.spend_rank}, rank gap ${fmtGap(team.value_gap!)}. ${costPerWinDescription(facts[team.slug].costPerWinM, false)}. ${movementSummary(movementBySlug[team.slug], history.previousPoll?.week ?? null)}`}
                 className="flex min-h-14 items-center gap-3 px-4 py-3 transition-ui hover:bg-panel/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper"
               >
                 <span className="w-10 shrink-0 whitespace-nowrap font-display text-lg font-black tabular-nums text-fog">#{team.ap_rank}</span>
@@ -94,7 +96,7 @@ export default function Moneyball() {
                   <span className="mt-0.5 block text-xs tabular-nums text-fog">
                     {fmtRange(team.budget_low_m, team.budget_high_m)} · {facts[team.slug].record} · Spend #{team.spend_rank}
                   </span>
-                  <span className="mt-1 block"><CostPerWin value={facts[team.slug].costPerWinM} /></span>
+                  <span className="mt-1 block"><CostPerWin value={facts[team.slug].costPerWinM} showCaveat={false} /></span>
                   <span className="mt-1 block text-xs leading-relaxed tabular-nums text-fog">
                     <span className={movementBySlug[team.slug].ap.status === "up" ? "text-status-success" : movementBySlug[team.slug].ap.status === "down" ? "text-status-loss" : ""}>
                       AP {movementLabel(movementBySlug[team.slug].ap)}
@@ -132,10 +134,18 @@ export default function Moneyball() {
         <p className={`mt-6 font-black tracking-tight tabular-nums ${insights.fieldMidM == null ? "text-2xl" : "whitespace-nowrap text-5xl sm:text-6xl"}`}>{insights.fieldMidM == null ? "Unavailable" : fmtM(insights.fieldMidM)}</p>
         <p className="mt-2 text-sm text-fog">Combined estimated roster spend, at budget midpoints.</p>
         {insights.missingBudgets.length > 0 && <p className="mt-3 text-sm text-fog">Full field cost unavailable: no tracked budget for {insights.missingBudgets.map((row) => row.name).join(", ")}.</p>}
-        <ol className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 flex items-center justify-between border-b border-line pb-2 text-xs text-fog" aria-hidden="true"><span>AP rank · program</span><span>Budget midpoint</span></div>
+        <ol className="divide-y divide-line">
           {insights.field.map((row) => (
             <li key={row.name} className="text-sm">
-              {row.team ? <Link href={`/team/${row.team.slug}`} className="flex items-baseline justify-between gap-3 hover:underline"><span>#{row.rank} {row.name}</span><span className="shrink-0 tabular-nums text-fog">{fmtM(row.team.budget_mid_m)}</span></Link> : <span>#{row.rank} {row.name} · budget unavailable</span>}
+              {row.team ? (
+                <Link href={`/team/${row.team.slug}`} aria-label={`AP #${row.rank} ${row.name}, budget midpoint ${fmtM(row.team.budget_mid_m)}`} className="grid min-h-12 grid-cols-[2rem_1.5rem_minmax(0,1fr)_auto] items-center gap-3 py-3 transition-ui hover:bg-panel/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper">
+                  <span className="tabular-nums text-fog">#{row.rank}</span>
+                  <TeamMark slug={row.team.slug} name={row.team.name} abbr={row.team.abbr} color={row.team.color} size="sm" />
+                  <span className="min-w-0 break-words font-semibold">{row.name}</span>
+                  <span className="shrink-0 whitespace-nowrap tabular-nums text-fog">{fmtM(row.team.budget_mid_m)}</span>
+                </Link>
+              ) : <div className="flex min-h-12 items-center justify-between gap-3 py-3"><span>#{row.rank} {row.name}</span><span className="text-fog">Budget unavailable</span></div>}
             </li>
           ))}
         </ol>
