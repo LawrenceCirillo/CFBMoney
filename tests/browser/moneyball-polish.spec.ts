@@ -50,8 +50,9 @@ test("spotlight cards have the same lead stat and definition order", async ({ pa
   const cards = page.locator("article");
   await expect(cards).toHaveCount(3);
   for (const card of await cards.all()) {
-    await expect(card.locator("p").first()).toHaveText(/^AP #\d+ versus spend #\d+: \d+ rank places apart\.$/);
-    await expect(card.locator("dt")).toHaveText(["Estimated budget", "Record", "AP / spend rank", "Played SOS rank"]);
+    await expect(card.getByLabel(/^Rank gap /).first()).toHaveText(/^[+−±]\d+$/);
+    await expect(card.getByText(/^AP #\d+ versus spend #\d+: \d+ rank places apart\.$/)).toBeVisible();
+    await expect(card.locator("dt")).toHaveText(["Estimated budget", "Record", "Crude cost per win", "AP / spend rank", "Played SOS rank"]);
   }
 });
 
