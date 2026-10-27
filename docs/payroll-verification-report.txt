@@ -11,14 +11,14 @@ byu                  budget=$22,500,000   QB1=Bear Bachmeier             anchors
 california           budget=$22,000,000   QB1=Jaron-Keawe Sagapolutele   anchors=0 PASS sum=$22,000,000 floor=0
 cincinnati           budget=$15,000,000   QB1=JC French IV               anchors=0 PASS sum=$15,000,000 floor=1
 clemson              budget=$30,500,000   QB1=Tait Reynolds              anchors=0 PASS sum=$30,500,000 floor=0
-colorado             budget=$19,500,000   QB1=Julian Lewis               anchors=0 PASS sum=$19,500,000 floor=0
+colorado             budget=$19,500,000   QB1=Isaac Wilson               anchors=0 PASS sum=$19,500,000 floor=0
 duke                 budget=$13,500,000   QB1=Walker Eget                anchors=0 PASS sum=$13,500,000 floor=0
 florida              budget=$36,000,000   QB1=Aaron Philo                anchors=0 PASS sum=$36,000,000 floor=0
 florida-state        budget=$26,500,000   QB1=Ashton Daniels             anchors=0 PASS sum=$26,500,000 floor=0
 georgia              budget=$32,500,000   QB1=Gunner Stockton            anchors=0 PASS sum=$32,500,000 floor=0
 georgia-tech         budget=$24,500,000   QB1=Alberto Mendoza            anchors=0 PASS sum=$24,500,000 floor=0
 houston              budget=$17,000,000   QB1=Conner Weigman             anchors=0 PASS sum=$17,000,000 floor=0
-illinois             budget=$21,000,000   QB1=Katin Houser               anchors=0 PASS sum=$21,000,000 floor=0
+illinois             budget=$21,000,000   QB1=Michael Clayton II         anchors=0 PASS sum=$21,000,000 floor=0
 indiana              budget=$38,000,000   QB1=Josh Hoover                anchors=0 PASS sum=$38,000,000 floor=0
 iowa                 budget=$19,000,000   QB1=Hank Brown                 anchors=1 PASS sum=$19,000,000 floor=1
 iowa-state           budget=$15,000,000   QB1=Jaylen Raynor              anchors=0 PASS sum=$15,000,000 floor=0
@@ -58,7 +58,7 @@ texas                budget=$50,000,000   QB1=Arch Manning               anchors
 texas-am             budget=$47,500,000   QB1=Marcel Reed                anchors=0 PASS sum=$47,500,000 floor=0
 texas-tech           budget=$40,000,000   QB1=Will Hammond               anchors=0 PASS sum=$40,000,000 floor=0
 ucf                  budget=$17,500,000   QB1=Keyone Jenkins             anchors=0 PASS sum=$17,500,000 floor=1
-ucla                 budget=$28,000,000   QB1=Nico Iamaleava             anchors=0 PASS sum=$28,000,000 floor=0
+ucla                 budget=$28,000,000   QB1=Ty Dieffenbach             anchors=0 PASS sum=$28,000,000 floor=0
 usc                  budget=$38,500,000   QB1=Jayden Maiava              anchors=0 PASS sum=$38,500,000 floor=0
 utah                 budget=$20,000,000   QB1=Devon Dampier              anchors=0 PASS sum=$20,000,000 floor=0
 vanderbilt           budget=$26,500,000   QB1=Jared Curtis               anchors=0 PASS sum=$26,500,000 floor=0

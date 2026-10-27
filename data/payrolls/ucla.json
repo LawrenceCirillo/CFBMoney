@@ -1,7 +1,7 @@
 {
   "teamSlug": "ucla",
   "budget": 28000000,
-  "qb1Name": "Nico Iamaleava",
+  "qb1Name": "Ty Dieffenbach",
   "anchorCount": 0,
   "anchorSum": 0,
   "floorHits": 0,
@@ -124,8 +124,8 @@
       "originalPosition": "QB",
       "position": "QB",
       "class": "SR",
-      "qb1": false,
-      "valuation": 468000,
+      "qb1": true,
+      "valuation": 2044000,
       "source": "model"
     },
     {
@@ -194,8 +194,8 @@
       "originalPosition": "QB",
       "position": "QB",
       "class": "SR",
-      "qb1": true,
-      "valuation": 2044000,
+      "qb1": false,
+      "valuation": 468000,
       "source": "model"
     },
     {
