@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { buildMoneyballHistory, rankMovement } from "./moneyball-history.mjs";
+import { validateApBallot } from "./validate-data.mjs";
 
 const json = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 const csv = readFileSync(new URL("../data/ap-poll-2026.csv", import.meta.url), "utf8");
@@ -59,6 +60,12 @@ const badRanks = teams.map((team, i) => i === 1 ? { ...team, ap_rank: 3 } : team
 assert.throws(() => buildMoneyballHistory("week,team,rank\n" + ballot(7, badRanks) + "\n" + ballot(8), fixture, baseline), /competition ranks/);
 const tied = teams.map((team, i) => i === 14 ? { ...team, ap_rank: 14 } : team);
 assert.doesNotThrow(() => buildMoneyballHistory("week,team,rank\n" + ballot(7, tied) + "\n" + ballot(8), fixture, baseline), "Real AP ties preserve competition ranks");
+const tiedSource = teams.map((team, i) => ({ team: team.name, rank: String(i === 20 ? 20 : i + 1) }));
+assert.doesNotThrow(() => validateApBallot([...tiedSource].reverse()), "Source validation preserves #20 ties and the jump to #22");
+assert.throws(() => validateApBallot(tiedSource.map((row, i) => i === 21 ? { ...row, rank: "21" } : row)), /competition ranks/, "A tie cannot be followed by an unskipped rank");
+assert.throws(() => validateApBallot(tiedSource.map((row, i) => i === 24 ? { ...row, team: tiedSource[0].team } : row)), /duplicates/);
+assert.throws(() => validateApBallot(tiedSource.slice(1)), /25 teams/);
+assert.throws(() => validateApBallot(tiedSource.map((row, i) => i === 0 ? { ...row, rank: "0" } : row)), /invalid rank/);
 const badBook = structuredClone(baseline);
 badBook.snapshots[0].teams[0].spend_rank = 4;
 assert.throws(() => buildMoneyballHistory(polls([7, 8]), fixture, badBook), /historical spend rank/);

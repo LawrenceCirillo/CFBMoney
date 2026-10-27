@@ -5,7 +5,7 @@
   "anchorCount": 0,
   "anchorSum": 0,
   "floorHits": 0,
-  "residual": 2000,
+  "residual": -11000,
   "sum": 38000000,
   "players": [
     {
@@ -15,7 +15,7 @@
       "position": "WR",
       "class": "JR",
       "qb1": false,
-      "valuation": 546000,
+      "valuation": 545000,
       "source": "model"
     },
     {
@@ -35,7 +35,7 @@
       "position": "OL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -45,7 +45,7 @@
       "position": "OL",
       "class": "JR",
       "qb1": false,
-      "valuation": 410000,
+      "valuation": 409000,
       "source": "model"
     },
     {
@@ -55,7 +55,7 @@
       "position": "WR",
       "class": "SR",
       "qb1": false,
-      "valuation": 665000,
+      "valuation": 664000,
       "source": "model"
     },
     {
@@ -65,7 +65,7 @@
       "position": "TE",
       "class": "FR",
       "qb1": false,
-      "valuation": 125000,
+      "valuation": 124000,
       "source": "model"
     },
     {
@@ -75,7 +75,7 @@
       "position": "WR",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -85,7 +85,7 @@
       "position": "RB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -95,7 +95,7 @@
       "position": "WR",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -105,7 +105,7 @@
       "position": "QB",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -125,7 +125,7 @@
       "position": "OL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -135,7 +135,7 @@
       "position": "WR",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -145,7 +145,7 @@
       "position": "WR",
       "class": "SR",
       "qb1": false,
-      "valuation": 665000,
+      "valuation": 664000,
       "source": "model"
     },
     {
@@ -155,7 +155,7 @@
       "position": "QB",
       "class": "SR",
       "qb1": false,
-      "valuation": 665000,
+      "valuation": 664000,
       "source": "model"
     },
     {
@@ -175,7 +175,7 @@
       "position": "OL",
       "class": "JR",
       "qb1": false,
-      "valuation": 410000,
+      "valuation": 409000,
       "source": "model"
     },
     {
@@ -195,7 +195,7 @@
       "position": "WR",
       "class": "JR",
       "qb1": false,
-      "valuation": 546000,
+      "valuation": 545000,
       "source": "model"
     },
     {
@@ -205,7 +205,7 @@
       "position": "OL",
       "class": "JR",
       "qb1": false,
-      "valuation": 410000,
+      "valuation": 409000,
       "source": "model"
     },
     {
@@ -225,7 +225,7 @@
       "position": "OL",
       "class": "JR",
       "qb1": false,
-      "valuation": 410000,
+      "valuation": 409000,
       "source": "model"
     },
     {
@@ -235,7 +235,7 @@
       "position": "TE",
       "class": "JR",
       "qb1": false,
-      "valuation": 205000,
+      "valuation": 204000,
       "source": "model"
     },
     {
@@ -245,7 +245,7 @@
       "position": "QB",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -255,7 +255,7 @@
       "position": "RB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -275,7 +275,7 @@
       "position": "RB",
       "class": "SO",
       "qb1": false,
-      "valuation": 297000,
+      "valuation": 296000,
       "source": "model"
     },
     {
@@ -285,7 +285,7 @@
       "position": "WR",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -315,7 +315,7 @@
       "position": "OL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -325,7 +325,7 @@
       "position": "RB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -345,7 +345,7 @@
       "position": "OL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -355,7 +355,7 @@
       "position": "WR",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -385,7 +385,7 @@
       "position": "WR",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -395,7 +395,7 @@
       "position": "OL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -425,7 +425,7 @@
       "position": "WR",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -455,17 +455,7 @@
       "position": "WR",
       "class": "SR",
       "qb1": false,
-      "valuation": 665000,
-      "source": "model"
-    },
-    {
-      "name": "Brady Smigiel",
-      "jersey": "17",
-      "originalPosition": "QB",
-      "position": "QB",
-      "class": "FR",
-      "qb1": false,
-      "valuation": 333000,
+      "valuation": 664000,
       "source": "model"
     },
     {
@@ -475,7 +465,7 @@
       "position": "LB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -485,7 +475,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -495,7 +485,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -515,7 +505,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -525,7 +515,7 @@
       "position": "DE",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -535,7 +525,7 @@
       "position": "DE",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -545,7 +535,7 @@
       "position": "LB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -565,7 +555,7 @@
       "position": "DE",
       "class": "SR",
       "qb1": false,
-      "valuation": 665000,
+      "valuation": 664000,
       "source": "model"
     },
     {
@@ -575,7 +565,7 @@
       "position": "LB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -605,7 +595,7 @@
       "position": "LB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -615,7 +605,7 @@
       "position": "DE",
       "class": "SR",
       "qb1": false,
-      "valuation": 665000,
+      "valuation": 664000,
       "source": "model"
     },
     {
@@ -635,7 +625,17 @@
       "position": "DB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
+      "source": "model"
+    },
+    {
+      "name": "Jeremiah Earby",
+      "jersey": "26",
+      "originalPosition": "CB",
+      "position": "DB",
+      "class": "SR",
+      "qb1": false,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -645,7 +645,7 @@
       "position": "DB",
       "class": "SO",
       "qb1": false,
-      "valuation": 297000,
+      "valuation": 296000,
       "source": "model"
     },
     {
@@ -665,7 +665,7 @@
       "position": "DE",
       "class": "JR",
       "qb1": false,
-      "valuation": 546000,
+      "valuation": 545000,
       "source": "model"
     },
     {
@@ -675,7 +675,7 @@
       "position": "DL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -685,7 +685,7 @@
       "position": "LB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -695,7 +695,7 @@
       "position": "DL",
       "class": "JR",
       "qb1": false,
-      "valuation": 410000,
+      "valuation": 409000,
       "source": "model"
     },
     {
@@ -705,7 +705,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -715,7 +715,7 @@
       "position": "DE",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -735,7 +735,7 @@
       "position": "DL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -765,7 +765,7 @@
       "position": "DE",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -775,7 +775,7 @@
       "position": "DE",
       "class": "FR",
       "qb1": false,
-      "valuation": 333000,
+      "valuation": 332000,
       "source": "model"
     },
     {
@@ -785,7 +785,7 @@
       "position": "LB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -795,7 +795,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -815,7 +815,7 @@
       "position": "DE",
       "class": "JR",
       "qb1": false,
-      "valuation": 546000,
+      "valuation": 545000,
       "source": "model"
     },
     {
@@ -825,7 +825,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -835,7 +835,7 @@
       "position": "DB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -855,7 +855,7 @@
       "position": "LB",
       "class": "SO",
       "qb1": false,
-      "valuation": 297000,
+      "valuation": 296000,
       "source": "model"
     },
     {
@@ -865,7 +865,7 @@
       "position": "DL",
       "class": "JR",
       "qb1": false,
-      "valuation": 410000,
+      "valuation": 409000,
       "source": "model"
     },
     {
@@ -875,7 +875,7 @@
       "position": "DE",
       "class": "SO",
       "qb1": false,
-      "valuation": 475000,
+      "valuation": 474000,
       "source": "model"
     },
     {
@@ -885,7 +885,7 @@
       "position": "LB",
       "class": "SO",
       "qb1": false,
-      "valuation": 297000,
+      "valuation": 296000,
       "source": "model"
     },
     {
@@ -895,7 +895,7 @@
       "position": "DL",
       "class": "SR",
       "qb1": false,
-      "valuation": 499000,
+      "valuation": 498000,
       "source": "model"
     },
     {
@@ -905,7 +905,7 @@
       "position": "LB",
       "class": "FR",
       "qb1": false,
-      "valuation": 208000,
+      "valuation": 207000,
       "source": "model"
     },
     {
@@ -915,7 +915,7 @@
       "position": "DB",
       "class": "SR",
       "qb1": false,
-      "valuation": 416000,
+      "valuation": 415000,
       "source": "model"
     },
     {
@@ -935,7 +935,7 @@
       "position": "K",
       "class": "JR",
       "qb1": false,
-      "valuation": 137000,
+      "valuation": 136000,
       "source": "model"
     },
     {
@@ -1015,7 +1015,7 @@
       "position": "QB",
       "class": "SO",
       "qb1": true,
-      "valuation": 2080000,
+      "valuation": 2063000,
       "source": "model"
     }
   ]

@@ -1,4 +1,4 @@
-Payroll verification — 2026; roster snapshot 2026-10-19; mode build
+Payroll verification — 2026; roster snapshot 2026-10-27; mode build
 Teams: 68; On3 suffix-normalized roster matches: 3; eligible On3 anchors: 1; human review queue: 2
 alabama              budget=$40,000,000   QB1=Keelon Russell             anchors=0 PASS sum=$40,000,000 floor=0
 arizona              budget=$15,500,000   QB1=Noah Fifita                anchors=0 PASS sum=$15,500,000 floor=1

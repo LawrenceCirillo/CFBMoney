@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { tickerAbbr } from "../../lib/scores";
+import { scoreboard, tickerAbbr } from "../../lib/scores";
 
 function luminance(hex: string) {
   const fullHex = /^#[\da-f]{3}$/i.test(hex)
@@ -154,10 +154,14 @@ test("ticker does not move with reduced motion", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Pause scores" })).toBeHidden();
 });
 
-test("ticker distinguishes Arkansas from Arkansas State", async ({ page }) => {
+test("ticker distinguishes Arkansas from Arkansas State and respects byes", async ({ page }) => {
   expect(tickerAbbr({ name: "Arkansas", slug: "arkansas", abbr: "ARST" })).toBe("ARK");
   expect(tickerAbbr({ name: "Arkansas St", slug: null, abbr: "ARST" })).toBe("ARK ST");
   await page.goto("/");
   const ticker = page.locator(".score-ticker-window");
-  await expect(ticker.getByText("ARK", { exact: true }).first()).toBeAttached();
+  if (scoreboard.games.some((game) => game.away.slug === "arkansas" || game.home.slug === "arkansas")) {
+    await expect(ticker.getByText("ARK", { exact: true }).first()).toBeAttached();
+  } else {
+    await expect(ticker.locator('a[href="/team/arkansas"]')).toHaveCount(0);
+  }
 });

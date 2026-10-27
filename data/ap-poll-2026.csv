@@ -1,5 +1,5 @@
-# as_of: 2026-10-18
-# note: Through Week 7 of the 2026 season. Week 8 AP Top 25 published Oct. 18, 2026.
+# as_of: 2026-10-25
+# note: Through Week 8 of the 2026 season. Week 9 AP Top 25 published Oct. 25, 2026. Boise State and Northwestern tied at #20; the next rank is #22.
 week,team,rank
 0,Ohio State,1
 0,Oregon,2
@@ -176,3 +176,28 @@ week,team,rank
 8,SMU,23
 8,Northwestern,24
 8,Arizona,25
+9,Miami,1
+9,Ohio State,2
+9,Georgia,3
+9,Indiana,4
+9,Notre Dame,5
+9,Utah,6
+9,UCLA,7
+9,BYU,8
+9,Kentucky,9
+9,Alabama,10
+9,Texas,11
+9,Ole Miss,12
+9,Texas Tech,13
+9,Wake Forest,14
+9,LSU,15
+9,Tennessee,16
+9,Florida,17
+9,Houston,18
+9,SMU,19
+9,Boise State,20
+9,Northwestern,20
+9,Arizona,22
+9,Missouri,23
+9,Oklahoma State,24
+9,Wisconsin,25
