@@ -48,6 +48,22 @@ function unique(values, label) {
   if (new Set(values).size !== values.length) fail(`${label} contains duplicates`);
 }
 
+// AP uses competition ranks: a tie at #20 is followed by #22.
+export function validateApBallot(rows, label = "AP ballot") {
+  if (rows.length !== 25) fail(`${label} must contain 25 teams`);
+  if (rows.some((row) => !row.team || !Number.isInteger(Number(row.rank)) ||
+      Number(row.rank) < 1 || Number(row.rank) > 25)) {
+    fail(`${label} has an empty team or invalid rank`);
+  }
+  unique(rows.map((row) => row.team), `${label} teams`);
+  const ranks = rows.map((row) => Number(row.rank)).sort((a, b) => a - b);
+  for (let i = 0; i < ranks.length; i++) {
+    if (ranks[i] !== ranks[i - 1] && ranks[i] !== i + 1) {
+      fail(`${label} has invalid competition ranks`);
+    }
+  }
+}
+
 function nonNegative(value, label) {
   if (!Number.isFinite(value) || value < 0) fail(`${label} must be nonnegative`);
 }
@@ -87,12 +103,7 @@ function validateSources(sources, today) {
   const pollWeek = Math.max(...poll.rows.map((row) => Number(row.week)));
   if (pollWeek < 1 || pollWeek > 16) fail("AP poll current week is invalid");
   const current = poll.rows.filter((row) => Number(row.week) === pollWeek);
-  if (current.length !== 25) fail(`AP week ${pollWeek} must contain 25 teams`);
-  unique(current.map((row) => row.team), "current AP teams");
-  unique(current.map((row) => Number(row.rank)), "current AP ranks");
-  if (current.some((row) => Number(row.rank) < 1 || Number(row.rank) > 25)) {
-    fail("current AP ranks must be 1–25");
-  }
+  validateApBallot(current, `AP week ${pollWeek}`);
   // The AP ballot covers all FBS programs; our budget model covers only 68.
   // Keep outside programs in the source ballot so the tracked ranks retain
   // their actual AP numbers, including gaps.

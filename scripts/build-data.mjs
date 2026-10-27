@@ -13,7 +13,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateData } from "./validate-data.mjs";
+import { validateApBallot, validateData } from "./validate-data.mjs";
 import { buildMoneyballHistory } from "./moneyball-history.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -45,11 +45,7 @@ function parsePoll(text) {
   const week = Math.max(...weeks);
   if (!asOf || !note) throw new Error("AP poll file needs # as_of: and # note: comments");
   const current = rows.filter((r) => Number(r.week) === week);
-  if (current.length !== 25) {
-    throw new Error(`AP week ${week} has ${current.length} teams, expected 25`);
-  }
-  const ranks = new Set(current.map((r) => Number(r.rank)));
-  if (ranks.size !== 25) throw new Error(`AP week ${week} has duplicate or missing ranks`);
+  validateApBallot(current, `AP week ${week}`);
   return { rows, week, asOf, note };
 }
 
