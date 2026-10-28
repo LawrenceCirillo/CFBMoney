@@ -90,19 +90,18 @@ export default function Scatterplot({ teams, week, movements, previousWeek }: {
             onPointerEnter={(event) => { if (event.pointerType !== "touch") { clearHoverTimer(); setHovered(t.slug); } }}
             onPointerLeave={hideHover}
             onFocus={() => { clearHoverTimer(); setHovered(null); setFocused(t.slug); }} onBlur={() => setFocused(null)}>
-            <circle className="moneyball-point-ring" cx={cx} cy={cy} r={r + 3} fill="none" stroke="var(--color-paper)" strokeWidth={2} opacity={active?.slug === t.slug ? 1 : 0} />
-            <circle cx={cx} cy={cy} r={r} fill={markDisc(t.color)} />
-            <image
-              href={logoSrc(t.slug)}
-              x={cx - 11}
-              y={cy - 11}
-              width={22}
-              height={22}
-              preserveAspectRatio="xMidYMid meet"
-            />
+            <g id={`${tooltipId}-point-${t.slug}`} transform={`translate(${cx} ${cy})`}>
+              <g className="moneyball-point-visual" style={{ transform: `scale(${active?.slug === t.slug ? 1.15 : 1})` }}>
+                <circle className="moneyball-point-ring" cx={0} cy={0} r={r + 3} fill="none" stroke="var(--color-paper)" strokeWidth={2} opacity={active?.slug === t.slug ? 1 : 0} />
+                <circle cx={0} cy={0} r={r} fill={markDisc(t.color)} />
+                <image href={logoSrc(t.slug)} x={-11} y={-11} width={22} height={22} preserveAspectRatio="xMidYMid meet" />
+              </g>
+            </g>
           </a>
         );
       })}
+      {/* Paint the active mark last without changing link or keyboard order. */}
+      {active && <use className="moneyball-active-point" href={`#${tooltipId}-point-${active.slug}`} pointerEvents="none" aria-hidden="true" />}
     </svg>
     {active && (
       <div id={tooltipId} role="tooltip" onPointerEnter={clearHoverTimer} onPointerLeave={hideHover}

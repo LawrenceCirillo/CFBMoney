@@ -25,7 +25,7 @@ export interface BarDatum {
 }
 
 /** Animated, re-sortable bar list. Rows glide to their new positions on metric switch. */
-const FIRST_SCREEN = 8;
+const EAGER_LOGOS = 15;
 const GRID = "md:grid-cols-[1.75rem_minmax(8rem,1.3fr)_3.5rem_3.75rem_5.5rem_minmax(7rem,2fr)_7rem_1rem]";
 
 export default function TeamBars({ data, metricLabel }: { data: BarDatum[]; metricLabel: string }) {
@@ -55,7 +55,6 @@ export default function TeamBars({ data, metricLabel }: { data: BarDatum[]; metr
       </div>
 
       {data.map((d, i) => {
-        const delay = reduceMotion || !arrival.current || i >= FIRST_SCREEN ? 0 : i * 0.05;
         const showMetricValue = d.value !== d.budget;
         return (
           <motion.div key={d.slug} layout={!reduceMotion} transition={spring}>
@@ -69,7 +68,7 @@ export default function TeamBars({ data, metricLabel }: { data: BarDatum[]; metr
               </span>
 
               <span className="col-start-2 row-start-1 flex min-w-0 items-center gap-2 md:col-auto md:row-auto">
-                <TeamMark slug={d.slug} name={d.name} abbr={d.abbr} color={d.color} size="md" />
+                <TeamMark slug={d.slug} name={d.name} abbr={d.abbr} color={d.color} size="md" priority={i < EAGER_LOGOS} placeholder />
                 <span className="truncate text-sm font-semibold lg:text-base group-hover:underline" title={d.name}>
                   {d.name}
                 </span>
@@ -86,9 +85,9 @@ export default function TeamBars({ data, metricLabel }: { data: BarDatum[]; metr
                   <motion.span
                     className="block h-full rounded-full"
                     style={{ background: d.barColor ?? d.color }}
-                    initial={reduceMotion ? false : { width: "0%" }}
+                    initial={reduceMotion || arrival.current ? false : { width: "0%" }}
                     animate={{ width: `${Math.max(2.5, d.frac * 100)}%` }}
-                    transition={{ ...barSpring, delay }}
+                    transition={barSpring}
                   />
                 </span>
                 {showMetricValue && (

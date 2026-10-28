@@ -8,7 +8,7 @@ export function CostPerWin({ value, showCaveat = true }: { value: number | null;
   return (
     <span className="block text-xs leading-relaxed text-fog">
       <span className="tabular-nums">{value == null ? "No wins yet" : `${fmtMoney2(value)} / win`}</span>
-      {showCaveat && <span className="block">At the budget midpoint · crude, partial-season</span>}
+      {showCaveat && <span className="block">midpoint · partial-season</span>}
     </span>
   );
 }

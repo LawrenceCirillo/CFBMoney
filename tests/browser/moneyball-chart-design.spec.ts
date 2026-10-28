@@ -31,6 +31,7 @@ for (const theme of ["light", "dark"]) {
       await expect(tick).toHaveCSS("font-variant-numeric", "tabular-nums");
     }
     await expect(chart.locator("a")).toHaveCount(ranked.length);
+    const originalOrder = await chart.locator("a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
     for (const link of await chart.locator("a").all()) await expect(link.locator("circle").nth(1)).toHaveCSS("fill", "rgb(255, 255, 255)");
     const cluster = ["texas-tech", "ole-miss", "tennessee", "alabama"];
     const boxes = [];
@@ -38,6 +39,10 @@ for (const theme of ["light", "dark"]) {
       const link = chart.locator(`a[href="/team/${slug}"]`);
       await link.hover();
       await expect(page.getByRole("tooltip")).toContainText(data.teams.find((team) => team.slug === slug)!.name);
+      await expect(link.locator(".moneyball-point-visual")).toHaveCSS("transform", "matrix(1.15, 0, 0, 1.15, 0, 0)");
+      const pointId = await link.locator("g[id]").getAttribute("id");
+      await expect(chart.locator(".moneyball-active-point")).toHaveAttribute("href", `#${pointId}`);
+      expect(await chart.locator("a").evaluateAll((links) => links.map((item) => item.getAttribute("href")))).toEqual(originalOrder);
       boxes.push((await link.locator("image").boundingBox())!);
     }
     for (let a = 0; a < boxes.length; a++) for (let b = a + 1; b < boxes.length; b++) {
@@ -48,11 +53,15 @@ for (const theme of ["light", "dark"]) {
 
     const browse = page.getByRole("region", { name: `Browse ${ranked.length} tracked AP-ranked teams` });
     const caveat = "At the budget midpoint · crude, partial-season";
+    await expect(page.getByText(caveat, { exact: true })).toHaveCount(1);
     await expect(browse.getByText(caveat, { exact: true })).toHaveCount(1);
     await expect(browse.locator("ol")).not.toContainText(caveat);
-    for (const card of await page.locator("article").all()) await expect(card).toContainText(caveat);
+    for (const card of await page.locator("article").all()) {
+      await expect(card).toContainText("midpoint · partial-season");
+      await expect(card).not.toContainText(caveat);
+    }
     const unranked = page.getByRole("region", { name: "Spending big, not ranked", exact: true });
-    for (const card of await unranked.locator("li").all()) await expect(card).toContainText(caveat);
+    for (const card of await unranked.locator("li").all()) await expect(card).toContainText("midpoint · partial-season");
     await expect(page.getByRole("region", { name: "Methodology", exact: true })).toContainText("Cost per win divides the full-season budget midpoint");
 
     const signals = await page.locator("main .text-status-success, main .text-status-loss").allTextContents();

@@ -3,7 +3,7 @@ import type { TeamBudget } from "./types";
 /** One linear rank scale for AP positions and their spend-rank reference. */
 export function moneyballChartLayout(teams: TeamBudget[]) {
   const W = 880;
-  const H = 760;
+  const H = 840;
   const m = { t: 46, r: 34, b: 56, l: 60 };
   const xs = teams.map((team) => team.budget_mid_m);
   const x0 = Math.floor(xs.length ? Math.min(...xs) : 0) - 2;
