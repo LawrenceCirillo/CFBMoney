@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { logoSrc } from "@/lib/mark";
 
 export type MarkSize = "sm" | "md" | "lg" | "xl";
@@ -27,20 +27,29 @@ export default function TeamMark({
   name,
   abbr,
   size = "md",
+  priority = false,
+  placeholder = false,
 }: {
   slug: string;
   name: string;
   abbr: string;
   color: string;
   size?: MarkSize;
+  priority?: boolean;
+  placeholder?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const imageRef = useCallback((image: HTMLImageElement | null) => {
+    // Eager/cached marks can finish before hydration installs the load handler.
+    if (image?.complete && image.naturalWidth > 0) setLoaded(true);
+  }, []);
   const px = markPx(size);
   const typeSize = size === "sm" ? "text-[8px]" : size === "xl" ? "text-xs" : "text-[9px]";
 
   return (
     <span
-      className="relative inline-flex shrink-0 items-center justify-center"
+      className={`relative inline-flex shrink-0 items-center justify-center ${placeholder && !loaded ? "rounded-full bg-panel" : ""}`}
       style={{ width: px, height: px }}
       title={name}
     >
@@ -49,13 +58,16 @@ export default function TeamMark({
       ) : (
         // Pre-sized static WebP. A missing file falls back to the abbreviation.
         <img
+          ref={imageRef}
           src={logoSrc(slug)}
           alt=""
           width={px}
           height={px}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
           decoding="async"
           className="team-mark-image h-full w-full object-contain"
+          onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
         />
       )}

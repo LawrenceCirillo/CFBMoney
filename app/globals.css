@@ -104,6 +104,10 @@
 /* A swipe instruction belongs only to the existing narrow touch chart. */
 .moneyball-touch-hint { display: none; }
 .moneyball-point:focus-visible .moneyball-point-ring { opacity: 1; }
+.moneyball-point-visual { transition: transform 160ms var(--ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  .moneyball-point-visual { transition: none; }
+}
 @media (max-width: 47.999rem) and (hover: none) and (pointer: coarse) {
   .moneyball-touch-hint { display: block; }
 }

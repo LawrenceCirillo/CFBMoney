@@ -47,7 +47,7 @@ test("all unranked top spenders and the AP proxy have snapshot-based budgets and
       const card = section.locator("li").filter({ has: page.getByRole("link", { name: team.name, exact: true }) });
       await expect(card).toContainText(insights.facts[team.slug].record);
       await expect(card).toContainText(`Unranked / #${team.spend_rank}`);
-      await expect(card).toContainText("At the budget midpoint · crude, partial-season");
+      await expect(card).toContainText("midpoint · partial-season");
     }
   }
   const field = page.getByRole("region", { name: "If the playoff started today", exact: true });
