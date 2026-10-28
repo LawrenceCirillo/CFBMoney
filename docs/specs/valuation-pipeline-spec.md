@@ -37,7 +37,7 @@ Full rationale: `player-valuation-methodology.md`. Implement exactly this:
 ## Inputs (read from this repo — do not scrape the live site)
 - Rosters: the repo's own roster data backing `/team/[slug]` (name, position,
   class, jersey). ESPN normally supplies 100 players per team; exact duplicate
-  removal and five verified QB additions make some rosters 99 or 101 players.
+  removal and verified roster supplements make some rosters 99 or 101 players.
   Count is not a validation rule. If rosters don't exist as repo data, stop and
   say so instead of scraping.
 - Verified roster supplements: `data/payroll-inputs/roster-additions.csv`,

@@ -1,0 +1,109 @@
+CFB Money QB1 source review - October 27, 2026
+Base: origin/main 20c57763e1a9b6cba24799fde2868bc19e078650
+Branch: codex/025-qb1-source-review
+Scope: the 11 participation flags from the October 27 refresh; verified designation inputs, one missing-player supplement, regenerated payrolls, and provenance. Prepared locally; not deployed.
+
+DECISION STANDARD
+QB1 is a reviewed current model input, not a prediction of the next game's starter or a claim of a permanent job. A coach's announced choice, corroborated continuing starts, or an established current starter during a documented extended absence can support an update. A passing-log omission or a single injury-relief appearance cannot establish a change. When the latest coach says the choice is open, retain the prior working input and flag it; do not label it confirmed.
+All source review is bounded to information available on or before October 27, 2026. Search excerpts located evidence; cited decisions use retrieved article/profile text. No social-media fan posts, Wikipedia, game ratings, or search summaries alone decide a designation or class. No paywall bypass or full-text copying is part of this package.
+
+SUMMARY
+Updated: 3 (Colorado, Illinois, UCLA).
+Retained working inputs: 8 (Florida, Kansas State, Michigan, Michigan State, Oregon, Rutgers, Tennessee, Washington).
+Of those eight, five have an open or unconfirmed next-starter decision; three have documented injury-cover context without a verified ongoing designation change. A retained input is not a certification that its player will start the next game.
+Roster correction: add Isaac Wilson to Colorado through the existing verified-supplement CSV and local snapshot. Colorado now has 101 players; total tracked roster entries become 6,805. Other teams' roster records and all sports-stat totals remain unchanged.
+
+UPDATED DESIGNATIONS
+
+Colorado: Julian Lewis -> Isaac Wilson
+Decision: confirmed current starter; continue monitoring the competition.
+The Daily Camera reported Deion Sanders naming Wilson to start against Utah on October 13. Its October 27 follow-up reports Wilson starting the three games since Lewis last played on September 26, and gives no announced return of the job to Lewis. Sweetwyne's late relief appearance against Oklahoma State does not establish another designation change.
+Sources:
+  https://www.dailycamera.com/2026/10/13/isaac-wilson-cu-buffs-utah-quarterback-deion-sanders/
+  https://www.dailycamera.com/2026/10/27/cu-buffs-qb-julian-lewis-deion-sanders/
+Roster/class verification:
+  https://cubuffs.com/sports/football/roster/isaac-wilson/18349
+  https://www.espn.com/college-football/player/_/id/5079771/isaac-wilson
+CU's official 2026 profile verifies Wilson as a Colorado quarterback and labels his year Third. The current ESPN Colorado profile explicitly says Junior, #16, Active, with 2026 statistics through October 24. Use JR under the repo's ESPN class-label convention; do not infer eligibility class from attendance years or adopt a conflicting tertiary-source label.
+Wilson was absent from the committed Colorado roster under both exact and suffix-normalized matching. Added colorado,Isaac Wilson,QB,JR to data/payroll-inputs/roster-additions.csv and restored him once in the local snapshot. The existing four-column supplement format gives a blank jersey fallback, as for the other verified additions; the importer will restore him only while ESPN's roster feed omits him. No importer or class-weight code changed.
+
+Illinois: Katin Houser -> Michael Clayton II
+Decision: verified current starter during Houser's extended absence; re-check when Houser returns.
+Illinois' October 26 Maryland preview documents Houser's broken hand and extended absence. Its October 26 award report explicitly identifies Clayton's starting debut in the Oregon win. Together these support Clayton as the current starter while Houser is unavailable; they do not establish a permanent performance-based benching of Houser.
+Sources:
+  https://fightingillini.com/news/2026/10/26/football-illinois-travels-east-for-matchup-at-maryland
+  https://fightingillini.com/news/2026/10/26/football-michael-clayton-ii-named-big-ten-freshman-of-the-week
+  https://fightingillini.com/documents/download/2026/10/26/20261031_Maryland.pdf
+The first eight pages of the Maryland game notes corroborate the report and Clayton's FR class. No explicit depth-order table was found in those retrieved pages, and none is claimed. Michael Clayton II already exists uniquely as QB/FR in the repo; no roster addition was needed.
+
+UCLA: Nico Iamaleava -> Ty Dieffenbach
+Decision: confirmed announced replacement; monitor normal weekly availability.
+The Los Angeles Times' October 12 report records Bob Chesney choosing Dieffenbach to start going forward. UCLA's October 27 school notebook confirms Dieffenbach's second Big Ten start. AP's October 24 recap identifies the same continuing role after Iamaleava's season-ending injury. This is more than an inference from one relief appearance.
+Sources:
+  https://www.latimes.com/sports/ucla/story/2026-10-12/ucla-quarterback-nico-iamaleava-out-for-season-with-knee-injury
+  https://uclabruins.com/news/2026/10/27/ucla-football-notebook-nevada-week
+  https://www.espn.com/college-football/recap/_/gameId/401858499
+Ty Dieffenbach already exists uniquely as QB/SR in the repo; no roster addition was needed.
+
+RETAINED WORKING INPUTS / FOLLOW-UP
+
+Florida: Aaron Philo retained; open competition, not confirmed for the next game.
+Florida's October 26 school report says Philo and Tramell Jones Jr. are both taking first-team reps while recovering, and Jon Sumrall leaves the choice open through the week. Jones' Texas start is insufficient to settle that explicitly unresolved decision. Re-check the next available pregame coach/availability report.
+  https://floridagators.com/news/2026/10/26/football-gators-florida-georgia-a-century-of-hate-a-new-setting-and-QB-questions-jon-sumrall-tramell-jones-jr-southeastern-conference
+
+Kansas State: Avery Johnson retained; health/next starter unresolved.
+Collin Klein's October 26 school press conference calls Johnson day-to-day, discusses Knuth's ankle issue, and says he does not yet know who will take the first snap. The school recap describes Knuth filling in for the injured Johnson. No new QB1 is established. Re-check after the midweek availability update.
+  https://www.kstatesports.com/news/2026/10/26/football-k-state-discusses-colorado-game-during-weekly-press-conference
+  https://www.kstatesports.com/news/2026/10/24/football-k-state-falls-at-arizona-state-28-17
+
+Michigan: Bryce Underwood retained; next starter unresolved.
+The school recap confirms Tommy Carr started against Indiana, but the October 26 Detroit Free Press report says Kyle Whittingham did not name Carr or Underwood for Rutgers. Only the accessible opening of that report is needed for that conclusion. Do not turn Carr's one start into an announced ongoing selection. Re-check after the week's practices and coach availability.
+  https://mgoblue.com/news/2026/10/24/football-u-m-falls-to-no-6-hoosiers-in-overtime
+  https://www.freep.com/story/sports/college/university-michigan/wolverines/2026/10/26/michigan-football-quarterback-running-back-rutgers/92448873007/
+
+Michigan State: Alessio Milivojevic retained; absence explained by injury cover.
+Michigan State's October 26 official postgame notes identify Kayd Coffman as the starter in place of the injured Milivojevic. Hannan played later; first position in the passing-participation list did not mean first-string QB. No continuing replacement announcement was verified. Re-check Milivojevic's availability before MSU's next game.
+  https://msuspartans.com/news/2026/10/26/football-post-game-notes-ucla
+  https://msuspartans.com/news/2026/10/24/football-no-9-ucla-tops-michigan-state-28-10
+
+Oregon: Dante Moore remains only the old working CSV input; PRIORITY UNRESOLVED, not a verified active QB1.
+Dan Lanning's October 26 school report says Moore is not anticipated back this season. It discusses starts by Raiola and Thomas and an opportunity for Akili Smith Jr., without naming an ongoing replacement. Raiola's latest start alone does not resolve that open choice. The single-name CSV cannot express this uncertainty; preserve the old value as an explicitly flagged placeholder until a reliable current designation is established, rather than invent a selection or silently claim Moore is active. This is a known source-status limitation, not a roster-match failure.
+  https://goducks.com/news/2026/10/26/football-moore-unlikely-to-return-for-ducks-in-2026
+
+Rutgers: Dylan Lonergan retained; participation flag explained.
+ESPN's October 24 report identifies Lonergan as the actual starter. He left after a hit before attempting a pass; Surace relieved him, then Ashenfelder replaced Surace. The absent passing line was not evidence of an earlier demotion. Re-check availability and any subsequent decision before the next game.
+  https://www.espn.com/college-football/story/_/id/50267749/rutgers-qb-ryan-lonergan-exits-apparent-head-injury
+
+Tennessee: Faizon Brandon retained; injury-cover context, no verified ongoing replacement decision.
+The Sporting News' October 17 report, syndicated by Yahoo, attributes George MacIntyre's starts to Brandon's shoulder injury and reports Heupel clarifying that the absence was health-related. The October 24 participation log is consistent with continued cover but does not establish a new designated QB1. No newer reliable continuing-choice announcement was established in this pass; this entry still needs a current availability/designation check.
+  https://sports.yahoo.com/articles/why-george-macintyre-starting-qb-100001379.html
+  https://www.sportingnews.com/us/ncaa-football/tennessee/news/why-george-macintyre-starting-qb-tennessee-faizon-brandon/e1e776fdbedae63ef4d52814
+
+Washington: Demond Williams Jr. retained; next starter unresolved.
+The October 26 Spokesman-Review report quotes Fisch declining to name Williams or Elijah Brown against Nebraska, with the decision dependent on practice and treatment. It also says Fisch will continue evaluating the position weekly. Brown's Purdue start does not settle the next game. Re-check the announced midweek decision; do not mark Williams confirmed.
+  https://www.spokesman.com/stories/2026/oct/26/washington-huskies-coach-jedd-fisch-wont-name-star/
+
+PAYROLL EFFECTS (MODELED VALUES, INTEGER DOLLARS)
+Team       New QB1             New QB1 valuation   Prior QB1 now backup   Prior QB1 valuation   Exact team sum
+Colorado   Isaac Wilson        $1,103,000          Julian Lewis           $218,000              $19,500,000
+Illinois   Michael Clayton II  $823,000            Katin Houser           $378,000              $21,000,000
+UCLA       Ty Dieffenbach      $2,044,000          Nico Iamaleava         $468,000              $28,000,000
+Before this change: Wilson had no roster/valuation entry; Clayton was $183,000; Dieffenbach was $468,000. Previous QB1 values were Lewis $967,000, Houser $1,609,000 and Iamaleava $2,044,000.
+All three prior starters remain on their rosters as modeled backup QBs. Each changed payroll has exactly one QB1. Other player values redistribute by the same locked method; Colorado also incorporates its added player. All 65 other payroll outputs remain unchanged.
+
+VERIFICATION
+Initial payroll tests: 300/300 pilot fixture rows exact; all strict failure cases pass; seven verified supplements present exactly once.
+Payroll build: 68/68 valid, 0 blocked; every sum equals the exact budget midpoint. On3 matches 3, eligible pinned anchors 1, review queue 2 unchanged. Full per-team report: docs/payroll-verification-report.txt.
+All verification suites passed across the aggregate run plus the completed isolated share-suite rerun:
+  Source validation/build-data: AP Week 9, score Week 8, all 68 sources.
+  TypeScript: clean. Next.js production build: passed.
+  Payroll fixture and validation tests: passed; 300/300 exact historical fixture rows.
+  Production payroll build: 68/68 valid; every exact budget sum; only the three reviewed payrolls change.
+  Spend ranks, source labels, AP ties, stored movement and Moneyball geometry/insights: passed.
+  Season/gameplan/gravity determinism, Build-session recovery and allocation/preview invariants: passed.
+  Disposable PostgreSQL, publish-route and availability suites: passed.
+  Browser suite: 50/50 passed (58.1 seconds).
+  Isolated publish/replay/share, idempotency, stale/forged rejection, leaderboard and 320/390 light/dark recap checks: passed; dedicated rerun exited 0.
+  Generated-data drift: passed separately with exit 0.
+The initial aggregate npm run check reached the final successful share-test message, but its Windows Node process remained alive after cleanup. Only that completed test process was stopped, so the aggregate command itself did not exit 0 and is not represented as a clean full-command run. The isolated npm run test:share rerun subsequently passed and exited normally; no assertions were skipped and no test-harness behavior was changed.
+Simulator/model version, gravity, budget inputs, valuation weights, class multipliers, floor, anchors, gameplans and schedules are unchanged. This is a payroll-input review, with no gameplay injury/depth feature and no model migration.
