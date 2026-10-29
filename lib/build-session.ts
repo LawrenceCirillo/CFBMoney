@@ -31,7 +31,11 @@ export type ActiveRun = {
   publish: PublishAttempt | null;
 };
 export type RunNotice = { mode: ReplayMode; draft: BuildDraft; reason: string };
-export type BuildSession = { version: 1; selectedMode: ReplayMode; runs: Partial<Record<ReplayMode, ActiveRun>>; notices: RunNotice[] };
+export type BuildSession = { version: 1; selectedMode: ReplayMode; runs: Partial<Record<ReplayMode, ActiveRun>>; notices: RunNotice[];
+  /** One bounded, supported completed run. Results are derived, never saved here. */
+  baseline?: ActiveRun;
+  rematch?: { baselineId: string; mode: ReplayMode };
+};
 export const emptySession = (): BuildSession => ({ version: 1, selectedMode: "season", runs: {}, notices: [] });
 
 const playsheetSchema = z.object(Object.fromEntries(PLAYSHEET_SLOTS.map((slot) => [slot.key,
@@ -55,6 +59,8 @@ const noticeSchema = z.object({ mode: z.enum(["quick", "season"]), draft: draftS
 const envelopeSchema = z.object({ version: z.literal(1), selectedMode: z.enum(["quick", "season"]),
   runs: z.object({ quick: z.unknown().optional(), season: z.unknown().optional() }).strict(),
   notices: z.array(noticeSchema).max(2).refine((notices) => new Set(notices.map((notice) => notice.mode)).size === notices.length),
+  baseline: z.unknown().optional(),
+  rematch: z.object({ baselineId: z.uuid(), mode: z.enum(["quick", "season"]) }).strict().optional(),
 }).strict();
 
 export function decodeBuildDraft(raw: string | null): BuildDraft | null {
@@ -92,13 +98,14 @@ export function validateRun(value: unknown, mode: ReplayMode): ActiveRun | null 
   } catch { return null; }
 }
 
-export type SessionDecode = { status: "absent" | "valid" | "malformed" | "incompatible"; session: BuildSession };
+export type SessionDecode = { status: "absent" | "valid" | "malformed" | "incompatible"; session: BuildSession; comparisonDiscarded?: boolean };
 export function decodeBuildSession(raw: string | null): SessionDecode {
   if (raw === null) return { status: "absent", session: emptySession() };
   try {
     const parsed = envelopeSchema.safeParse(JSON.parse(raw));
     if (!parsed.success) return { status: "malformed", session: emptySession() };
-    const session: BuildSession = { ...parsed.data, runs: {}, notices: parsed.data.notices as RunNotice[] };
+    const { baseline: savedBaseline, rematch: savedRematch, ...envelope } = parsed.data;
+    const session: BuildSession = { ...envelope, runs: {}, notices: parsed.data.notices as RunNotice[] };
     let incompatible = false;
     for (const mode of ["quick", "season"] as const) {
       const saved = parsed.data.runs[mode];
@@ -119,13 +126,26 @@ export function decodeBuildSession(raw: string | null): SessionDecode {
       if (session.runs.season) session.selectedMode = "season";
       else if (session.runs.quick) session.selectedMode = "quick";
     }
-    return { status: incompatible ? "incompatible" : "valid", session };
+    let comparisonDiscarded = false;
+    if (savedBaseline !== undefined) {
+      const input = (savedBaseline as ActiveRun | null)?.input;
+      // Never invoke replay on an unsupported baseline, including archived models.
+      const baseline = input?.simVersion === SIM_VERSION && input?.dataFingerprint === DATA_FINGERPRINT && input?.gravityVersion === GRAVITY_VERSION
+        ? validateRun(savedBaseline, input.mode) : null;
+      if (baseline && replaySeason(baseline.input, baseline.completedGames).complete) {
+        session.baseline = baseline;
+        if (savedRematch && savedRematch.baselineId === baseline.id && savedRematch.mode === baseline.input.mode && session.selectedMode === savedRematch.mode) session.rematch = savedRematch;
+        else if (savedRematch) comparisonDiscarded = true;
+      } else comparisonDiscarded = true;
+    } else if (savedRematch) comparisonDiscarded = true;
+    return { status: incompatible ? "incompatible" : "valid", session, ...(comparisonDiscarded ? { comparisonDiscarded: true } : {}) };
   } catch { return { status: "malformed", session: emptySession() }; }
 }
 
 export function encodeBuildSession(session: BuildSession): string {
   const raw = JSON.stringify(session);
-  if (decodeBuildSession(raw).status !== "valid") throw new Error("Invalid active season");
+  const decoded = decodeBuildSession(raw);
+  if (decoded.status !== "valid" || decoded.comparisonDiscarded) throw new Error("Invalid active season");
   return raw;
 }
 
@@ -136,6 +156,50 @@ export function createRun(mode: ReplayMode, draft: BuildDraft, id: string, seed:
     pos: { ...draft.pos }, completedGames: 0, featured: 0, pending: null, publish: null };
   if (!validateRun(run, mode)) throw new Error("Spend the exact selected book before starting a season.");
   return run;
+}
+
+export function sameChallenge(a: ReplayInput, b: ReplayInput): boolean {
+  return a.mode === b.mode && a.seed === b.seed && a.programSlug === b.programSlug && a.budgetM === b.budgetM &&
+    a.gravityOn === b.gravityOn && a.gravityVersion === b.gravityVersion && a.simVersion === b.simVersion && a.dataFingerprint === b.dataFingerprint;
+}
+
+export function clearComparison(session: BuildSession): BuildSession {
+  const { baseline: _baseline, rematch: _rematch, ...rest } = session;
+  return rest;
+}
+
+/** Open an editable rematch without replacing either currently saved mode. */
+export function prepareRematch(session: BuildSession, source: ActiveRun): { session: BuildSession; draft: BuildDraft; seed: number } {
+  const baseline = validateRun(source, source.input.mode);
+  if (!baseline || !replaySeason(baseline.input, baseline.completedGames).complete) throw new Error("Finish this season before replaying its challenge.");
+  const { input } = baseline;
+  return { session: { ...session, selectedMode: input.mode, baseline: structuredClone(baseline), rematch: { baselineId: baseline.id, mode: input.mode } },
+    draft: { pos: { ...baseline.pos }, budgetM: input.budgetM, gravityOn: input.gravityOn, programSlug: input.programSlug }, seed: input.seed };
+}
+
+export function draftMatchesBaseline(session: BuildSession, draft: BuildDraft, seed: number, mode = session.selectedMode): boolean {
+  const baseline = session.baseline;
+  return !!baseline && sameChallenge(baseline.input, { ...baseline.input, mode, seed, programSlug: draft.programSlug, budgetM: draft.budgetM, gravityOn: draft.gravityOn,
+    simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, gravityVersion: GRAVITY_VERSION });
+}
+
+/** Replacement is explicit. A rematch gets fresh picks, progress and publish identity. */
+export function startDraftRun(session: BuildSession, draft: BuildDraft, mode: ReplayMode, id: string, seed: number): BuildSession {
+  const next = createRun(mode, draft, id, seed);
+  const base = session.baseline && sameChallenge(session.baseline.input, next.input) ? session : clearComparison(session);
+  const { rematch: _rematch, ...rest } = base;
+  return { ...rest, selectedMode: mode, runs: { ...rest.runs, [mode]: next } };
+}
+
+/** A late publish response belongs to its source run, even after a rematch starts. */
+export function updateSessionRun(session: BuildSession, next: ActiveRun): BuildSession {
+  const active = session.runs[next.input.mode]?.id === next.id;
+  const baseline = session.baseline?.id === next.id;
+  if (!active && !baseline) return session;
+  return { ...session,
+    runs: active ? { ...session.runs, [next.input.mode]: next } : session.runs,
+    ...(baseline ? { baseline: { ...session.baseline!, publish: next.publish } } : {}),
+  };
 }
 
 type StorageProvider = () => Pick<Storage, "getItem" | "setItem">;

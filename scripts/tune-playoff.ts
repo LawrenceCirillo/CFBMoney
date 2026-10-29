@@ -11,7 +11,6 @@ import {
   ratingsFromAllocation,
   ratingsFromAllocationWithRates,
   simulateGame,
-  withDepth,
   type Allocation,
 } from "../lib/simulator";
 import { expectedWins as modeledExpectedWins, fieldRatings } from "../lib/moneyball";
@@ -19,9 +18,9 @@ import { buildSeasonGames, projectedRank } from "../lib/season-mode";
 import { preseasonExpectedWins } from "../lib/season-mode";
 import { gravityTags } from "../lib/gravity";
 import { GAME_BUDGET_M, MARKET_CAPS, POSITION_GROUPS, TALENT_FLOOR, type PositionKey } from "../lib/simulator";
-import { writeFileSync } from "node:fs";
+import { appendFileSync, writeFileSync } from "node:fs";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason, type ReplayInput } from "../lib/season-replay";
-import { DEFENSIVE_OPTIONS, OFFENSIVE_OPTIONS, resolveGameplan, type GameplanPick } from "../lib/gameplan";
+import { DEFENSIVE_OPTIONS, OFFENSIVE_OPTIONS, neutralPick, resolveGameplan, type GameplanPick } from "../lib/gameplan";
 
 const field = fieldRatings();
 const N = 400;
@@ -161,14 +160,16 @@ writeFileSync("docs/gravity-tuning.md", [
 // The schedule and random draw are paired by seed. Only the coaching calls
 // change, so this measures their season-level effect without roster changes.
 const program = getTeam("texas")!;
-const roster = cappedOptimalAllocation(30);
-const ratings = ratingsFromAllocation(withDepth(roster, 30));
+const coachingContext = { programSlug: program.slug, gravityOn: true };
+const roster = cappedOptimalAllocation(GAME_BUDGET_M, coachingContext);
+const ratings = ratingsFromAllocation(roster, coachingContext);
 let winGain = 0;
+let probabilityGain = 0;
 const defensiveChoices = new Map<string, number>();
 const offensiveChoices = new Map<string, number>();
 for (let seed = 0; seed < N; seed++) {
   const base: ReplayInput = {
-    mode: "season", seed, programSlug: program.slug, budgetM: 30,
+    mode: "season", seed, programSlug: program.slug, budgetM: GAME_BUDGET_M,
     alloc: roster, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
     gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
   };
@@ -190,6 +191,8 @@ for (let seed = 0; seed < N; seed++) {
     // Tied calls produce the same probability. Prefer Balanced so its viable
     // multiple-front matchup is visible in the representative perfect slate.
     const best = bestCalls.find((call) => call.off === "balanced") ?? bestCalls[0];
+    probabilityGain += resolveGameplan(best, game.opponent.slug, game.winProb).adjustedWinProb -
+      resolveGameplan(neutralPick(game.week), game.opponent.slug, game.winProb).adjustedWinProb;
     return best;
   });
   const neutral = replaySeason(base).games.slice(0, 12).filter((game) => game.result?.won).length;
@@ -198,8 +201,20 @@ for (let seed = 0; seed < N; seed++) {
   winGain += coached - neutral;
 }
 const averageGain = winGain / N;
-console.log(`Perfect weekly gameplan vs neutral: ${averageGain >= 0 ? "+" : ""}${averageGain.toFixed(2)} regular-season wins (${N} paired seeds)`);
+const expectedGain = probabilityGain / N;
+console.log(`Coaching at $${GAME_BUDGET_M}M · ${program.name} · gravity on · seeds 0–${N - 1}`);
+console.log(`Best calls vs Auto Balanced + Base: +${expectedGain.toFixed(3)} probability-sum expected regular wins; ${averageGain >= 0 ? "+" : ""}${averageGain.toFixed(3)} sampled actual regular wins (${N} paired schedules/seeds)`);
+console.log("The Auto benchmark includes Balanced's multiple-front adjustment. Preseason expectation still uses neutral unadjusted game probabilities.");
 console.log(`Optimal defensive picks (ties included): ${JSON.stringify(Object.fromEntries(defensiveChoices))}`);
 console.log(`Optimal offensive picks (ties included): ${JSON.stringify(Object.fromEntries(offensiveChoices))}`);
+appendFileSync("docs/gravity-tuning.md", [
+  "", "## Coaching measurement at the current book", "",
+  `$${GAME_BUDGET_M}M, ${program.name}, gravity on in both allocation and ratings, ${N} paired seeds (0–${N - 1}). The comparison is best weekly calls versus the game's Auto Balanced + Base calls, including Balanced's +3 against multiple fronts. Preseason expectation remains the neutral unadjusted probability sum.`, "",
+  `- Probability-sum expected regular-win gain: +${expectedGain.toFixed(3)}.`,
+  `- Sampled actual regular-win gain: ${averageGain >= 0 ? "+" : ""}${averageGain.toFixed(3)}.`,
+  "- Identical regular-season opponent/venue slates; changing calls and overtime can consume random draws differently. Sampled outcomes are observations, not guaranteed counterfactual wins.",
+  `- Optimal defensive options (ties included): ${JSON.stringify(Object.fromEntries(defensiveChoices))}.`,
+  `- Optimal offensive options (ties included): ${JSON.stringify(Object.fromEntries(offensiveChoices))}.`, "",
+].join("\n"));
 if (averageGain < 0.5 || averageGain > 1.0 ||
   defensiveChoices.size !== DEFENSIVE_OPTIONS.length || offensiveChoices.size !== OFFENSIVE_OPTIONS.length) process.exitCode = 1;

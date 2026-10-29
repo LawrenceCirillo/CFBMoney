@@ -20,10 +20,11 @@ interface Props {
   run: ActiveRun;
   onRunChange: (run: ActiveRun) => void;
   onNew: () => void;
+  onReplay: () => void;
   onBack: () => void;
 }
 
-export default function Season({ run, onRunChange, onNew, onBack }: Props) {
+export default function Season({ run, onRunChange, onNew, onReplay, onBack }: Props) {
   const { input } = run;
   const { alloc, budgetM, gravityOn, seed } = input;
   const { program, games } = useMemo(() => replaySeason(input, run.completedGames), [input, run.completedGames]);
@@ -108,7 +109,7 @@ export default function Season({ run, onRunChange, onNew, onBack }: Props) {
             onClick={newSeason}
             className="rounded-full border border-line px-5 py-2.5 text-sm text-fog transition-ui hover:border-fog hover:text-paper"
           >
-            New season
+            New season · new seed
           </button>
         </div>
       </div>
@@ -219,10 +220,11 @@ export default function Season({ run, onRunChange, onNew, onBack }: Props) {
           <p className="mt-3 max-w-xl text-sm text-fog">
             This roster projected {summary.expectedWins.toFixed(1)} wins.
             {summary.wins - summary.expectedWins > 0.05
-              ? ` Beat it by ${(summary.wins - summary.expectedWins).toFixed(1)} — the build outplayed the money.`
+              ? ` This run finished ${(summary.wins - summary.expectedWins).toFixed(1)} wins above that projection.`
               : summary.expectedWins - summary.wins > 0.05
-                ? ` Missed it by ${(summary.expectedWins - summary.wins).toFixed(1)} — bad luck, or a soft build.`
-                : ` Right on the number. The money never lies.`}
+                ? ` This run finished ${(summary.expectedWins - summary.wins).toFixed(1)} wins below that projection.`
+                : ` This run finished close to that projection.`}
+            {" "}The roster sets the odds; game draws still matter.
           </p>
 
           <div className="mt-8 grid max-w-xl grid-cols-2 gap-px bg-edge">
@@ -294,6 +296,7 @@ export default function Season({ run, onRunChange, onNew, onBack }: Props) {
           />
 
           <div className="mt-8 flex flex-wrap gap-3">
+            <button onClick={onReplay} className="min-h-11 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-ink transition-ui hover:opacity-90">Replay this challenge</button>
             <button
               onClick={copySummary}
               className="rounded-full border border-line px-6 py-3 text-sm font-semibold text-paper transition-ui hover:border-fog"

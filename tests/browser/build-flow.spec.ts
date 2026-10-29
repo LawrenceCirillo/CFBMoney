@@ -1,9 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 import { scoreboard } from "../../lib/scores";
-import { ACTIVE_RUNS_KEY, BUILD_DRAFT_KEY, BUILD_SETUP_KEY, type BuildDraft, type ActiveRun } from "../../lib/build-session";
-import { allocationFromPlaysheet, cappedOptimalAllocation, distributeAllocationToSlots } from "../../lib/simulator";
+import { ACTIVE_RUNS_KEY, BUILD_DRAFT_KEY, BUILD_SETUP_KEY, createRun, emptySession, encodeBuildSession, type BuildDraft, type ActiveRun } from "../../lib/build-session";
+import { allocationFromPlaysheet, cappedOptimalAllocation, distributeAllocationToSlots, PLAYSHEET_SLOTS } from "../../lib/simulator";
 import { replaySeason } from "../../lib/season-replay";
 import { tendencyLabel } from "../../lib/gameplan";
+import { gameplanOdds } from "../../lib/gameplan-display";
 
 async function savedRun(page: Page, mode: "season" | "quick" = "season"): Promise<ActiveRun> {
   await expect(page.locator("[data-run-id]")).toBeVisible();
@@ -111,7 +112,7 @@ test("draft edits and a different program require explicit run replacement", asy
   await expect(page.getByText(/Spend the exact book to start/)).toBeVisible();
   await page.getByRole("button", { name: "Resume season", exact: true }).click();
   await assertRenderedRun(page, texas);
-  await page.getByRole("button", { name: "New season", exact: true }).click();
+  await page.getByRole("button", { name: "New season · new seed", exact: true }).click();
   const rerolled = await savedRun(page);
   expect(rerolled.id).not.toBe(texas.id);
   expect(rerolled.input.alloc).toEqual(texas.input.alloc);
@@ -248,7 +249,8 @@ test("manual week requires two calls and previews their edge", async ({ page }) 
   await expect(kickoff).toBeDisabled();
   await page.getByRole("button", { name: "Blitz heavy" }).click();
   await expect(kickoff).toBeEnabled();
-  await expect(page.getByText(/Net edge:/)).toBeVisible();
+  await expect(page.getByLabel("Win odds")).toContainText("Matchup modifier:");
+  await expect(page.getByLabel("Win odds")).toContainText("Selected calls · preview only");
   await kickoff.click();
   await expect(page.getByRole("button", { name: /Play next week|Open season report/ })).toBeVisible();
   await expect(page.getByText(/Air it out · Blitz heavy/)).toBeVisible();
@@ -262,6 +264,140 @@ async function slotAmounts(page: Page) {
 async function savedDraft(page: Page): Promise<BuildDraft> {
   return page.evaluate((key) => JSON.parse(localStorage.getItem(key)!), BUILD_DRAFT_KEY);
 }
+
+async function seedCompletedChallenge(page: Page, theme = "light") {
+  const draft: BuildDraft = { pos: distributeAllocationToSlots(cappedOptimalAllocation(55, { programSlug: "texas", gravityOn: true })), budgetM: 55, gravityOn: true, programSlug: "texas" };
+  const started = createRun("season", draft, "e67ce4ad-9a1d-4e91-85b4-11dc0566e0be", 24);
+  const full = replaySeason({ ...started.input, autoGameplan: true });
+  const run: ActiveRun = { ...started, input: { ...started.input, autoGameplan: true, gameplan: full.games.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })) },
+    completedGames: full.games.length, featured: full.games.length - 1 };
+  await page.addInitScript(({ draft, raw, theme }) => {
+    if (localStorage.getItem("plan012-seeded")) return;
+    localStorage.setItem("plan012-seeded", "true");
+    localStorage.setItem("cfb-money-theme", theme);
+    localStorage.setItem("cfb-money-build-draft-v1-55m", JSON.stringify(draft));
+    localStorage.setItem("cfb-money-build-setup-v1", JSON.stringify({ version: 1, seed: 24, complete: true }));
+    localStorage.setItem("cfb-money-active-runs-v1", raw);
+  }, { draft, raw: encodeBuildSession({ ...emptySession(), runs: { season: run } }), theme });
+  await page.goto("/build");
+  await expect(page.getByText("Season report", { exact: true })).toBeVisible();
+  return run;
+}
+
+for (const width of [320, 390, 1280]) for (const theme of ["light", "dark"]) {
+  test(`same-challenge rematch recovers edits, calls and feedback at ${width}px in ${theme}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const original = await seedCompletedChallenge(page, theme);
+    await page.getByRole("button", { name: "Replay this challenge", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Allocate your roster", exact: true })).toBeVisible();
+    const compare = page.getByRole("region", { name: "Same challenge comparison", exact: true });
+    await expect(compare).toBeVisible();
+    expect((await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).runs.season, ACTIVE_RUNS_KEY)).id).toBe(original.id);
+    const slot = PLAYSHEET_SLOTS.find((slot) => original.pos[slot.key] + 0.5 <= slot.cap)!;
+    const slotButton = page.locator(`[data-slot-key="${slot.key}"]:visible`).first();
+    const slotLabel = (await slotButton.getAttribute("aria-label"))!.split(",")[0].replace(/\s*\([^)]*\)$/, "");
+    await slotButton.click();
+    await page.getByRole("button", { name: `Increase ${slotLabel} spend`, exact: true }).click();
+    const edited = await savedDraft(page);
+    expect(edited.pos).not.toEqual(original.pos);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "Allocate your roster", exact: true })).toBeVisible();
+    expect((await savedDraft(page)).pos).toEqual(edited.pos);
+    await page.getByRole("button", { name: "Continue", exact: true }).click();
+    const rematch = await savedRun(page);
+    expect(rematch.id).not.toBe(original.id);
+    for (const key of ["mode", "seed", "programSlug", "budgetM", "gravityOn", "gravityVersion", "simVersion", "dataFingerprint"] as const) expect(rematch.input[key]).toEqual(original.input[key]);
+    const slate = (run: ActiveRun) => replaySeason(run.input, 0).games.map((game) => [game.opponent.slug, game.isHome]);
+    expect(slate(rematch)).toEqual(slate(original));
+    expect(rematch.input.gameplan).toEqual([]);
+    expect(rematch.publish).toBeNull();
+    const kickoff = page.getByRole("button", { name: "Kick off", exact: true });
+    await expect(kickoff).toBeDisabled();
+    await page.getByRole("button", { name: "Air it out", exact: true }).focus();
+    await page.keyboard.press("Space");
+    await expect(kickoff).toBeDisabled();
+    await page.getByRole("button", { name: "Bracket their WR1", exact: true }).click();
+    await expect(kickoff).toBeEnabled();
+    await kickoff.scrollIntoViewIfNeeded();
+    const bounds = await kickoff.boundingBox();
+    const nav = await page.locator("header").first().boundingBox();
+    expect(bounds!.y).toBeGreaterThanOrEqual(nav!.y + nav!.height);
+    expect(await page.locator("html").evaluate((element) => element.scrollWidth)).toBe(width);
+    await kickoff.click();
+    await expect(page.getByRole("button", { name: "Play next week", exact: true })).toBeVisible();
+    const played = await savedRun(page);
+    const game = replaySeason(played.input, 1).games[0];
+    await expect(page.getByLabel("Win odds")).toContainText(gameplanOdds(game.winProb, game.gameplan!).change);
+    await expect(page.getByLabel("Win odds")).toContainText("Committed calls");
+    await page.reload();
+    expect((await savedRun(page)).input.gameplan).toEqual(played.input.gameplan);
+    await assertRenderedRun(page, played);
+    await compare.getByText("Compare with previous season", { exact: true }).click();
+    await expect(compare).toContainText("1 changed across 1 replayed regular-season games.");
+    await page.getByRole("button", { name: "Play next week", exact: true }).click();
+    await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season", exact: true }).check();
+    await expect(page.getByLabel("Win odds")).toContainText("Auto · Balanced + Base");
+    await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season", exact: true }).uncheck();
+    await expect(page.getByRole("button", { name: "Kick off", exact: true })).toBeDisabled();
+    await page.getByRole("button", { name: "New season · new seed", exact: true }).click();
+    const rerolled = await savedRun(page);
+    expect(rerolled.input.seed).not.toBe(rematch.input.seed);
+    await expect(compare).toHaveCount(0);
+  });
+}
+
+test("program, book, gravity and mode edits clear same-challenge comparisons", async ({ page }) => {
+  const original = await seedCompletedChallenge(page);
+  for (const setting of ["gravity", "book", "program"]) {
+    await page.getByRole("button", { name: "Replay this challenge", exact: true }).click();
+    await page.getByRole("button", { name: "Edit setup", exact: true }).click();
+    if (setting === "gravity") await page.getByRole("button", { name: "Off · Pure parity", exact: true }).click();
+    if (setting === "book") await page.getByRole("button", { name: "Decrease roster budget", exact: true }).click();
+    if (setting === "program") {
+      await page.getByRole("button", { name: /^Program Texas/ }).click();
+      await page.getByRole("combobox").fill("Iowa");
+      await page.getByRole("option", { name: "Iowa", exact: true }).click();
+    }
+    await expect(page.getByRole("region", { name: "Same challenge comparison", exact: true })).toHaveCount(0);
+    await expect(page.getByText(/same-challenge comparison has been cleared/)).toBeVisible();
+    expect((await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).runs.season, ACTIVE_RUNS_KEY)).id).toBe(original.id);
+    await page.getByRole("button", { name: "Resume season", exact: true }).click();
+  }
+  await page.getByRole("button", { name: "Replay this challenge", exact: true }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Quick sim", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Same challenge comparison", exact: true })).toHaveCount(0);
+});
+
+test("Quick sim rematches preserve mode and source seed without weekly picks", async ({ page }) => {
+  await seedCompletedChallenge(page);
+  await page.getByRole("button", { name: "Quick sim", exact: true }).click();
+  await page.getByRole("button", { name: "Sim season", exact: true }).click();
+  const original = await savedRun(page, "quick");
+  await page.getByRole("button", { name: "Replay this challenge", exact: true }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  const next = await savedRun(page, "quick");
+  expect(next.id).not.toBe(original.id);
+  expect(next.input.seed).toBe(original.input.seed);
+  expect(next.input.mode).toBe("quick");
+  expect(next.input.gameplan).toEqual([]);
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Quick sim", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("region", { name: "Same challenge comparison", exact: true })).toBeVisible();
+});
+
+test("replaying a resumed program replaces a different requested-program URL", async ({ page }) => {
+  const original = await seedCompletedChallenge(page);
+  await page.goto("/build?program=iowa");
+  await page.getByRole("button", { name: "Resume season", exact: true }).click();
+  await page.getByRole("button", { name: "Replay this challenge", exact: true }).click();
+  await expect(page).toHaveURL(/program=texas/);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Allocate your roster", exact: true })).toBeVisible();
+  expect((await savedDraft(page)).programSlug).toBe(original.input.programSlug);
+  await expect(page.getByRole("region", { name: "Same challenge comparison", exact: true })).toBeVisible();
+});
 
 test("full-book funding identifies donors and Undo restores every accessible slot after buttons, keyboard and a pointer gesture", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

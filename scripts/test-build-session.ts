@@ -4,8 +4,9 @@ import { randomUUID } from "node:crypto";
 import {
   ACTIVE_RUNS_KEY, BUILD_SETUP_KEY, restoreBuildSetup, createRun, decodeBuildDraft, decodeBuildSession, emptySession,
   encodeBuildSession, readBuildStorage, validateRun, writeBuildStorage, type ActiveRun,
+  clearComparison, draftMatchesBaseline, prepareRematch, sameChallenge, startDraftRun, updateSessionRun,
 } from "../lib/build-session";
-import { distributeAllocationToSlots } from "../lib/simulator";
+import { cappedOptimalAllocation, distributeAllocationToSlots } from "../lib/simulator";
 import { replaySeason, type ReplayInput } from "../lib/season-replay";
 import { SeasonPayloadSchema } from "../lib/season-payload";
 
@@ -115,4 +116,53 @@ for (const raw of [null, "{", "null", JSON.stringify({ version: 1, seed: -1, com
 }
 assert.deepEqual(restoreBuildSetup(JSON.stringify({ version: 1, seed: 147, complete: true }), () => { throw new Error("Seed must not regenerate"); }), { version: 1, seed: 147, complete: true });
 console.log("  ok one-time/idempotent setup migration, retained setup seeds/completion and untouched legacy drafts/010 runs");
+const opened = prepareRematch({ ...emptySession(), runs: { quick: published, season: manual } }, published);
+assert.equal(opened.session.runs.quick, published, "opening setup preserves the original run and share");
+assert.equal(opened.session.runs.season, manual, "opening setup preserves the other mode");
+assert.equal(opened.seed, published.input.seed);
+assert.deepEqual(decodeBuildSession(encodeBuildSession(opened.session)).session, opened.session);
+assert(draftMatchesBaseline(opened.session, opened.draft, opened.seed));
+const edited = { ...opened.draft, pos: distributeAllocationToSlots(cappedOptimalAllocation(55, { programSlug: "texas", gravityOn: false })) };
+const started = startDraftRun(opened.session, edited, "quick", randomUUID(), opened.seed);
+const rematch = started.runs.quick!;
+assert(sameChallenge(rematch.input, published.input));
+assert.notEqual(rematch.id, published.id);
+assert.equal(rematch.publish, null);
+assert.equal(rematch.completedGames, 0);
+assert.equal(rematch.pending, null);
+assert.deepEqual(rematch.input.gameplan, []);
+assert.equal(started.rematch, undefined);
+assert.equal(started.baseline!.publish!.result!.id, "saved-id");
+const late = updateSessionRun(started, { ...published, publish: { ...published.publish, result: { id: "late-source-share" } } });
+assert.equal(late.baseline!.publish!.result!.id, "late-source-share", "late source publication updates only its retained baseline");
+assert.equal(late.runs.quick, rematch, "late source response never overwrites the new run or its publish identity");
+assert.deepEqual(decodeBuildSession(encodeBuildSession(late)).session, late);
+assert.equal(updateSessionRun(started, { ...published, id: randomUUID() }), started, "untracked responses are ignored");
+const slate = (run: ActiveRun) => replaySeason(run.input, 0).games.map((g) => [g.opponent.slug, g.isHome]);
+assert.deepEqual(slate(rematch), slate(published), "all 12 opponent/venue pairs survive allocation changes");
+for (const change of [{ programSlug: "iowa" }, { budgetM: 54 }, { gravityOn: false }]) assert(!draftMatchesBaseline(opened.session, { ...opened.draft, ...change }, opened.seed));
+assert(!draftMatchesBaseline(opened.session, opened.draft, opened.seed + 1));
+assert(!draftMatchesBaseline(opened.session, opened.draft, opened.seed, "season"));
+assert.equal(clearComparison(started).baseline, undefined);
+assert.throws(() => prepareRematch(emptySession(), manual), /Finish/);
+for (const field of ["simVersion", "dataFingerprint", "gravityVersion"] as const) {
+  const stale = structuredClone(started);
+  Object.assign(stale.baseline!.input, { [field]: field === "simVersion" ? 3 : "stale" });
+  const recovered = decodeBuildSession(JSON.stringify(stale));
+  assert.equal(recovered.status, "valid");
+  assert.equal(recovered.comparisonDiscarded, true);
+  assert.equal(recovered.session.baseline, undefined);
+  assert.deepEqual(recovered.session.runs, started.runs, "stale baseline cannot discard supported active runs");
+}
+const seasonFixture = fixtures.find((f) => f.input.mode === "season")!;
+const finishedReplay = replaySeason(seasonFixture.input);
+const finishedManual: ActiveRun = { id: randomUUID(), input: structuredClone(seasonFixture.input), pos: distributeAllocationToSlots(seasonFixture.input.alloc), completedGames: finishedReplay.games.length,
+  featured: finishedReplay.games.length - 1, pending: null, publish: null };
+const seasonRematch = prepareRematch(emptySession(), finishedManual);
+const nextSeason = startDraftRun(seasonRematch.session, seasonRematch.draft, "season", randomUUID(), seasonRematch.seed);
+assert.equal(nextSeason.runs.season!.input.autoGameplan, false);
+assert.deepEqual(nextSeason.runs.season!.input.gameplan, []);
+assert.deepEqual(slate(nextSeason.runs.season!), slate(finishedManual));
+assert.deepEqual(decodeBuildSession(encodeBuildSession(nextSeason)).session, nextSeason);
+console.log("  ok bounded rematch baseline, explicit replacement, frozen settings/slate, fresh calls/publish identity and stale-baseline isolation");
 console.log("All build session tests passed.");
