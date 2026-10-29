@@ -1,10 +1,81 @@
 import { expect, test, type Page } from "@playwright/test";
 import { scoreboard } from "../../lib/scores";
 import { ACTIVE_RUNS_KEY, BUILD_DRAFT_KEY, BUILD_SETUP_KEY, createRun, emptySession, encodeBuildSession, type BuildDraft, type ActiveRun } from "../../lib/build-session";
-import { allocationFromPlaysheet, cappedOptimalAllocation, distributeAllocationToSlots, PLAYSHEET_SLOTS } from "../../lib/simulator";
+import { allocationFromPlaysheet, cappedOptimalAllocation, venueLabel, distributeAllocationToSlots, PLAYSHEET_SLOTS } from "../../lib/simulator";
 import { replaySeason } from "../../lib/season-replay";
 import { tendencyLabel } from "../../lib/gameplan";
 import { gameplanOdds } from "../../lib/gameplan-display";
+import { SeasonPayloadSchema } from "../../lib/season-payload";
+import goldens from "../../scripts/fixtures/model-v5-replays.json";
+
+for (const width of [320, 390, 1280]) for (const theme of ["light", "dark"]) {
+  for (const name of ["season-top-four-bye", "season-first-round-loss", "season-quarterfinal-loss", "season-manual-four-rounds", "season-bowl"]) {
+    test(`v5 ${name} keeps stages, venue and seed readable at ${width}px in ${theme}`, async ({ page }, testInfo) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const input = SeasonPayloadSchema.parse(goldens.find((fixture) => fixture.name === name)!.input);
+      const full = replaySeason(input);
+      const pos = distributeAllocationToSlots(input.alloc);
+      const runAt = (count: number): ActiveRun => ({ id: "7235418b-c99c-4376-9050-454c336374ec",
+        input: { ...input, gameplan: full.games.slice(0, count).map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })) },
+        pos, completedGames: count, featured: Math.min(count, full.games.length - 1), pending: null, publish: null });
+      const raw = encodeBuildSession({ ...emptySession(), runs: { season: runAt(12) } });
+      await page.addInitScript(({ raw, input, pos, theme }) => {
+        localStorage.setItem("cfb-money-theme", theme);
+        localStorage.setItem("cfb-money-build-draft-v1-55m", JSON.stringify({ pos, budgetM: input.budgetM, gravityOn: input.gravityOn, programSlug: input.programSlug }));
+        localStorage.setItem("cfb-money-build-setup-v1", JSON.stringify({ version: 1, seed: input.seed, complete: true }));
+        if (!sessionStorage.getItem("v5-fixture-seeded")) {
+          localStorage.setItem("cfb-money-active-runs-v1", raw);
+          sessionStorage.setItem("v5-fixture-seeded", "yes");
+        }
+      }, { raw, input, pos, theme });
+      await page.goto("/build");
+      await expect(page.getByText(new RegExp(`Qualification seed #${full.postseasonSeed} ·`))).toBeVisible();
+      const path = page.getByRole("region", { name: "Your playoff path" });
+      if (name === "season-bowl") await expect(path).toHaveCount(0);
+      else {
+        await expect(path).toBeVisible();
+        await expect(path.getByRole("list", { name: "Playoff rounds" }).getByRole("listitem")).toHaveCount(4);
+        await expect(path.locator(".tnum"), "unplayed projections show no scores").toHaveCount(0);
+        if (name === "season-top-four-bye") {
+          await expect(path.locator('[data-path-stage="fr"]')).toContainText("First-round bye");
+          await expect(path.locator('[data-path-stage="qf"]')).toContainText("Up next");
+          await expect(page.getByRole("region", { name: "Your season scores, Week 14 · Quarterfinal" })).toBeVisible();
+          await expect(page.locator('[data-season-week="13"]')).toHaveCount(0);
+        } else {
+          await expect(path.locator('[data-path-stage="fr"]')).toContainText("Away · higher seed hosts");
+          await expect(path.locator('[data-path-stage="qf"]')).toContainText("Projected opponent");
+          await expect(page.getByRole("region", { name: "Your season scores, Week 13 · First round" })).toBeVisible();
+        }
+      }
+      await page.evaluate(({ key, raw }) => localStorage.setItem(key, raw),
+        { key: ACTIVE_RUNS_KEY, raw: encodeBuildSession({ ...emptySession(), runs: { season: runAt(full.games.length) } }) });
+      await page.reload();
+      await expect(page.getByText("Season report", { exact: true })).toBeVisible();
+      await expect(page.getByText(new RegExp(`Frozen qualification seed #${full.postseasonSeed}`))).toBeVisible();
+      await expect(page.getByText("Gravity on · v5", { exact: true })).toBeVisible();
+      await expect(page.getByRole("region", { name: "Season game log" }).locator(":scope > div")).toHaveCount(full.games.length);
+      const ticker = page.getByRole("region", { name: "Your season scores, Final" });
+      const weeks = await ticker.locator("[data-season-week]").evaluateAll((elements) => elements.filter((el) => !el.closest("[inert]")).map((el) => Number(el.getAttribute("data-season-week"))));
+      expect(weeks).toEqual(full.games.map((game) => game.week));
+      expect(weeks.every((week, i) => i === 0 || week > weeks[i - 1])).toBe(true);
+      if (name !== "season-bowl") {
+        const post = full.games.filter((game) => game.stage);
+        await expect(path.locator(".tnum")).toHaveCount(post.length * 2);
+        for (const game of post) {
+          const card = path.locator(`[data-path-stage="${game.stage}"]`);
+          await expect(card).toContainText(game.opponent.name);
+          await expect(card).toContainText(game.result!.won ? "W ·" : "L · Eliminated");
+          if (game.stage !== "fr") await expect(card).toContainText("Neutral site");
+        }
+        await path.screenshot({ path: testInfo.outputPath("playoff-path.png") });
+      } else await expect(page.getByRole("region", { name: "Season game log" })).toContainText("Neutral site · vs");
+      await expect(page.locator("html")).toHaveClass(theme === "dark" ? /dark/ : /^(?!.*dark)/);
+      expect(await page.locator("html").evaluate((element) => element.scrollWidth)).toBe(width);
+      expect((await savedRun(page)).input.gameplan).toHaveLength(full.games.length);
+    });
+  }
+}
 
 async function savedRun(page: Page, mode: "season" | "quick" = "season"): Promise<ActiveRun> {
   await expect(page.locator("[data-run-id]")).toBeVisible();
@@ -19,7 +90,7 @@ async function assertRenderedRun(page: Page, run: ActiveRun) {
   for (const [index, game] of replay.games.filter((game) => game.result).entries()) {
     const row = log.locator(":scope > div").nth(index);
     await expect(row).toContainText(game.opponent.name);
-    await expect(row).toContainText(game.isHome ? "vs" : "at");
+    await expect(row).toContainText(venueLabel(game));
     await expect(row).toContainText(`${game.result!.won ? "W" : "L"} ${game.result!.scoreFor}–${game.result!.scoreAgainst}`);
     if (run.input.mode === "season") await expect(row).toContainText(`${tendencyLabel(game.gameplan!.off)} · ${tendencyLabel(game.gameplan!.def)}`);
   }
@@ -161,7 +232,7 @@ test("gravity toggle carries from program setup into the season report", async (
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season" }).check();
   await page.getByRole("button", { name: "Sim to end" }).click();
-  await expect(page.getByText("Gravity off · Pure parity · v4")).toBeVisible();
+  await expect(page.getByText("Gravity off · Pure parity · v5")).toBeVisible();
 });
 
 test("playsheet survives navigation and both sim modes render", async ({ page }) => {
@@ -232,7 +303,7 @@ test("playoff run shows the user's path through the bracket", async ({ page }) =
   await expect(path.getByText("Quarterfinal")).toBeVisible();
   await expect(path.getByText("Semifinal")).toBeVisible();
   await expect(path.getByText("National championship")).toBeVisible();
-  await expect(path.getByText(/^(?:Eliminated|National champions)$/)).toBeVisible();
+  await expect(path.getByText(/^(?:L · Eliminated|W · National champions)$/)).toBeVisible();
 });
 
 test("manual week requires two calls and previews their edge", async ({ page }) => {

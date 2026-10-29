@@ -525,8 +525,19 @@ export interface ExpectedScore {
   winProb: number;
 }
 
-export function expectedScore(a: Ratings, b: Ratings, aHome: boolean): ExpectedScore {
-  const ha = aHome ? HOME_EDGE : -HOME_EDGE;
+export type GameVenue = "home" | "away" | "neutral";
+
+/** Explicit venues win; absent metadata retains the historical boolean meaning. */
+export function gameVenue(game: { venue?: GameVenue; isHome: boolean }): GameVenue {
+  return game.venue ?? (game.isHome ? "home" : "away");
+}
+
+export function venueLabel(game: { venue?: GameVenue; isHome: boolean }): string {
+  return { home: "vs", away: "at", neutral: "Neutral site · vs" }[gameVenue(game)];
+}
+
+export function expectedScore(a: Ratings, b: Ratings, aHome: boolean | GameVenue): ExpectedScore {
+  const ha = aHome === "neutral" ? 0 : aHome === true || aHome === "home" ? HOME_EDGE : -HOME_EDGE;
   const forPts =
     BASE_POINTS +
     POINTS_PER_RATING * (a.off - 50) -
@@ -553,7 +564,7 @@ export interface GameResult {
 export function simulateGame(
   a: Ratings,
   b: Ratings,
-  aHome: boolean,
+  aHome: boolean | GameVenue,
   rng: () => number,
   adjustedWinProb?: number,
 ): GameResult {
@@ -595,12 +606,16 @@ export interface ScheduledGame {
   opponent: TeamBudget;
   oppRatings: Ratings;
   isHome: boolean;
+  venue?: GameVenue;
   winProb: number;
   /** Present only after the weekly call has been made; winProb remains neutral. */
   gameplan?: GameplanResolution;
   result?: GameResult;
   /** postseason stage; undefined for regular-season games */
-  stage?: "qf" | "sf" | "ncg" | "bowl";
+  stage?: "fr" | "qf" | "sf" | "ncg" | "bowl";
+  /** Frozen modeled qualification seed and projected opponent seed. */
+  playerSeed?: number;
+  opponentSeed?: number;
   /** true for the 4 non-conference games (balanceable, rivalry-replaceable) */
   nonConf?: boolean;
   /** rivalry name when this game is the program's rivalry game */

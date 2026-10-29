@@ -5,6 +5,7 @@ import { useState } from "react";
 import { data, getTeam } from "@/lib/data";
 import { scoreboard, tickerAbbr, type ScoreGame, type ScoreSide } from "@/lib/scores";
 import { useSeasonTicker, type SeasonTickerGame } from "@/components/SeasonTickerContext";
+import { gameVenue } from "@/lib/simulator";
 
 const spriteColumns = 8;
 const spriteCell = 24;
@@ -102,9 +103,9 @@ function SeasonGameChip({ game, programSlug, programAbbr, current }: {
   return (
     <div data-season-week={game.week} className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap border-r border-ink/15 px-4 ${current ? "bg-ink/10" : ""}`}>
       <span className="text-[10px] font-black uppercase tracking-wide text-ink/55">{game.stage ?? `W${game.week}`}</span>
-      {game.isHome ? theirs : yours}
-      <span className="text-[11px] text-ink/45">at</span>
-      {game.isHome ? yours : theirs}
+      {gameVenue(game) === "home" ? theirs : yours}
+      <span className="text-[11px] text-ink/45">{gameVenue(game) === "neutral" ? "vs · neutral" : "at"}</span>
+      {gameVenue(game) === "home" ? yours : theirs}
       <span className={`text-[10px] font-black ${played ? game.won ? "text-emerald-700" : "text-red-700" : "text-ink/50"}`}>
         {played ? game.won ? "W" : "L" : current ? "NEXT" : ""}
       </span>
@@ -117,7 +118,7 @@ export default function ScoreTicker() {
   const { season } = useSeasonTicker();
   if (season) {
     const current = season.games[season.featured];
-    const stageLabel: Record<string, string> = { qf: "Quarterfinal", sf: "Semifinal", ncg: "Championship", bowl: "Bowl" };
+    const stageLabel: Record<string, string> = { fr: "First round", qf: "Quarterfinal", sf: "Semifinal", ncg: "Championship", bowl: "Bowl" };
     const range = season.done ? "Final" : `Week ${current?.week ?? 1}${current?.stage ? ` · ${stageLabel[current.stage]}` : ""}`;
     const ordered = season.games;
     const played = season.games.filter((game) => game.scoreFor != null).length;

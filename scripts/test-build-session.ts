@@ -6,22 +6,27 @@ import {
   encodeBuildSession, readBuildStorage, validateRun, writeBuildStorage, type ActiveRun,
   clearComparison, draftMatchesBaseline, prepareRematch, sameChallenge, startDraftRun, updateSessionRun,
 } from "../lib/build-session";
-import { cappedOptimalAllocation, distributeAllocationToSlots } from "../lib/simulator";
+import { cappedOptimalAllocation, distributeAllocationToSlots, ratingsFromAllocation } from "../lib/simulator";
+import { data } from "../lib/data";
+import { buildSeasonGames } from "../lib/season-mode";
 import { replaySeason, type ReplayInput } from "../lib/season-replay";
 import { SeasonPayloadSchema } from "../lib/season-payload";
 
-const fixtures = JSON.parse(readFileSync(new URL("./fixtures/model-v4-replays.json", import.meta.url), "utf8")) as {
-  name: string; input: ReplayInput; ratings: unknown; games: unknown;
+const fixtures = JSON.parse(readFileSync(new URL("./fixtures/model-v5-replays.json", import.meta.url), "utf8")) as {
+  name: string; input: ReplayInput; ratings: unknown; games: unknown; summary: unknown; postseasonSeed: number | null;
 }[];
 for (const fixture of fixtures) {
   const replay = replaySeason(fixture.input);
-  assert.deepEqual(replay.ratings, fixture.ratings, `${fixture.name}: v4 ratings`);
+  assert.deepEqual(replay.ratings, fixture.ratings, `${fixture.name}: v5 ratings`);
+  assert.deepEqual(replay.summary, fixture.summary, `${fixture.name}: v5 summary`);
+  assert.equal(replay.postseasonSeed, fixture.postseasonSeed, `${fixture.name}: frozen seed`);
   assert.deepEqual(replay.games.map((game) => ({ week: game.week, opponent: game.opponent.slug,
-    isHome: game.isHome, stage: game.stage ?? null, winProb: game.winProb,
-    gameplan: game.gameplan, result: game.result })), fixture.games, `${fixture.name}: canonical v4 games`);
+    isHome: game.isHome, venue: game.venue, stage: game.stage ?? null, playerSeed: game.playerSeed ?? null,
+    opponentSeed: game.opponentSeed ?? null, winProb: game.winProb,
+    gameplan: game.gameplan, result: game.result })), fixture.games, `${fixture.name}: canonical v5 games`);
 
   const pos = distributeAllocationToSlots(fixture.input.alloc);
-  for (const count of [0, 2, replay.games.length]) {
+  for (const count of new Set([0, 2, 12, replay.games.length - 1, replay.games.length])) {
     const input = { ...fixture.input, gameplan: fixture.input.mode === "season"
       ? replay.games.slice(0, count).map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })) : [] };
     const run: ActiveRun = { id: randomUUID(), input, pos, completedGames: count,
@@ -33,7 +38,27 @@ for (const fixture of fixtures) {
     assert.deepEqual(replaySeason(decoded.session.runs[input.mode]!.input, count).games, replaySeason(input, count).games);
   }
 }
-console.log("  ok fixed v4 Quick/manual/Auto/gravity-off goldens and partial/finished round trips");
+console.log("  ok fixed v5 Quick/manual/Auto/gravity-off/four-round goldens and partial/finished round trips");
+
+const historical = JSON.parse(readFileSync(new URL("./fixtures/model-v4-replays.json", import.meta.url), "utf8")) as {
+  name: string; input: ReplayInput; games: { week: number; opponent: string; isHome: boolean; winProb: number; stage: string | null }[];
+}[];
+for (const fixture of historical) {
+  const program = data.teams.find((team) => team.slug === fixture.input.programSlug)!;
+  const regular = buildSeasonGames(fixture.input.seed, ratingsFromAllocation(fixture.input.alloc,
+    { programSlug: program.slug, gravityOn: fixture.input.gravityOn }), program, data.teams);
+  assert.deepEqual(regular.map((game) => [game.week, game.opponent.slug, game.isHome, game.winProb]),
+    fixture.games.filter((game) => !game.stage).map((game) => [game.week, game.opponent, game.isHome, game.winProb]), "historical v4 regular slate/odds unchanged");
+  assert.throws(() => replaySeason(fixture.input), /Unsupported simulation snapshot/, "never replay historical v4 with the v5 engine");
+  const old = { id: randomUUID(), input: fixture.input, pos: distributeAllocationToSlots(fixture.input.alloc),
+    completedGames: fixture.games.length, featured: fixture.games.length - 1, pending: null, publish: null };
+  const recovered = decodeBuildSession(JSON.stringify({ ...emptySession(), runs: { [fixture.input.mode]: old }, baseline: old }));
+  assert.equal(recovered.status, "incompatible");
+  assert.deepEqual(recovered.session.runs, {});
+  assert.equal(recovered.comparisonDiscarded, true);
+  assert.deepEqual(recovered.session.notices[0].draft.pos, old.pos, "v4 keeps editable roster without replaying results");
+}
+console.log("  ok immutable v4 regular slates, unsupported replay guard and roster-only recovery");
 
 const draft = { pos: distributeAllocationToSlots(fixtures[0].input.alloc), budgetM: 55, gravityOn: true, programSlug: "texas" };
 const quick = createRun("quick", draft, randomUUID(), 24);
@@ -53,7 +78,7 @@ function reject(mutator: (run: ActiveRun) => void) {
   assert.equal(validateRun(run, "season"), null);
   assert.equal(decodeBuildSession(JSON.stringify({ ...emptySession(), runs: { season: run } })).status, "malformed");
 }
-for (const count of [-1, 0.5, 16, 1_000_000]) reject((run) => { run.completedGames = count; });
+for (const count of [-1, 0.5, 17, 1_000_000]) reject((run) => { run.completedGames = count; });
 reject((run) => { run.completedGames = 1; }); // missing committed manual pick
 reject((run) => { run.input.budgetM = 54; });
 reject((run) => { run.pos.QB -= 0.1; });
@@ -154,7 +179,7 @@ for (const field of ["simVersion", "dataFingerprint", "gravityVersion"] as const
   assert.equal(recovered.session.baseline, undefined);
   assert.deepEqual(recovered.session.runs, started.runs, "stale baseline cannot discard supported active runs");
 }
-const seasonFixture = fixtures.find((f) => f.input.mode === "season")!;
+const seasonFixture = fixtures.find((f) => f.name === "season-manual-four-rounds")!;
 const finishedReplay = replaySeason(seasonFixture.input);
 const finishedManual: ActiveRun = { id: randomUUID(), input: structuredClone(seasonFixture.input), pos: distributeAllocationToSlots(seasonFixture.input.alloc), completedGames: finishedReplay.games.length,
   featured: finishedReplay.games.length - 1, pending: null, publish: null };

@@ -17,6 +17,9 @@ import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-repla
 import type { SeasonPayload } from "../lib/season-payload";
 import { startTestPostgres } from "./test-postgres";
 
+import historical from "./fixtures/model-v4-replays.json";
+import { getTeam } from "../lib/data";
+
 const payload = (mode: "quick" | "season", seed: number): SeasonPayload => {
   const base: SeasonPayload = {
     mode, seed, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
@@ -64,7 +67,7 @@ async function main() {
         replay.games.map((g) => [g.week, g.opponent.slug, g.result?.scoreFor, g.result?.scoreAgainst, g.stage ?? null]));
       const shareHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id }) }));
       assert.match(shareHtml, new RegExp(`Season projection</p><p[^>]*>${row.expectedWins.toFixed(1)}</p>`));
-      assert.match(shareHtml, /Gravity on · v4/);
+      assert.match(shareHtml, /Gravity on · v5/);
       assert(!shareHtml.includes(row.dataFingerprint!));
       console.log(`  ok ${mode}: stored result matches canonical replay`);
     }
@@ -125,6 +128,36 @@ async function main() {
     const earlierHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id: "rules00001" }) }));
     assert.match(earlierHtml, /Verified under an earlier game model/);
     console.log("  ok earlier verified ruleset stays shareable but is not ranked with current seasons");
+
+    const original = historical.find((fixture) => fixture.input.mode === "season")!;
+    const oldGames = original.games.map((game) => ({ week: game.week, oppName: getTeam(game.opponent)!.name,
+      oppSlug: game.opponent, oppColor: getTeam(game.opponent)!.color, isHome: game.isHome,
+      winProb: game.winProb, stage: game.stage ?? undefined, gameplan: game.gameplan,
+      ...game.result })) as schema.StoredGame[];
+    const oldWins = oldGames.filter((game) => game.won).length;
+    await db.insert(schema.seasons).values({ ...legacyRow,
+      ...original.input, starterAlloc: original.input.alloc, mode: "season", verified: true,
+      gameplan: oldGames.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })),
+      off: original.ratings.off, def: original.ratings.def, st: original.ratings.st,
+      games: oldGames, wins: oldWins, losses: oldGames.length - oldWins,
+      expectedWins: oldGames.reduce((sum, game) => sum + game.winProb, 0),
+      avgMargin: oldGames.reduce((sum, game) => sum + game.scoreFor - game.scoreAgainst, 0) / oldGames.length,
+      id: "archive-v4", gmName: "Original v4 fixture",
+    });
+    const oldRow = await getSeason("archive-v4");
+    assert.equal(oldRow?.simVersion, 4);
+    assert.equal(oldRow?.verified, true);
+    assert.deepEqual(oldRow?.games, JSON.parse(JSON.stringify(oldGames)), "archiving preserves original saved v4 scores/calls/venues");
+    assert.equal(await countSeasons(), 3);
+    assert((await getLegacyArchive()).some((row) => row.id === "archive-v4"));
+    assert(!(await getLeaderboard()).some((row) => row.id === "archive-v4"));
+    const oldHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id: "archive-v4" }) }));
+    assert.match(oldHtml, /Earlier model · three-round record/);
+    assert(!oldHtml.includes('data-path-stage="fr"'), "v4 recap never fabricates a missing first round");
+    assert(!oldHtml.includes("higher seed hosts") && !oldHtml.includes("Opponent projected/TBD"), "v4 saved venues and empty rounds do not imply v5 rules or future games");
+    assert.match(oldHtml, /Not played · earlier model/);
+    assert.match(oldHtml, /Gravity on · v4/);
+    console.log("  ok original v4 results stay verified/shareable in archive; only v5 ranks");
 
     const legacyHtml = renderToStaticMarkup(await ShareSeasonPage({ params: Promise.resolve({ id: "legacy0001" }) }));
     assert.match(legacyHtml, /Unverified legacy result/);

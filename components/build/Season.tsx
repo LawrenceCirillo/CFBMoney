@@ -159,7 +159,7 @@ export default function Season({ run, onRunChange, onNew, onReplay, onBack }: Pr
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-paper">
                   <span className="mr-2 text-xs font-normal text-fog">
-                    {g.isHome ? "vs" : "at"}
+                    {g.venue === "neutral" ? "Neutral site · vs" : g.isHome ? "vs" : "at"}
                   </span>
                   {g.opponent.name}
                 </p>

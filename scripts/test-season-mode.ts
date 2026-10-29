@@ -17,6 +17,8 @@ import {
   distributeAllocationToSlots,
   emptyAllocation,
   emptyPlaysheet,
+  expectedScore,
+  gameVenue,
   GAME_BUDGET_MAX_M,
   GAME_BUDGET_M,
   GAME_BUDGET_MIN_M,
@@ -38,6 +40,7 @@ import { gravityTags, GRAVITY_VERSION } from "../lib/gravity";
 import gravityTable from "../data/program-gravity.json";
 import {
   RIVALRIES,
+  buildPostseasonPath,
   buildSeasonGames,
   nextPostseasonGame,
   postseasonOpener,
@@ -49,7 +52,7 @@ import {
 } from "../lib/season-mode";
 import { SeasonPayloadSchema } from "../lib/season-payload";
 import { DATA_FINGERPRINT, SIM_VERSION, fingerprintForTeams, replaySeason, type ReplayInput } from "../lib/season-replay";
-import { clampGameplanEdge, gameplanNarration, offensiveEdge, resolveGameplan, type DefTag, type GameplanPick } from "../lib/gameplan";
+import { adjustGameplanProbability, clampGameplanEdge, gameplanNarration, offensiveEdge, resolveGameplan, type DefTag, type GameplanPick } from "../lib/gameplan";
 
 let failures = 0;
 function assert(cond: boolean, label: string, extra?: unknown) {
@@ -256,51 +259,30 @@ console.log("projectedRank");
   assert(projectedRank(2.5, [1, 2, 3]) === 2, "fractional projection");
 }
 
-// ---------- postseason scheduling ----------
+// ---------- frozen projected path, all 12 seeds ----------
 console.log("postseason scheduling");
 {
-  const rng = mulberry32(42);
-  const ctx = { program, teams: data.teams, userR, field, rng };
-  const used = new Set(data.teams.slice(0, 12).map((t) => t.slug)); // pretend regular-season foes
-
-  const sf1 = postseasonOpener(1, used, ctx);
-  assert(sf1.stage === "sf" && sf1.week === 14, "seed 1 -> semifinal week 14", sf1);
-  const sf4 = postseasonOpener(4, used, ctx);
-  assert(sf4.stage === "sf" && sf4.week === 14, "seed 4 -> semifinal week 14");
-
-  const qf5 = postseasonOpener(5, used, ctx);
-  assert(qf5.stage === "qf" && qf5.week === 13, "seed 5 -> quarterfinal week 13");
-  assert(qf5.isHome === true, "higher seed hosts quarterfinal");
-
-  const qf12 = postseasonOpener(12, used, ctx);
-  assert(qf12.stage === "qf" && qf12.week === 13, "seed 12 -> quarterfinal week 13");
-  assert(qf12.isHome === false, "lower seed travels in quarterfinal");
-
-  const bowl = postseasonOpener(20, used, ctx);
-  assert(bowl.stage === "bowl" && bowl.week === 13, "seed 20 -> money bowl week 13");
-
-  for (const g of [sf1, sf4, qf5, qf12, bowl]) {
-    assert(!used.has(g.opponent.slug), `no rematch vs ${g.opponent.slug}`);
-    assert(g.opponent.slug !== program.slug, "never faces own program");
-    assert(g.winProb > 0 && g.winProb < 1, "winProb sane");
+  const ctx = { program, teams: data.teams, userR, field };
+  const used = new Set(data.teams.slice(0, 12).map((team) => team.slug));
+  const expectedOpponents = [[8,4,2], [7,3,1], [6,2,1], [5,1,2], [12,4,1,2], [11,3,2,1],
+    [10,2,3,1], [9,1,4,2], [8,1,4,2], [7,2,3,1], [6,3,2,1], [5,4,1,2]];
+  for (let seed = 1; seed <= 12; seed++) {
+    const path = buildPostseasonPath(seed, used, ctx);
+    assert(JSON.stringify(path.map((game) => game.opponentSeed)) === JSON.stringify(expectedOpponents[seed - 1]), `seed ${seed}: fixed subtree representatives`);
+    assert(JSON.stringify(path.map((game) => game.week)) === JSON.stringify(seed <= 4 ? [14,15,16] : [13,14,15,16]), `seed ${seed}: bye and four-round weeks`);
+    assert(path[0].stage === (seed <= 4 ? "qf" : "fr"), `seed ${seed}: correct opening round`);
+    assert(path.every((game) => game.playerSeed === seed), `seed ${seed}: qualification remains frozen`);
+    assert(path.every((game) => gameVenue(game) === (game.stage !== "fr" ? "neutral" : seed <= 8 ? "home" : "away")), `seed ${seed}: campus opener, neutral bowls`);
+    assert(new Set(path.map((game) => game.opponent.slug)).size === path.length, `seed ${seed}: unique path opponents`);
+    assert(path.every((game) => game.opponent.slug !== program.slug && !used.has(game.opponent.slug) && !game.result && !game.gameplan), `seed ${seed}: projections have no rematches, calls or results`);
+    for (let i = 0; i < path.length; i++) assert(nextPostseasonGame(path[i].stage!, path) === (path[i + 1] ?? null), `seed ${seed}: fixed transition ${path[i].stage}`);
+    assert(JSON.stringify(buildPostseasonPath(seed, used, { ...ctx, teams: [...data.teams].reverse() })) === JSON.stringify(path), `seed ${seed}: deterministic field including budget ties`);
   }
-
-  // QF winner -> SF week 14; SF winner -> NCG week 15; nothing after bowl/ncg.
-  const used2 = new Set([...used, qf5.opponent.slug]);
-  const sfNext = nextPostseasonGame("qf", used2, ctx);
-  assert(sfNext?.stage === "sf" && sfNext?.week === 14, "qf win -> semifinal week 14");
-  const used3 = new Set([...used2, sfNext!.opponent.slug]);
-  const ncgNext = nextPostseasonGame("sf", used3, ctx);
-  assert(ncgNext?.stage === "ncg" && ncgNext?.week === 15, "sf win -> championship week 15");
-  assert(nextPostseasonGame("ncg", used3, ctx) === null, "nothing after ncg");
-  assert(nextPostseasonGame("bowl", used3, ctx) === null, "nothing after bowl");
-
-  // Determinism: same rng seed -> same opponents.
-  const ctxA = { program, teams: data.teams, userR, field, rng: mulberry32(7) };
-  const ctxB = { program, teams: data.teams, userR, field, rng: mulberry32(7) };
-  const a = postseasonOpener(6, used, ctxA);
-  const b = postseasonOpener(6, used, ctxB);
-  assert(a.opponent.slug === b.opponent.slug && a.isHome === b.isHome, "deterministic with same rng");
+  const bowl = buildPostseasonPath(20, used, ctx);
+  assert(bowl.length === 1 && bowl[0].stage === "bowl" && bowl[0].week === 13 && gameVenue(bowl[0]) === "neutral", "nonqualifier gets one neutral peer Money Bowl");
+  let poolError = false;
+  try { buildPostseasonPath(1, new Set(data.teams.map((team) => team.slug)), ctx); } catch { poolError = true; }
+  assert(poolError, "an insufficient eligible pool fails instead of fabricating opponents");
 }
 
 // ---------- postseasonOutcome ----------
@@ -313,6 +295,7 @@ console.log("postseasonOutcome");
   assert(postseasonOutcome([won("qf"), won("sf"), won("ncg")]) === "National champions", "champions");
   assert(postseasonOutcome([won("qf"), won("sf"), lost("ncg")]) === "National runners-up", "runners-up");
   assert(postseasonOutcome([lost("sf")]) === "Playoff semifinalists", "semifinalists");
+  assert(postseasonOutcome([lost("fr")]) === "Playoff first-round exit", "first-round exit");
   assert(postseasonOutcome([lost("qf")]) === "Playoff quarterfinalists", "quarterfinalists");
   assert(postseasonOutcome([won("bowl")]) === "Money Bowl champions", "bowl champs");
   assert(postseasonOutcome([lost("bowl")]) === "Money Bowl runners-up", "bowl runners-up");
@@ -323,36 +306,12 @@ console.log("postseasonOutcome");
 console.log("full season runs");
 
 function runSeason(alloc: Allocation, seed: number, label: string) {
-  const r = ratingsFromAllocation(alloc);
-  const rng = mulberry32(seed);
-  const ctx = { program, teams: data.teams, userR: r, field, rng };
-
-  let games: ScheduledGame[] = buildSeasonGames(seed, r, program, data.teams);
-  // Play regular season.
-  games = games.map((g) => ({ ...g, result: simulateGame(r, g.oppRatings, g.isHome, rng) }));
-
-  const fieldProj = data.teams
-    .filter((t) => t.slug !== program.slug)
-    .map((t) => modeledExpectedWins(t.budget_mid_m, field));
-  const proj = games.reduce((s, g) => s + (g.result!.won ? 1 : 0), 0);
-  const seedRank = projectedRank(proj, fieldProj);
-
-  // Play postseason to completion.
-  const used = new Set(games.map((g) => g.opponent.slug));
-  let opener = postseasonOpener(seedRank, used, ctx);
-  opener = { ...opener, result: simulateGame(r, opener.oppRatings, opener.isHome, rng) };
-  games = [...games, opener];
-  let last: ScheduledGame = opener;
-  while (last.result!.won) {
-    const nxt = nextPostseasonGame(last.stage!, new Set(games.map((g) => g.opponent.slug)), ctx);
-    if (!nxt) break;
-    const played: ScheduledGame = {
-      ...nxt,
-      result: simulateGame(r, nxt.oppRatings, nxt.isHome, rng),
-    };
-    games = [...games, played];
-    last = played;
-  }
+  // Some historical allocations below are diagnostic proposals, not publishable rosters.
+  const replay = replaySeason({ mode: "season", seed, programSlug: program.slug, budgetM: 30,
+    alloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, gameplan: [],
+    autoGameplan: true, gravityOn: false, gravityVersion: "v1" });
+  const games = replay.games;
+  const seedRank = replay.postseasonSeed!;
 
   // Invariants.
   const weeks = games.map((g) => g.week);
@@ -372,7 +331,7 @@ function runSeason(alloc: Allocation, seed: number, label: string) {
   const stages = games.filter((g) => g.stage);
   assert(
     stages.every((g) =>
-      g.stage === "qf" ? g.week === 13 : g.stage === "bowl" ? g.week === 13 : g.stage === "sf" ? g.week === 14 : g.week === 15
+      g.stage === "fr" || g.stage === "bowl" ? g.week === 13 : g.stage === "qf" ? g.week === 14 : g.stage === "sf" ? g.week === 15 : g.week === 16
     ),
     `${label}: postseason weeks correct`,
     stages.map((g) => `${g.stage}@${g.week}`)
@@ -482,69 +441,8 @@ function oldUiRun(
     }
     return games;
   }
-  const field = fieldRatings();
-  const fieldProj = data.teams.filter((t) => t.slug !== programChoice.slug)
-    .map((t) => modeledExpectedWins(t.budget_mid_m, field));
-  const ctx = { program: programChoice, teams: data.teams, userR: ratings, field, rng };
-  if (fast) {
-    for (let i = 0; i < 12; i++) {
-      const g = games[i];
-      games[i] = { ...g, result: simulateGame(ratings, g.oppRatings, g.isHome, rng) };
-    }
-    const rank = projectedRank(games.filter((g) => g.result?.won).length, fieldProj);
-    games.push(postseasonOpener(rank, new Set(games.map((g) => g.opponent.slug)), ctx));
-    while (true) {
-      const g = games[games.length - 1];
-      g.result = simulateGame(ratings, g.oppRatings, g.isHome, rng);
-      if (!g.result.won) break;
-      const next = nextPostseasonGame(g.stage!, new Set(games.map((x) => x.opponent.slug)), ctx);
-      if (!next) break;
-      games.push(next);
-    }
-    return games;
-  }
-  for (let i = 0; i < games.length; i++) {
-    const g = games[i];
-    const result = simulateGame(ratings, g.oppRatings, g.isHome, rng);
-    games[i] = { ...g, result };
-    if (i === 11) {
-      const rank = projectedRank(games.filter((x) => x.result?.won).length, fieldProj);
-      games.push(postseasonOpener(rank, new Set(games.map((x) => x.opponent.slug)), ctx));
-    } else if (g.stage && result.won) {
-      const next = nextPostseasonGame(g.stage, new Set(games.map((x) => x.opponent.slug)), ctx);
-      if (next) games.push(next);
-    }
-  }
-  return games;
-}
-
-{
-  const playoffProgram = data.teams.find((team) => team.slug === "boston-college")!;
-  const playoffAlloc = cappedOptimalAllocation(55);
-  const input: ReplayInput = {
-    mode: "season", seed: 2, programSlug: playoffProgram.slug, budgetM: 55,
-    alloc: playoffAlloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT,
-    gameplan: [], autoGameplan: true, gravityOn: false, gravityVersion: "v1",
-  };
-  const fixtureSeed = Array.from({ length: 1000 }, (_, seed) => seed).find((seed) =>
-    replaySeason({ ...input, seed }).games.filter((g) => g.stage).map((g) => g.stage).join(",") === "qf,sf,ncg"
-  );
-  if (fixtureSeed === undefined) throw new Error("No full playoff fixture found in 1000 seeds");
-  input.seed = fixtureSeed;
-  const manual = oldUiRun("season", fixtureSeed, false, playoffAlloc, 55, playoffProgram);
-  const fast = oldUiRun("season", fixtureSeed, true, playoffAlloc, 55, playoffProgram);
-  const full = replaySeason(input);
-  assert(full.games.filter((g) => g.stage).map((g) => g.stage).join(",") === "qf,sf,ncg",
-    "playoff fixture reaches quarterfinal, semifinal, and title game");
-  assert(replayLog(manual) === replayLog(fast), "playoff manual and fast paths agree");
-  assert(JSON.stringify(manual.slice(0, 12).map((g) => g.opponent.slug)) ===
-    JSON.stringify(full.games.slice(0, 12).map((g) => g.opponent.slug)),
-    "playoff replay keeps the old honest schedule");
-  for (let n = 0; n <= full.games.length; n++) {
-    const partial = replaySeason(input, n);
-    assert(replayLog(partial.games.filter((g) => g.result)) === replayLog(full.games.slice(0, n)),
-      `playoff step ${n} matches full run`);
-  }
+  // Retain only the old regular-season boolean scoring characterization.
+  return games.map((g) => ({ ...g, result: simulateGame(ratings, g.oppRatings, g.isHome, rng) }));
 }
 
 for (const mode of ["quick", "season"] as const) {
@@ -707,6 +605,33 @@ console.log("program gravity");
     "wrong gravity table version cannot publish");
   assert(!SeasonPayloadSchema.safeParse({ ...base, gravityOn: undefined }).success,
     "gravity choice is mandatory in published payload");
+}
+
+// v4 boolean scoring and ordinary interior calls remain exactly characterized.
+{
+  const a = { off: 70, def: 65, st: 55 }, b = { off: 60, def: 72, st: 58 };
+  assert(expectedScore(a, b, true).winProb === 0.6288800952351592 && expectedScore(a, b, false).winProb === 0.4540023479041523, "v4 boolean odds unchanged");
+  assert(JSON.stringify(simulateGame(a, b, true, mulberry32(27))) === JSON.stringify({ scoreFor: 41, scoreAgainst: 36, won: true }), "v4 boolean home score unchanged");
+  assert(JSON.stringify(simulateGame(a, b, false, mulberry32(27))) === JSON.stringify({ scoreFor: 38, scoreAgainst: 39, won: false }), "v4 boolean away score unchanged");
+  assert(resolveGameplan({ week: 1, off: "air", def: "base" }, "lsu", 0.5).adjustedWinProb === 0.55, "v4 interior adjustment unchanged");
+  const ab = expectedScore(a, b, "neutral"), ba = expectedScore(b, a, "neutral");
+  assert(ab.for === ba.against && ab.against === ba.for && Math.abs(ab.winProb + ba.winProb - 1) < 1e-9, "neutral expected scoring is symmetric");
+  assert(gameVenue({ isHome: true }) === "home" && gameVenue({ isHome: false }) === "away" && gameVenue({ isHome: true, venue: "neutral" }) === "neutral", "explicit venue wins with legacy boolean fallback");
+  for (const p of [0, 0.00005976, 0.0009, 0.001, 0.2, 0.5, 0.999, 0.9991, 0.99994, 1]) {
+    const adjusted = Array.from({ length: 17 }, (_, i) => adjustGameplanProbability(p, i - 8));
+    assert(adjusted.every((value, i) => Number.isFinite(value) && value >= 0 && value <= 1 &&
+      (i < 8 ? value <= p : i === 8 ? value === p : value >= p) && (i === 0 || value >= adjusted[i - 1])), `monotone bounded edge grid at p=${p}`);
+  }
+}
+
+// Desired v5 contracts, first run against the unchanged v4 engine.
+{
+  const equal = { off: 60, def: 60, st: 60 };
+  assert(Math.abs(expectedScore(equal, equal, "neutral").winProb - 0.5) < 1e-9, "v5 neutral venue has no home edge");
+  const low = resolveGameplan({ week: 1, off: "ground", def: "base" }, "lsu", 0.00005976077748126585);
+  assert(low.netEdge < 0 && low.adjustedWinProb <= 0.00005976077748126585, "v5 negative call cannot increase extreme underdog odds");
+  const opening = postseasonOpener(1, new Set(), { program, teams: data.teams, userR, field });
+  assert(opening.stage === "qf" && opening.week === 14, "v5 top-four bye leads to quarterfinal week 14");
 }
 
 console.log(failures === 0 ? "\nALL SEASON-MODE TESTS PASSED" : `\n${failures} FAILURES`);

@@ -1,32 +1,16 @@
 /**
  * Playtest: play season mode headlessly under several college-football-fan
- * roster proposals, using the EXACT code paths the SeasonMode component uses
- * (schedule gen, storylineFor, projectedRank, postseasonOpener/nextPostseasonGame,
- * simulateGame). Prints a week-by-week narrative log per persona plus fun metrics.
+ * diagnostic roster proposals through the same canonical replay as SeasonMode.
+ * Prints actual player results, explicit venues and regular-only rank metrics;
+ * other teams' projected bracket representatives never receive simulated results.
  *
  * Run with: npx tsx scripts/playtest.ts
  */
 import { data, getTeam } from "../lib/data";
-import {
-  expectedScore,
-  generateSchedule,
-  mulberry32,
-  optimalAllocation,
-  ratingsFromAllocation,
-  simulateGame,
-  type Allocation,
-  type ScheduledGame,
-} from "../lib/simulator";
+import { MARKET_CAPS, venueLabel, type Allocation, type ScheduledGame } from "../lib/simulator";
 import { expectedWins as modeledExpectedWins, fieldRatings } from "../lib/moneyball";
-import {
-  buildSeasonGames,
-  nextPostseasonGame,
-  postseasonOpener,
-  postseasonOutcome,
-  projectedRank,
-  storylineFor,
-} from "../lib/season-mode";
-
+import { postseasonOutcome, projectedRank, storylineFor } from "../lib/season-mode";
+import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-replay";
 const field = fieldRatings();
 
 interface Persona {
@@ -75,112 +59,28 @@ const PERSONAS: Persona[] = [
   },
 ];
 
-function projection(games: ScheduledGame[]): number {
-  return games.reduce((s, g) => s + (g.result ? (g.result.won ? 1 : 0) : g.winProb), 0);
-}
-
-const STAGE_WEEK: Record<string, string> = { qf: "QF", sf: "SF", ncg: "NCG", bowl: "BOWL" };
+const STAGE_WEEK: Record<string, string> = { fr: "FR", qf: "QF", sf: "SF", ncg: "NCG", bowl: "BOWL" };
 
 for (const p of PERSONAS) {
-  const program = getTeam(p.programSlug)!;
   const total = Object.values(p.alloc).reduce((a, b) => a + b, 0);
-  const userR = ratingsFromAllocation(p.alloc);
-  const rng = mulberry32(p.seed);
-  const ctx = { program, teams: data.teams, userR, field, rng };
-  const fieldProj = data.teams
-    .filter((t) => t.slug !== program.slug)
-    .map((t) => modeledExpectedWins(t.budget_mid_m, field));
-
-  let games: ScheduledGame[] = buildSeasonGames(p.seed, userR, program, data.teams);
-
-  console.log(`\n${"=".repeat(72)}`);
-  console.log(`PERSONA: ${p.name}  @  ${program.name}`);
-  console.log(`"${p.pitch}"`);
-  console.log(`Roster ratings: off ${userR.off.toFixed(0)} / def ${userR.def.toFixed(0)} / st ${userR.st.toFixed(0)}  ($${total}M)`);
-  console.log(`Preseason projected rank: #${projectedRank(projection(games), fieldProj)}`);
-  console.log(`${"=".repeat(72)}`);
-
-  let upsets = 0;
-  let oneScore = 0;
-  const ranks: number[] = [];
-  const tags = new Set<string>();
-
-  const rankNow = () => projectedRank(projection(games), fieldProj);
-
-  // Regular season, week by week.
-  for (let w = 0; w < 12; w++) {
-    const g = games[w];
-    const prev = w > 0 ? games[w - 1] : null;
-    const story = storylineFor(g, prev);
-    tags.add(story.tag);
-    const result = simulateGame(userR, g.oppRatings, g.isHome, rng);
-    games[w] = { ...g, result };
-    const rank = rankNow();
-    ranks.push(rank);
-    const prevRank = ranks.length > 1 ? ranks[ranks.length - 2] : rank;
-    const delta = prevRank - rank;
-    const upset = (result.won && g.winProb < 0.35) || (!result.won && g.winProb > 0.65);
-    if (upset) upsets++;
-    const margin = Math.abs(result.scoreFor - result.scoreAgainst);
-    if (margin <= 7) oneScore++;
-    const move = delta > 0 ? `▲${delta}` : delta < 0 ? `▼${-delta}` : "–";
-    const ranked = g.opponent.ap_rank != null ? ` AP #${g.opponent.ap_rank}` : "";
-    console.log(
-      `Wk ${String(w + 1).padEnd(2)} [${story.tag}] ${g.isHome ? "vs" : "at"}${ranked} ${g.opponent.name} ` +
-        `(${Math.round(g.winProb * 100)}%) → ${result.won ? "W" : "L"} ${result.scoreFor}-${result.scoreAgainst}` +
-        `${upset ? "  ★ UPSET" : ""}${margin <= 7 ? "  (one-score)" : ""}   | rank #${rank} ${move}`
-    );
+  const program = getTeam(p.programSlug)!;
+  const overMarket = Object.entries(p.alloc).filter(([key, value]) => value > MARKET_CAPS[key as keyof Allocation]);
+  const run = replaySeason({ mode: "season", seed: p.seed, programSlug: p.programSlug, budgetM: total,
+    alloc: p.alloc, simVersion: SIM_VERSION, dataFingerprint: DATA_FINGERPRINT, gameplan: [],
+    autoGameplan: true, gravityOn: false, gravityVersion: "v1" });
+  const fieldProj = data.teams.filter((team) => team.slug !== program.slug).map((team) => modeledExpectedWins(team.budget_mid_m, field));
+  const ranks = run.games.filter((game) => !game.stage).map((_, index) => projectedRank(run.games.filter((game) => !game.stage)
+    .reduce((sum, game, i) => sum + (i <= index ? Number(game.result!.won) : game.winProb), 0), fieldProj));
+  console.log(`\nPERSONA: ${p.name} @ ${program.name} · model v${SIM_VERSION}`);
+  console.log(`Diagnostic allocation only · $${total}M · gravity off${overMarket.length ? ` · over market: ${overMarket.map(([key]) => key).join(", ")}` : ""}. Not a publishable-roster claim.`);
+  console.log(p.pitch);
+  for (const [index, game] of run.games.entries()) {
+    const story = storylineFor(game, run.games[index - 1] ?? null, game.gameplan);
+    const result = game.result!;
+    console.log(`${game.stage ? STAGE_WEEK[game.stage] : `Wk ${game.week}`} [${story.tag}] ${venueLabel(game)} ${game.opponent.name} ` +
+      `(${(game.winProb * 100).toFixed(1)}%) → ${result.won ? "W" : "L"} ${result.scoreFor}-${result.scoreAgainst}`);
   }
-
-  const wins = games.filter((g) => g.result!.won).length;
-  const seedRank = rankNow();
-  console.log(`\nRegular season: ${wins}-${12 - wins} → projected seed #${seedRank}`);
-
-  // Postseason.
-  const used = new Set(games.map((g) => g.opponent.slug));
-  let stage: string | null = null;
-  {
-    let g = postseasonOpener(seedRank, used, ctx);
-    g = { ...g, result: simulateGame(userR, g.oppRatings, g.isHome, rng) };
-    games = [...games, g];
-    stage = g.stage!;
-    const story = storylineFor(g, games[games.length - 2]);
-    tags.add(story.tag);
-    const r = g.result!;
-    const upset = (r.won && g.winProb < 0.35) || (!r.won && g.winProb > 0.65);
-    if (upset) upsets++;
-    if (Math.abs(r.scoreFor - r.scoreAgainst) <= 7) oneScore++;
-    console.log(
-      `${STAGE_WEEK[g.stage!]} [${story.tag}] ${g.isHome ? "vs" : "at"} ${g.opponent.name} ` +
-        `(${Math.round(g.winProb * 100)}%) → ${r.won ? "W" : "L"} ${r.scoreFor}-${r.scoreAgainst}${upset ? "  ★ UPSET" : ""}`
-    );
-    while (r.won || g.result!.won) {
-      const last = games[games.length - 1];
-      if (!last.result!.won) break;
-      const nxt = nextPostseasonGame(last.stage!, new Set(games.map((x) => x.opponent.slug)), ctx);
-      if (!nxt) break;
-      const ng = { ...nxt, result: simulateGame(userR, nxt.oppRatings, nxt.isHome, rng) };
-      games = [...games, ng];
-      const nr = ng.result!;
-      const nupset = (nr.won && ng.winProb < 0.35) || (!nr.won && ng.winProb > 0.65);
-      if (nupset) upsets++;
-      if (Math.abs(nr.scoreFor - nr.scoreAgainst) <= 7) oneScore++;
-      console.log(
-        `${STAGE_WEEK[ng.stage!]} [${storylineFor(ng, last).tag}] ${ng.isHome ? "vs" : "at"} ${ng.opponent.name} ` +
-          `(${Math.round(ng.winProb * 100)}%) → ${nr.won ? "W" : "L"} ${nr.scoreFor}-${nr.scoreAgainst}${nupset ? "  ★ UPSET" : ""}`
-      );
-    }
-  }
-
-  const finalWins = games.filter((g) => g.result!.won).length;
-  const outcome = postseasonOutcome(games);
-  const rankSwing = Math.max(...ranks) - Math.min(...ranks);
-  console.log(`\nFINAL: ${finalWins}-${games.length - finalWins}  |  ${outcome ?? "no postseason"}`);
-  console.log(
-    `METRICS: upsets=${upsets}, one-score games=${oneScore}, rank swing=${rankSwing} ` +
-      `(best #${Math.min(...ranks)}, worst #${Math.max(...ranks)}), storyline variety=${tags.size}/12 tags`
-  );
-  console.log(`Tags seen: ${[...tags].join(" · ")}`);
+  console.log(`Frozen qualification seed #${run.postseasonSeed} · rank swing ${Math.max(...ranks) - Math.min(...ranks)} (12 regular games only)`);
+  console.log(`FINAL: ${run.summary.wins}-${run.summary.losses} · ${postseasonOutcome(run.games)}`);
 }
-
-console.log("\nDONE");
+console.log("\nDONE · canonical player paths only; no other-team results, publication or source-data writes.");

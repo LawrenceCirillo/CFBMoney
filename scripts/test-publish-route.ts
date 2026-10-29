@@ -11,8 +11,10 @@ import { countSeasons, getSeason } from "../db/seasons";
 import * as schema from "../db/schema";
 import { cappedOptimalAllocation, emptyAllocation } from "../lib/simulator";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-replay";
-import type { SeasonPayload } from "../lib/season-payload";
+import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 import { startTestPostgres } from "./test-postgres";
+
+import goldens from "./fixtures/model-v5-replays.json";
 
 const input = (mode: "quick" | "season", seed: number): SeasonPayload => {
   const base: SeasonPayload = {
@@ -68,17 +70,11 @@ async function main() {
       console.log(`  ok ${mode} POST stores server-derived results`);
     }
 
-    const mixed = input("season", 812);
-    const regular = mixed.gameplan.filter((pick) => pick.week <= 12).map((pick) => ({
-      ...pick,
-      off: pick.week % 2 ? "air" as const : "ground" as const,
-      def: pick.week % 2 ? "blitz" as const : "bracket" as const,
-    }));
-    const provisional = replaySeason({ ...mixed, gameplan: regular });
-    mixed.gameplan = provisional.games.map((game) => regular.find((pick) => pick.week === game.week) ??
-      { week: game.week, off: "balanced", def: "base" });
-    mixed.autoGameplan = false;
+    const mixed = SeasonPayloadSchema.parse(goldens.find((fixture) => fixture.name === "season-manual-four-rounds")!.input);
     const mixedReplay = replaySeason(mixed);
+    assert.equal(mixedReplay.games.length, 16);
+    assert(Buffer.byteLength(JSON.stringify(mixed), "utf8") < 16 * 1024, "full mixed-call v5 payload fits the existing body cap");
+    const bye = SeasonPayloadSchema.parse(goldens.find((fixture) => fixture.name === "season-top-four-bye")!.input);
     const mixedResponse = await publish(mixed);
     assert.equal(mixedResponse.status, 201, `mixed gameplan publish succeeds: ${mixedResponse.body.error}`);
     const mixedRow = await getSeason(mixedResponse.body.id!);
@@ -86,6 +82,11 @@ async function main() {
     assert.equal(mixedRow.verified, true);
     assert.deepEqual(mixedRow.gameplan, mixed.gameplan);
     assert.deepEqual(mixedRow.starterAlloc, mixed.alloc);
+    assert.deepEqual(mixedRow.games.map((game) => [game.week, game.oppSlug, game.venue, game.playerSeed, game.opponentSeed, game.stage, game.winProb]),
+      mixedReplay.games.map((game) => [game.week, game.opponent.slug, game.venue, game.playerSeed, game.opponentSeed, game.stage, game.winProb]));
+    assert(Math.abs(mixedRow.expectedWins - mixedReplay.summary.expectedWins) < 1e-5);
+    assert.equal(mixedReplay.postseasonSeed, mixedRow.games[12].playerSeed);
+
     assert.equal(mixedRow.gravityOn, true);
     assert.equal(mixedRow.gravityVersion, "v1");
     assert.deepEqual(mixedRow.games.map((game) => game.gameplan), mixedReplay.games.map((game) => game.gameplan));
@@ -119,6 +120,10 @@ async function main() {
       [{ ...mixed, gameplan: mixed.gameplan.slice(0, -1) }, 422, "incomplete manual gameplan"],
       [{ ...mixed, autoGameplan: true, gameplan: mixed.gameplan.slice(0, -1) }, 422, "incomplete auto gameplan"],
       [{ ...valid, simVersion: 99 }, 422, "unsupported version"],
+      [{ ...mixed, simVersion: 4 }, 422, "v4 publication is unsupported"],
+      [{ ...mixed, gameplan: [...mixed.gameplan, { week: 17, off: "air", def: "base" }] }, 422, "week 17"],
+      [{ ...mixed, gameplan: [mixed.gameplan[0], ...mixed.gameplan.slice(0, -1)] }, 422, "duplicate call"],
+      [{ ...bye, gameplan: [...bye.gameplan.slice(0, 12), { week: 13, off: "balanced", def: "base" }, ...bye.gameplan.slice(12)] }, 422, "bye has no call"],
       [{ ...valid, seed: 2 ** 31 }, 422, "seed range"],
       [{ ...valid, dataFingerprint: "v1-0000000000000000" }, 409, "stale data"],
       [{ ...valid, played: 4 }, 422, "unfinished client state"],

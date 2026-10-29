@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import type { GameVenue } from "@/lib/simulator";
 
 export interface SeasonTickerGame {
   week: number;
@@ -8,6 +9,7 @@ export interface SeasonTickerGame {
   opponentSlug: string;
   opponentAbbr: string;
   isHome: boolean;
+  venue?: GameVenue;
   scoreFor?: number;
   scoreAgainst?: number;
   won?: boolean;

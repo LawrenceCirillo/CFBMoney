@@ -84,6 +84,14 @@ export function clampGameplanEdge(edge: number): number {
   return Math.max(-8, Math.min(8, edge));
 }
 
+/** Add percentage points without reversing direction beyond the usual epsilon. */
+export function adjustGameplanProbability(neutralWinProb: number, netEdge: number): number {
+  const lower = Math.min(0.001, neutralWinProb);
+  const upper = Math.max(0.999, neutralWinProb);
+  return netEdge === 0 ? neutralWinProb
+    : Math.max(lower, Math.min(upper, neutralWinProb + netEdge / 100));
+}
+
 export function resolveGameplan(
   pick: GameplanPick,
   opponentSlug: string,
@@ -95,8 +103,7 @@ export function resolveGameplan(
   const netEdge = clampGameplanEdge(offEdge + defEdge);
   return {
     ...pick, oppOffTag: offTag, oppDefTag: defTag, offEdge, defEdge, netEdge,
-    adjustedWinProb: netEdge === 0 ? neutralWinProb
-      : Math.max(0.001, Math.min(0.999, neutralWinProb + netEdge / 100)),
+    adjustedWinProb: adjustGameplanProbability(neutralWinProb, netEdge),
   };
 }
 

@@ -10,6 +10,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { GameplanPick, GameplanResolution } from "../lib/gameplan";
+import type { GameVenue } from "../lib/simulator";
 
 /** One game inside a published season, stored as JSONB on the season row. */
 export type StoredGame = {
@@ -18,11 +19,14 @@ export type StoredGame = {
   oppSlug: string;
   oppColor: string;
   isHome: boolean;
+  venue?: GameVenue;
+  playerSeed?: number;
+  opponentSeed?: number;
   winProb: number; // 0..1
   scoreFor: number;
   scoreAgainst: number;
   won: boolean;
-  stage?: "qf" | "sf" | "ncg" | "bowl";
+  stage?: "fr" | "qf" | "sf" | "ncg" | "bowl";
   gameplan?: GameplanResolution;
 };
 

@@ -6,25 +6,27 @@
 // - Projected rank: the user's projected final wins (actual + remaining
 //   expected) ranked against every other team's modeled expected wins.
 //   Labeled as projected — it moves as the season unfolds.
-// - Postseason: top-12 projected seeds make a playoff (QF week 13,
-//   SF week 14, NCG week 15); everyone else gets the Money Bowl (week 13).
-//   Opponents are real teams picked by projected rank, never rematches.
+// - Postseason: one fixed projected player path (FR 13, QF 14, SF 15, NCG 16).
+//   Top-four seeds have a first-round bye. Other teams' games are not simulated.
 //
 // Pure functions only — no React, no I/O. Randomness via injected rng.
 
 import type { TeamBudget } from "./types";
 import { expectedWins as modeledExpectedWins } from "./moneyball";
 import { offTagLabel, schemeTagsFor, type GameplanResolution } from "./gameplan";
+import { playoffSeedPath, type PlayoffStage } from "./playoff-path";
 import {
   teamRatings,
   expectedScore,
   generateSchedule,
   mulberry32,
+  gameVenue,
+  type GameVenue,
   type Ratings as SimRatings,
   type ScheduledGame,
 } from "./simulator";
 
-export type PostseasonStage = "qf" | "sf" | "ncg" | "bowl";
+export type PostseasonStage = PlayoffStage | "bowl";
 export const PLAYOFF_CUT = 12;
 
 export interface Storyline {
@@ -39,8 +41,10 @@ export function storylineFor(
   prev: ScheduledGame | null,
   plan?: GameplanResolution | null,
 ): Storyline {
+  if (game.stage === "fr")
+    return { tag: "Playoff first round", blurb: "Win to reach the quarterfinal. Higher seed hosts.", tone: "hype" };
   if (game.stage === "qf")
-    return { tag: "Playoff quarterfinal", blurb: "Win or go home. The bracket starts here.", tone: "hype" };
+    return { tag: "Playoff quarterfinal", blurb: "A neutral field. Win to reach the semifinal.", tone: "hype" };
   if (game.stage === "sf")
     return { tag: "Playoff semifinal", blurb: "One win from playing for it all.", tone: "hype" };
   if (game.stage === "ncg")
@@ -87,7 +91,6 @@ export interface PostseasonCtx {
   teams: TeamBudget[];
   userR: SimRatings;
   field: SimRatings;
-  rng: () => number;
 }
 
 interface RankedTeam {
@@ -100,7 +103,7 @@ function rankedField(teams: TeamBudget[], field: SimRatings, exclude: Set<string
   return teams
     .filter((t) => !exclude.has(t.slug))
     .map((t) => ({ team: t, proj: modeledExpectedWins(t.budget_mid_m, field) }))
-    .sort((a, b) => b.proj - a.proj)
+    .sort((a, b) => b.proj - a.proj || (a.team.slug < b.team.slug ? -1 : a.team.slug > b.team.slug ? 1 : 0))
     .map((e, i) => ({ ...e, projRank: i + 1 }));
 }
 
@@ -117,70 +120,53 @@ function makeGame(
   opp: TeamBudget,
   week: number,
   stage: PostseasonStage,
-  isHome: boolean,
-  userR: SimRatings
+  venue: GameVenue,
+  userR: SimRatings,
+  playerSeed: number,
+  opponentSeed?: number,
 ): ScheduledGame {
   const oppRatings = teamRatings(opp.budget_mid_m);
   return {
     week,
     opponent: opp,
     oppRatings,
-    isHome,
-    winProb: expectedScore(userR, oppRatings, isHome).winProb,
+    isHome: venue === "home",
+    venue,
+    playerSeed,
+    ...(opponentSeed === undefined ? {} : { opponentSeed }),
+    winProb: expectedScore(userR, oppRatings, venue).winProb,
     stage,
   };
 }
 
-/**
- * First postseason game after week 12. Seeds 1–4 get a bye to the semifinal
- * (week 14); seeds 5–12 host a quarterfinal (week 13); everyone else plays
- * the Money Bowl (week 13) against a peer.
- */
-export function postseasonOpener(
+/** Construct once from regular results; projections consume no outcome RNG. */
+export function buildPostseasonPath(
   seed: number,
   usedSlugs: Set<string>,
   ctx: PostseasonCtx
-): ScheduledGame {
+): ScheduledGame[] {
+  if (!Number.isInteger(seed) || seed < 1) throw new Error("Invalid qualification seed");
   const exclude = new Set([ctx.program.slug, ...usedSlugs]);
   const ranked = rankedField(ctx.teams, ctx.field, exclude);
-  const neutral = ctx.rng() < 0.5;
-
-  if (seed <= 4) {
-    // Semifinal vs a quarterfinal-winner type: the team sitting around #8.
-    const opp = closest(ranked, 8);
-    return makeGame(opp.team, 14, "sf", neutral, ctx.userR);
-  }
-  if (seed <= PLAYOFF_CUT) {
-    // Proper bracket pairing: 5v12, 6v11, 7v10, 8v9. Higher seed hosts.
-    const opp = closest(ranked, PLAYOFF_CUT + 1 - seed);
-    return makeGame(opp.team, 13, "qf", seed < opp.projRank, ctx.userR);
-  }
-  const opp = closest(ranked, seed);
-  return makeGame(opp.team, 13, "bowl", neutral, ctx.userR);
+  if (seed > PLAYOFF_CUT) return [makeGame(closest(ranked, seed).team, 13, "bowl", "neutral", ctx.userR, seed)];
+  if (ranked.length < 11) throw new Error("Not enough unique eligible programs for a modeled path field");
+  const field = ranked.slice(0, 11).map((entry) => entry.team);
+  field.splice(seed - 1, 0, ctx.program);
+  return playoffSeedPath(seed).map((round) => makeGame(field[round.opponentSeed - 1], round.week,
+    round.stage, round.venue, ctx.userR, seed, round.opponentSeed));
 }
 
-/**
- * The next game after a postseason win. Null when the run ends
- * (losses end it implicitly — the caller just stops scheduling).
- */
+export function postseasonOpener(seed: number, usedSlugs: Set<string>, ctx: PostseasonCtx): ScheduledGame {
+  return buildPostseasonPath(seed, usedSlugs, ctx)[0];
+}
+
+/** Caller advances only on a player win; never redraw or re-rank this path. */
 export function nextPostseasonGame(
   stage: PostseasonStage,
-  usedSlugs: Set<string>,
-  ctx: PostseasonCtx
+  path: ScheduledGame[],
 ): ScheduledGame | null {
-  if (stage !== "qf" && stage !== "sf") return null;
-  const exclude = new Set([ctx.program.slug, ...usedSlugs]);
-  const ranked = rankedField(ctx.teams, ctx.field, exclude);
-  const neutral = ctx.rng() < 0.5;
-  if (stage === "qf") {
-    // Semifinal vs the strongest team left standing.
-    const opp = ranked[0];
-    if (!opp) throw new Error("no postseason opponent available");
-    return makeGame(opp.team, 14, "sf", neutral, ctx.userR);
-  }
-  const opp = ranked[0];
-  if (!opp) throw new Error("no postseason opponent available");
-  return makeGame(opp.team, 15, "ncg", neutral, ctx.userR);
+  const index = path.findIndex((game) => game.stage === stage);
+  return index < 0 ? null : path[index + 1] ?? null;
 }
 
 /** Human outcome of a finished postseason run, for the season report. */
@@ -193,6 +179,8 @@ export function postseasonOutcome(games: ScheduledGame[]): string | null {
   if (sf && !sf.result!.won) return "Playoff semifinalists";
   const qf = post.find((g) => g.stage === "qf");
   if (qf && !qf.result!.won) return "Playoff quarterfinalists";
+  const fr = post.find((g) => g.stage === "fr");
+  if (fr && !fr.result!.won) return "Playoff first-round exit";
   const bowl = post.find((g) => g.stage === "bowl");
   if (bowl) return bowl.result!.won ? "Money Bowl champions" : "Money Bowl runners-up";
   return null;
@@ -370,7 +358,8 @@ export function buildSeasonGames(
   const rng = mulberry32((seed ^ 0x51ab3f) >>> 0);
   const withProbs = (g: ScheduledGame): ScheduledGame => ({
     ...g,
-    winProb: expectedScore(userR, g.oppRatings, g.isHome).winProb,
+    venue: gameVenue(g),
+    winProb: expectedScore(userR, g.oppRatings, gameVenue(g)).winProb,
   });
 
   let games = generateSchedule(program, teams, seed).map(withProbs);

@@ -19,6 +19,10 @@ import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-repla
 import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 import { freePort, startTestPostgres } from "./test-postgres";
 
+import historical from "./fixtures/model-v4-replays.json";
+import { getTeam } from "../lib/data";
+import goldens from "./fixtures/model-v5-replays.json";
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 async function waitForServer(base: string, app: ChildProcess, output: () => string) {
@@ -81,15 +85,9 @@ async function main() {
         gameplan: [], autoGameplan: true, gravityOn: true, gravityVersion: "v1",
       };
       if (mode === "season") {
-        const regular = Array.from({ length: 12 }, (_, index) => ({
-          week: index + 1,
-          off: index % 3 === 0 ? "air" as const : index % 3 === 1 ? "ground" as const : "balanced" as const,
-          def: index % 3 === 0 ? "blitz" as const : index % 3 === 1 ? "bracket" as const : "base" as const,
-        }));
-        const provisional = replaySeason({ ...payload, gameplan: regular });
-        payload.gameplan = provisional.games.map((game) => regular.find((pick) => pick.week === game.week) ??
-          { week: game.week, off: "balanced", def: "base" });
-        payload.autoGameplan = false;
+        Object.assign(payload, SeasonPayloadSchema.parse(goldens.find((fixture) => fixture.name === "season-manual-four-rounds")!.input));
+        assert.equal(replaySeason(payload).games.length, 16);
+
       }
       assert(SeasonPayloadSchema.safeParse(payload).success);
       const replay = replaySeason(payload);
@@ -109,6 +107,12 @@ async function main() {
       assert.deepEqual(saved.games.map((g) => [g.oppSlug, g.scoreFor, g.scoreAgainst, g.stage ?? null]),
         replay.games.map((g) => [g.opponent.slug, g.result!.scoreFor, g.result!.scoreAgainst, g.stage ?? null]));
       assert.deepEqual(saved.gameplan, payload.gameplan);
+      assert.deepEqual(saved.alloc, replay.fullAlloc);
+      assert.deepEqual(saved.starterAlloc, payload.alloc);
+      assert(Math.abs(saved.expectedWins - replay.summary.expectedWins) < 1e-5);
+      assert.deepEqual(saved.games.map((game) => [game.week, game.oppSlug, game.venue, game.stage, game.playerSeed, game.opponentSeed, game.winProb, game.gameplan, game.scoreFor, game.scoreAgainst, game.won]),
+        replay.games.map((game) => [game.week, game.opponent.slug, game.venue, game.stage, game.playerSeed, game.opponentSeed, game.winProb, game.gameplan, game.result!.scoreFor, game.result!.scoreAgainst, game.result!.won]));
+      if (mode === "season") assert(saved.games.filter((game) => game.stage).every((game) => game.playerSeed === replay.postseasonSeed), "frozen seed survives HTTP replay/storage");
       assert.deepEqual(saved.games.map((g) => g.gameplan), replay.games.map((g) => g.gameplan));
 
       const share = await fetch(`${base}/s/${posted.body.id}`);
@@ -118,7 +122,7 @@ async function main() {
       assert(html.includes(`HTTP ${mode} test`));
       assert(html.includes(`${saved.wins}–${saved.losses}`));
       assert(/Gravity\s*(?:<!-- -->)?\s*on/.test(html));
-      assert(visibleHtml.includes("Gravity on · v4"));
+      assert(visibleHtml.includes("Gravity on · v5"));
       assert(!html.includes(saved.dataFingerprint!));
       assert(/Wk\s*(<!-- -->)?\s*1/.test(html));
       if (mode === "season") {
@@ -267,7 +271,21 @@ async function main() {
     }
     const archived = await getSeason(ids[0]);
     assert(archived);
-    await db.insert(schema.seasons).values({ ...archived, id: "archive-v3", publishKey: randomUUID(), simVersion: 3, gmName: "Archived model fixture" });
+    const original = historical.find((fixture) => fixture.input.mode === "season")!;
+    const oldGames = original.games.map((game) => ({ week: game.week, oppName: getTeam(game.opponent)!.name,
+      oppSlug: game.opponent, oppColor: getTeam(game.opponent)!.color, isHome: game.isHome,
+      winProb: game.winProb, stage: game.stage ?? undefined, gameplan: game.gameplan,
+      ...game.result })) as schema.StoredGame[];
+    const oldWins = oldGames.filter((game) => game.won).length;
+    await db.insert(schema.seasons).values({ ...archived,
+      ...original.input, starterAlloc: original.input.alloc, mode: "season", verified: true,
+      gameplan: oldGames.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })),
+      off: original.ratings.off, def: original.ratings.def, st: original.ratings.st,
+      games: oldGames, wins: oldWins, losses: oldGames.length - oldWins,
+      expectedWins: oldGames.reduce((sum, game) => sum + game.winProb, 0),
+      avgMargin: oldGames.reduce((sum, game) => sum + game.scoreFor - game.scoreAgainst, 0) / oldGames.length,
+      id: "archive-v4", publishKey: randomUUID(), gmName: "Archived model fixture",
+    });
     await db.insert(schema.seasons).values({ ...archived, id: "archive-no-calls", publishKey: randomUUID(), simVersion: 2, mode: "season", gmName: "Legacy without weekly calls", gameplan: [], games: archived.games.map(({ gameplan: _gameplan, ...game }) => game) });
     for (const width of [320, 390]) for (const theme of ["light", "dark"] as const) {
       const context = await browser.newContext({ viewport: { width, height: 844 }, colorScheme: theme });
@@ -327,9 +345,12 @@ async function main() {
           await expect(page.getByRole("heading", { name: "Earlier seasons · unranked archive" })).toBeVisible();
           await expect(page.getByRole("link", { name: /Archived model fixture/ })).toBeVisible();
         }
-        await page.goto(`${base}/s/archive-v3`);
+        await page.goto(`${base}/s/archive-v4`);
         await expect(page.getByText(/Verified under an earlier game model/)).toBeVisible();
-        await expect(page.getByText("Season projection", { exact: true }).locator("..").getByText(archived.expectedWins.toFixed(1), { exact: true })).toBeVisible();
+        await expect(page.getByText(/Earlier model · three-round record/)).toBeVisible();
+        await expect(page.locator('[data-path-stage="fr"]')).toHaveCount(0);
+        await expect(page.getByText("Gravity on · v4", { exact: true })).toBeVisible();
+        await expect(page.getByText("Season projection", { exact: true }).locator("..").getByText(oldGames.reduce((sum, game) => sum + game.winProb, 0).toFixed(1), { exact: true })).toBeVisible();
         await assertFits(page, `${width} ${theme} archived recap`);
         await page.goto(`${base}/s/archive-no-calls`);
         await expect(page.getByText("Weekly calls were not recorded for this season.", { exact: true })).toBeVisible();
@@ -338,6 +359,30 @@ async function main() {
       } finally { await context.close(); }
     }
     console.log("  ok populated recaps and both leaderboard sorts at 320/390 in both themes: values, opponents, narration and overflow");
+    const titlePathId = fixtures.find((fixture) => fixture.payload.mode === "season")!.id;
+    for (const theme of ["light", "dark"] as const) {
+      const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: theme });
+      try {
+        const page = await context.newPage();
+        await page.addInitScript((theme) => localStorage.setItem("cfb-money-theme", theme), theme);
+        await page.goto(`${base}/s/${titlePathId}`);
+        const path = page.getByRole("region", { name: "Your playoff path" });
+        await expect(path.locator("[data-path-stage]")).toHaveCount(4);
+        await expect(path).toContainText("qualification seed #11");
+        await expect(path.locator('[data-path-stage="fr"]')).toContainText("Away · higher seed hosts");
+        await path.screenshot({ path: resolve(root, "test-results", `plan013-share-v5-${theme}.png`) });
+        await assertFits(page, `desktop ${theme} v5 sixteen-game recap`);
+        await page.goto(`${base}/s/archive-v4`);
+        await expect(page.getByText(/Earlier model · three-round record/)).toBeVisible();
+        await expect(page.locator("[data-path-stage]")).toHaveCount(3);
+        await expect(page.getByText("Not played · earlier model", { exact: true })).toBeVisible();
+        await expect(page.getByRole("region", { name: "Your playoff path" })).not.toContainText("higher seed hosts");
+        await expect(page.getByRole("region", { name: "Your playoff path" })).not.toContainText("Opponent projected/TBD");
+        await page.getByRole("region", { name: "Your playoff path" }).screenshot({ path: resolve(root, "test-results", `plan013-share-v4-${theme}.png`) });
+        await assertFits(page, `desktop ${theme} original v4 recap`);
+      } finally { await context.close(); }
+    }
+    console.log("  ok desktop light/dark v5 four-round and original v4 three-round recaps, saved venues and visual captures");
   } finally {
     if (browser) await browser.close();
     if (app && app.exitCode === null) {
