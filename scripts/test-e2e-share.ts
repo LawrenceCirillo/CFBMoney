@@ -11,9 +11,10 @@ import { chromium, expect, type Browser, type Page, type Locator } from "@playwr
 import { resetDb, setDb } from "../db/client";
 import { countSeasons, getSeason } from "../db/seasons";
 import * as schema from "../db/schema";
-import { GAME_BUDGET_M, cappedOptimalAllocation, distributeAllocationToSlots } from "../lib/simulator";
+import { GAME_BUDGET_M, PLAYSHEET_SLOTS, cappedOptimalAllocation, distributeAllocationToSlots } from "../lib/simulator";
 import { ACTIVE_RUNS_KEY, emptySession, encodeBuildSession, type ActiveRun } from "../lib/build-session";
 import { gameplanNarration } from "../lib/gameplan";
+import { gameplanOdds } from "../lib/gameplan-display";
 import { DATA_FINGERPRINT, SIM_VERSION, replaySeason } from "../lib/season-replay";
 import { SeasonPayloadSchema, type SeasonPayload } from "../lib/season-payload";
 import { freePort, startTestPostgres } from "./test-postgres";
@@ -32,7 +33,7 @@ async function waitForServer(base: string, app: ChildProcess, output: () => stri
   throw new Error(`Local app did not start: ${output()}`);
 }
 
-async function publish(base: string, payload: unknown, key = randomUUID()) {
+async function publish(base: string, payload: unknown, key: string = randomUUID()) {
   const response = await fetch(`${base}/api/seasons`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "Idempotency-Key": key },
@@ -125,6 +126,8 @@ async function main() {
         assert(html.includes("Air it out"));
         assert(html.includes("Blitz heavy"));
         assert(!html.includes("confidence") && !html.includes("note"));
+        const first = saved.games[0];
+        assert(visibleHtml.includes(gameplanOdds(first.winProb, first.gameplan!).summary), "share displays stored applied odds without replaying the old model");
       }
       const retry = await publish(base, payload, key);
       assert.equal(retry.status, 201);
@@ -210,6 +213,47 @@ async function main() {
       assert.deepEqual(recovered.gameplan, mixed.gameplan);
       fixtures.push({ id: lostId!, payload: savedAttempt.payload });
       console.log("  ok browser lost-response retry after reload reuses exact UUID/payload, one row, restored completed publication");
+
+      await page.getByRole("button", { name: "Replay this challenge", exact: true }).click();
+      const preserved = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!), ACTIVE_RUNS_KEY);
+      assert.equal(preserved.runs.season.publish.result.id, lostId, "opening a rematch does not replace the original publication");
+      const slot = PLAYSHEET_SLOTS.find((slot) => run.pos[slot.key] + 0.5 <= slot.cap)!;
+      const slotButton = page.locator(`[data-slot-key="${slot.key}"]:visible`).first();
+      const slotLabel = (await slotButton.getAttribute("aria-label"))!.split(",")[0].replace(/\s*\([^)]*\)$/, "");
+      await slotButton.click();
+      await page.getByRole("button", { name: `Increase ${slotLabel} spend`, exact: true }).click();
+      await page.getByRole("button", { name: "Continue", exact: true }).click();
+      const initialRematch = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).runs.season as ActiveRun, ACTIVE_RUNS_KEY);
+      assert.notEqual(initialRematch.id, run.id);
+      assert.equal(initialRematch.publish, null);
+      assert.notDeepEqual(initialRematch.input.alloc, run.input.alloc);
+      assert.deepEqual(replaySeason(initialRematch.input, 0).games.map((game) => [game.opponent.slug, game.isHome]), replaySeason(run.input, 0).games.map((game) => [game.opponent.slug, game.isHome]));
+      await page.getByRole("button", { name: "Ground & pound", exact: true }).click();
+      await page.getByRole("button", { name: "Base defense", exact: true }).click();
+      await page.getByRole("button", { name: "Kick off", exact: true }).click();
+      await page.getByRole("button", { name: "Play next week", exact: true }).click();
+      await page.getByRole("checkbox", { name: "Auto gameplan for the rest of the season", exact: true }).check();
+      await page.getByRole("button", { name: "Sim to end", exact: true }).click();
+      await page.getByRole("textbox", { name: "GM name (optional)" }).fill("Rematch mixed-call GM");
+      const rematchResponse = page.waitForResponse((response) => response.url() === base + "/api/seasons" && response.request().method() === "POST");
+      await page.getByRole("button", { name: "Publish season", exact: true }).click();
+      const postedRematch = await rematchResponse;
+      assert.equal(postedRematch.status(), 201);
+      const rematchId = (await postedRematch.json()).id as string;
+      const rematchPayload = postedRematch.request().postDataJSON() as SeasonPayload;
+      const rematchKey = postedRematch.request().headers()["idempotency-key"];
+      assert.notEqual(rematchKey, lostKey);
+      assert.notEqual(rematchId, lostId);
+      const savedRematch = await getSeason(rematchId);
+      assert(savedRematch?.verified);
+      const expectedRematch = replaySeason(rematchPayload);
+      assert.deepEqual(savedRematch.games.map((game) => [game.oppSlug, game.scoreFor, game.scoreAgainst, game.gameplan]), expectedRematch.games.map((game) => [game.opponent.slug, game.result!.scoreFor, game.result!.scoreAgainst, game.gameplan]));
+      assert.equal((await publish(base, rematchPayload, rematchKey)).body.id, rematchId);
+      assert.equal((await publish(base, savedAttempt.payload, lostKey)).body.id, lostId);
+      assert.equal((await fetch(`${base}/s/${lostId}`)).status, 200);
+      assert.equal(await countSeasons(), 4);
+      fixtures.push({ id: rematchId, payload: rematchPayload });
+      console.log("  ok changed-roster/mixed-call rematch preserves all 12 venues/opponents, replays exactly on the server, and publishes independently/idempotently from its live original share");
     } finally { await recoveryContext.close(); }
 
     // Fixed inputs exercise both signs and short/long margin and record values.
@@ -224,6 +268,7 @@ async function main() {
     const archived = await getSeason(ids[0]);
     assert(archived);
     await db.insert(schema.seasons).values({ ...archived, id: "archive-v3", publishKey: randomUUID(), simVersion: 3, gmName: "Archived model fixture" });
+    await db.insert(schema.seasons).values({ ...archived, id: "archive-no-calls", publishKey: randomUUID(), simVersion: 2, mode: "season", gmName: "Legacy without weekly calls", gameplan: [], games: archived.games.map(({ gameplan: _gameplan, ...game }) => game) });
     for (const width of [320, 390]) for (const theme of ["light", "dark"] as const) {
       const context = await browser.newContext({ viewport: { width, height: 844 }, colorScheme: theme });
       try {
@@ -286,6 +331,10 @@ async function main() {
         await expect(page.getByText(/Verified under an earlier game model/)).toBeVisible();
         await expect(page.getByText("Season projection", { exact: true }).locator("..").getByText(archived.expectedWins.toFixed(1), { exact: true })).toBeVisible();
         await assertFits(page, `${width} ${theme} archived recap`);
+        await page.goto(`${base}/s/archive-no-calls`);
+        await expect(page.getByText("Weekly calls were not recorded for this season.", { exact: true })).toBeVisible();
+        await expect(page.getByText(/Weekly calls not recorded/).first()).toBeVisible();
+        await assertFits(page, `${width} ${theme} legacy without calls`);
       } finally { await context.close(); }
     }
     console.log("  ok populated recaps and both leaderboard sorts at 320/390 in both themes: values, opponents, narration and overflow");

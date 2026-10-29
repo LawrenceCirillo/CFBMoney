@@ -8,6 +8,7 @@ import { getTeam } from "@/lib/data";
 import TeamMark from "@/components/TeamMark";
 import { defTagLabel, gameplanNarration, gameplanRecord, offTagLabel, tendencyLabel } from "@/lib/gameplan";
 import { SIM_VERSION } from "@/lib/season-replay";
+import { GameplanOdds } from "@/components/build/ProbabilityPill";
 
 export const dynamic = "force-dynamic";
 
@@ -199,7 +200,7 @@ export default async function ShareSeasonPage({ params }: Props) {
                 </p>
               ))}
             </div>
-          ) : <p className="mt-2 text-sm text-fog">Neutral calls all season.</p>}
+          ) : <p className="mt-2 text-sm text-fog">{season.games.some((game) => game.gameplan) ? "Neutral calls all season." : "Weekly calls were not recorded for this season."}</p>}
         </section>
       )}
 
@@ -278,13 +279,12 @@ export default async function ShareSeasonPage({ params }: Props) {
                   : `Wk ${g.week}`;
           const details = (
             <>
-              <p className="text-xs text-fog">{Math.round(g.winProb * 100)}% to win</p>
+              <GameplanOdds neutral={g.winProb} plan={season.mode === "season" ? g.gameplan ?? null : null} label="Committed calls" compact />
               {season.mode === "season" && g.gameplan && (
                 <>
                   <p className="mt-1 text-xs text-fog">
                     They ran {offTagLabel(g.gameplan.oppOffTag)} / {defTagLabel(g.gameplan.oppDefTag)} ·{" "}
-                    {tendencyLabel(g.gameplan.off)} / {tendencyLabel(g.gameplan.def)} ·{" "}
-                    {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
+                    {tendencyLabel(g.gameplan.off)} / {tendencyLabel(g.gameplan.def)}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-fog">{gameplanNarration(g.gameplan, g.won, g.oppName, g.winProb)}</p>
                 </>

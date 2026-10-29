@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { data } from "@/lib/data";
 import {
   archetype,
@@ -26,7 +26,8 @@ import { fmtMoney1 } from "@/lib/format";
 import PublishPanel from "./PublishPanel";
 import PlayoffPath from "./PlayoffPath";
 import TeamMark from "@/components/TeamMark";
-import ProbabilityPill from "./ProbabilityPill";
+import { GameplanOdds } from "./ProbabilityPill";
+import { gameplanOdds } from "@/lib/gameplan-display";
 import { useSeasonTicker } from "@/components/SeasonTickerContext";
 import {
   DEFENSIVE_OPTIONS, OFFENSIVE_OPTIONS, defTagLabel, gameplanNarration,
@@ -38,6 +39,7 @@ interface Props {
   run: ActiveRun;
   onRunChange: (run: ActiveRun) => void;
   onNew: () => void;
+  onReplay: () => void;
   onBack: () => void;
 }
 
@@ -64,14 +66,14 @@ function rankOf(games: ScheduledGame[], fieldProj: number[]): number {
 }
 
 function edgeText(edge: number): string {
-  return edge > 0 ? `your edge (+${edge}%)` : edge < 0 ? `uphill (−${Math.abs(edge)}%)` : "neutral (0%)";
+  return `matchup modifier ${edge > 0 ? "+" : edge < 0 ? "−" : ""}${Math.abs(edge)} points`;
 }
 
 function edgeColor(edge: number): string {
   return edge > 0 ? "text-status-success" : edge < 0 ? "text-status-loss" : "text-fog";
 }
 
-function ratingBars(you: Ratings, opp: Ratings) {
+function ratingBars(you: Ratings, opp: Ratings, reduceMotion: boolean | null) {
   const rows = [
     { label: "Offense", y: you.off, o: opp.off, color: "#34d399" },
     { label: "Defense", y: you.def, o: opp.def, color: "#60a5fa" },
@@ -92,9 +94,9 @@ function ratingBars(you: Ratings, opp: Ratings) {
             <motion.div
               className="h-full rounded-full"
               style={{ background: r.color }}
-              initial={{ width: 0 }}
+              initial={reduceMotion ? false : { width: 0 }}
               animate={{ width: `${Math.min(100, (r.y / 100) * 100)}%` }}
-              transition={{ type: "spring", stiffness: 90, damping: 20 }}
+              transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 90, damping: 20 }}
             />
           </div>
           <div className="mt-0.5 h-1 overflow-hidden rounded-full bg-line/50">
@@ -110,11 +112,13 @@ function ratingBars(you: Ratings, opp: Ratings) {
   );
 }
 
-export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
+export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }: Props) {
   const { input, featured } = run;
   const { alloc, budgetM, gravityOn, seed, gameplan, autoGameplan } = input;
   const replay = useMemo(() => replaySeason(input, run.completedGames), [input, run.completedGames]);
   const { program, games } = replay;
+  const reduceMotion = useReducedMotion();
+  const [reportOpen, setReportOpen] = useState(replay.complete);
   const { setSeason: setTickerSeason } = useSeasonTicker();
   const userR = useMemo(() => ratingsFromAllocation(alloc, { programSlug: program.slug, gravityOn }), [alloc, program.slug, gravityOn]);
   const field = useMemo(() => fieldRatings(), []);
@@ -199,6 +203,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
     const nextCalls = [...gameplan, pick];
     const nextInput = { ...input, gameplan: nextCalls };
     onRunChange({ ...run, input: nextInput, completedGames: played + 1, pending: null });
+    setReportOpen(false);
     setRevealing(true);
     revealTimer.current = setTimeout(() => {
       setRevealing(false);
@@ -206,6 +211,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
   };
 
   const advance = () => {
+    if (done) { setReportOpen(true); return; }
     const i = games.findIndex((g) => !g.result);
     onRunChange({ ...run, featured: i === -1 ? games.length - 1 : i, pending: null });
   };
@@ -215,6 +221,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
     if (revealing || !autoGameplan) return;
     if (revealTimer.current) clearTimeout(revealTimer.current);
     const next = replaySeason(input).games;
+    setReportOpen(true);
     onRunChange({ ...run, input: { ...input, gameplan: next.map((game) => ({ week: game.week, off: game.gameplan!.off, def: game.gameplan!.def })) },
       completedGames: next.length, featured: next.length - 1, pending: null });
   };
@@ -227,6 +234,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
       `${tags.join(" · ")}\n` +
       (outcome ? `${outcome}\n` : "") +
       coachingRecord.map((row) => `${row.label}: ${row.wins}-${row.losses} (${row.aboveExpected >= 0 ? "+" : ""}${row.aboveExpected.toFixed(1)} vs expected)`).join("\n") + "\n" +
+      games.filter((game) => game.result && game.gameplan).map((game) => `Week ${game.week}: ${tendencyLabel(game.gameplan!.off)} / ${tendencyLabel(game.gameplan!.def)}. ${gameplanOdds(game.winProb, game.gameplan!).summary}`).join("\n") + "\n" +
       (s.bestWin ? `Best win: ${s.bestWin.opponent} ${s.bestWin.scoreFor}-${s.bestWin.scoreAgainst}\n` : "") +
       (s.worstLoss ? `Worst loss: ${s.worstLoss.opponent} ${s.worstLoss.scoreFor}-${s.worstLoss.scoreAgainst}` : "");
     try {
@@ -244,6 +252,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
   const previewPlan = fg && !fg.result
     ? resolveGameplan({ week: fg.week, off: shownOff, def: shownDef }, fg.opponent.slug, fg.winProb)
     : null;
+  const callsReady = autoGameplan || (!!offPick && !!defPick);
   const prevGame = featured > 0 ? games[featured - 1] : null;
   const story = fg && !fg.result ? storylineFor(fg, prevGame, previewPlan) : null;
   const fgUpset =
@@ -267,7 +276,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
 
   return (
     <div data-run-id={run.id} data-run-seed={seed}>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
         <div className="flex items-center gap-4">
           <TeamMark
             slug={program.slug}
@@ -304,12 +313,15 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
             onClick={newSeason}
             className="scroll-mt-20 rounded-full border border-line px-5 py-2.5 text-sm text-fog transition-ui hover:border-fog hover:text-paper"
           >
-            New season
+            New season · new seed
           </button>
         </div>
       </div>
 
-      <div className="mb-10 grid grid-cols-2 gap-px bg-edge sm:grid-cols-4">
+      <p className="mb-3 text-sm text-fog">{summary.wins}–{summary.losses} · Projected rank #{rank} · <span className="tabular-nums">{played}/{games.length}</span> played</p>
+      <details className="mb-5 text-sm">
+      <summary className="min-h-11 cursor-pointer py-2 font-semibold">Season context</summary>
+      <div className="mt-3 grid grid-cols-2 gap-px bg-edge sm:grid-cols-4">
         <div className="bg-ink px-5 py-6">
           <p className="text-[11px] font-semibold text-fog">Record</p>
           <p className="tnum mt-2 text-3xl font-black tracking-tight">{summary.wins}–{summary.losses}</p>
@@ -338,16 +350,16 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
         <div className="bg-ink px-5 py-6">
           <p className="text-[11px] font-semibold text-fog">Played</p>
           <p className="tnum mt-2 text-3xl font-black tracking-tight">
-            {played}
-            <span className="text-lg text-fog">/{games.length}</span>
+            {played} games
           </p>
         </div>
       </div>
+      </details>
 
       <PlayoffPath games={games} program={program} />
 
-      {!done && fg && (
-        <div className="mb-12">
+      {fg && (!done || !reportOpen) && (
+        <section className="mb-8 rounded-2xl border border-line bg-panel/40 p-4 sm:p-6" aria-label={`Week ${fg.week} gameplan`}>
           {story && (
             <p className="text-xs font-semibold text-fog">
               {story.tag}
@@ -368,24 +380,23 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                 {fg.isHome ? " · vs" : " · at"}
                 {fg.stage === "sf" && !games.some((g) => g.stage === "qf") && " · first-round bye"}
               </p>
-              <h3 className="mt-1 text-4xl font-black tracking-tight sm:text-5xl">
+              <h3 className="mt-1 text-2xl font-black tracking-tight sm:text-4xl">
                 {fg.opponent.name}
               </h3>
               <p className="mt-1 text-sm text-fog">
                 {fg.opponent.conference}
                 {fg.opponent.ap_rank != null && ` · AP #${fg.opponent.ap_rank}`}
               </p>
-              <div className="mt-2"><ProbabilityPill probability={previewPlan?.adjustedWinProb ?? fg.gameplan?.adjustedWinProb ?? fg.winProb} /></div>
             </div>
           </div>
 
           {previewPlan && (
-            <section className="mt-8 rounded-2xl border border-line bg-panel/40 p-4 sm:p-6" aria-label={`Week ${fg.week} gameplan`}>
+            <div className="mt-4">
               <p className="text-xs font-semibold text-fog">
                 They run: <span className="text-paper">{offTagLabel(previewPlan.oppOffTag)} / {defTagLabel(previewPlan.oppDefTag)}</span>
               </p>
-              <p className="mt-2 text-sm text-fog">Expectation assumes a neutral gameplan. Out-coach it.</p>
-              <p className="mt-1 text-xs text-fog">Your defensive base is 4-2-5; the call below adjusts it for this matchup.</p>
+              <GameplanOdds neutral={fg.winProb} plan={callsReady ? previewPlan : null} label={autoGameplan ? "Auto · Balanced + Base" : callsReady ? "Selected calls · preview only" : "Preview only · choose two calls"} />
+              <p className="mt-2 text-xs leading-relaxed text-fog">Calls change odds, not guarantees. The season projection uses neutral gameplans.</p>
               <div className="mt-5">
                 <p className="mb-2 text-sm font-bold text-paper">Offensive tendency</p>
                 <div className="grid grid-cols-3 gap-2" role="group" aria-label="Offensive tendency">
@@ -397,8 +408,8 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                     </button>
                   ))}
                 </div>
-                <p className={`mt-2 text-xs font-semibold ${edgeColor(previewPlan.offEdge)}`} aria-live="polite">
-                  {tendencyLabel(shownOff)} vs their {defTagLabel(previewPlan.oppDefTag)} front — {edgeText(previewPlan.offEdge)}
+                <p className={`mt-2 text-xs font-semibold ${edgeColor(offPick || autoGameplan ? previewPlan.offEdge : 0)}`} aria-live="polite">
+                  {offPick || autoGameplan ? `${tendencyLabel(shownOff)} vs their ${defTagLabel(previewPlan.oppDefTag)} front — ${edgeText(previewPlan.offEdge)}` : "Choose your offensive tendency."}
                 </p>
               </div>
               <div className="mt-5">
@@ -412,31 +423,28 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                     </button>
                   ))}
                 </div>
-                <p className={`mt-2 text-xs font-semibold ${edgeColor(previewPlan.defEdge)}`} aria-live="polite">
-                  {tendencyLabel(shownDef)} vs their {offTagLabel(previewPlan.oppOffTag)} — {edgeText(previewPlan.defEdge)}
+                <p className={`mt-2 text-xs font-semibold ${edgeColor(defPick || autoGameplan ? previewPlan.defEdge : 0)}`} aria-live="polite">
+                  {defPick || autoGameplan ? `${tendencyLabel(shownDef)} vs their ${offTagLabel(previewPlan.oppOffTag)} — ${edgeText(previewPlan.defEdge)}` : "Choose your defensive tendency. Your base is 4-2-5."}
                 </p>
               </div>
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
                 <label className="flex min-h-14 cursor-pointer items-center gap-3 text-sm font-semibold text-paper">
                   <input type="checkbox" checked={autoGameplan} disabled={revealing}
-                    onChange={(event) => setAutoGameplan(event.target.checked)} className="h-5 w-5 accent-emerald-500" />
+                    onChange={(event) => setAutoGameplan(event.target.checked)} className="h-5 w-5 accent-paper" />
                   Auto gameplan for the rest of the season
                 </label>
-                <p className={`text-sm font-bold ${edgeColor(previewPlan.netEdge)}`} aria-live="polite">
-                  Net edge: {previewPlan.netEdge > 0 ? "+" : ""}{previewPlan.netEdge}%
-                </p>
+                {autoGameplan && <p className="text-xs text-fog">Auto calls Balanced + Base each week. Scheme matchup adjustments still apply.</p>}
               </div>
-            </section>
+            </div>
           )}
 
-          <div className="mt-8 grid items-end gap-10 sm:grid-cols-2">
-            <div>{ratingBars(userR, fg.oppRatings)}</div>
+          <div className="mt-4">
             <div>
               <AnimatePresence mode="wait" initial={false}>
                 {fg.result && !revealing ? (
                   <motion.div
                     key={`final-${featured}-${seed}`}
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
                     {fgUpset && (
@@ -450,11 +458,15 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                       {fg.result.won ? "W" : "L"} {fg.result.scoreFor}–{fg.result.scoreAgainst}
                     </p>
                     {fg.gameplan && (
-                      <p className="mt-3 max-w-sm text-sm text-fog">{gameplanNarration(fg.gameplan, fg.result.won, fg.opponent.name, fg.winProb)}</p>
+                      <div>
+                        <p className="mt-3 text-sm font-semibold">Called {tendencyLabel(fg.gameplan.off)} / {tendencyLabel(fg.gameplan.def)}</p>
+                        <GameplanOdds neutral={fg.winProb} plan={fg.gameplan} label="Committed calls · actual applied odds" />
+                        <p className="mt-3 max-w-xl text-sm text-fog">{gameplanNarration(fg.gameplan, fg.result.won, fg.opponent.name, fg.winProb)}</p>
+                      </div>
                     )}
                     <button
                       onClick={advance}
-                      className="mt-6 rounded-xl bg-emerald-500 px-8 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400"
+                      className="mt-4 min-h-12 w-full rounded-xl bg-paper px-6 py-3 text-base font-bold text-ink transition-ui hover:opacity-90 sm:w-auto"
                     >
                       {games.some((g) => !g.result) ? "Play next week" : "Open season report"}
                     </button>
@@ -466,11 +478,10 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <p className="tnum text-6xl font-black tracking-tight text-fog">– : –</p>
                     <button
                       onClick={kickoff}
                       disabled={revealing || (!autoGameplan && (!offPick || !defPick))}
-                      className="mt-6 rounded-xl bg-emerald-500 px-10 py-3.5 text-lg font-bold text-ink transition-ui hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-45"
+                      className="min-h-12 w-full rounded-xl bg-paper px-8 py-3 text-base font-bold text-ink transition-ui hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
                     >
                       {revealing ? "Simulating…" : "Kick off"}
                     </button>
@@ -478,8 +489,9 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                 )}
               </AnimatePresence>
             </div>
+            <details className="mt-5 border-t border-line pt-2"><summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold">Roster matchup details</summary><div className="mt-3 max-w-md">{ratingBars(userR, fg.oppRatings, reduceMotion)}</div></details>
           </div>
-        </div>
+        </section>
       )}
 
       <div role="region" aria-label="Season game log" className="border-t border-line">
@@ -491,7 +503,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
             return (
               <div
                 key={`${seed}-${g.stage ?? "reg"}-${g.week}`}
-                className="flex items-center gap-4 border-b border-line/60 py-3"
+                className="grid grid-cols-[2.5rem_1.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-2 border-b border-line/60 py-4 sm:flex sm:items-center sm:gap-4"
               >
                 <span className="w-14 shrink-0 text-xs font-semibold text-fog">
                   {g.stage ? STAGE_SHORT[g.stage] : `Wk ${g.week}`}
@@ -504,7 +516,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                   size="sm"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-paper">
+                  <p className="break-words text-sm font-semibold text-paper">
                     <span className="mr-2 text-xs font-normal text-fog">
                       {g.isHome ? "vs" : "at"}
                     </span>
@@ -515,14 +527,15 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
                   </p>
                   {g.gameplan && (
                     <p className="mt-1 text-xs text-fog">
-                      {tendencyLabel(g.gameplan.off)} · {tendencyLabel(g.gameplan.def)} · {g.gameplan.netEdge > 0 ? "+" : ""}{g.gameplan.netEdge}% edge
+                      {tendencyLabel(g.gameplan.off)} · {tendencyLabel(g.gameplan.def)}
                     </p>
                   )}
+                  <GameplanOdds neutral={g.winProb} plan={g.gameplan ?? null} label="Committed calls" compact />
                   {g.gameplan && (
                     <p className="mt-1 text-xs text-fog">{gameplanNarration(g.gameplan, r.won, g.opponent.name, g.winProb)}</p>
                   )}
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="col-span-2 col-start-2 flex flex-wrap items-center gap-3 sm:shrink-0">
                   {upset && (
                     <span className="text-[11px] font-semibold text-status-caution">
                       Upset
@@ -547,9 +560,9 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
       </div>
 
       {/* season report */}
-      {done && (
+      {done && reportOpen && (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           className="mt-16 border-t border-line pt-8"
         >
@@ -665,6 +678,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
           />
 
           <div className="mt-8 flex flex-wrap gap-3">
+            <button onClick={onReplay} className="min-h-11 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-ink transition-ui hover:opacity-90">Replay this challenge</button>
             <button
               onClick={copySummary}
               className="rounded-full border border-line px-6 py-3 text-sm font-semibold text-paper transition-ui hover:border-fog"
@@ -675,7 +689,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
               onClick={newSeason}
               className="rounded-full border border-line px-6 py-3 text-sm font-semibold text-paper transition-ui hover:border-fog"
             >
-              New season
+              New season · new seed
             </button>
             <button
               onClick={onBack}
@@ -697,7 +711,8 @@ export default function SeasonMode({ run, onRunChange, onNew, onBack }: Props) {
             win and you climb, lose and you fall.
           </p>
           <p>
-            Your slate is fixed — the same exam for every GM at your program.
+            Your regular-season slate is fixed for your program and challenge seed.
+            Replay this challenge to keep that slate while changing your allocation and calls.
             Your selected book, roster allocation, opponent and weekly calls
             determine your odds. Compare your results with the roster&rsquo;s
             projected wins across the season.

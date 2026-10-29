@@ -46,3 +46,13 @@ Measured at the $55M cap with 32 paired seeds per tagged program. Each gain comp
 | boston-college | +0.057 | +0.000 | +0.050 | $4.3M / $0.0M | Yes |
 
 Directionality and monotonicity: 40/40 programs pass.
+
+## Coaching measurement at the current book
+
+$55M, Texas, gravity on in both allocation and ratings, 400 paired seeds (0–399). The comparison is best weekly calls versus the game's Auto Balanced + Base calls, including Balanced's +3 against multiple fronts. Preseason expectation remains the neutral unadjusted probability sum.
+
+- Probability-sum expected regular-win gain: +0.656.
+- Sampled actual regular-win gain: +0.565.
+- Identical regular-season opponent/venue slates; changing calls and overtime can consume random draws differently. Sampled outcomes are observations, not guaranteed counterfactual wins.
+- Optimal defensive options (ties included): {"bracket":4104,"base":439,"blitz":292}.
+- Optimal offensive options (ties included): {"air":3653,"ground":3343,"balanced":590}.
