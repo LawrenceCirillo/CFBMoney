@@ -9,6 +9,8 @@ import TeamMark from "@/components/TeamMark";
 import { defTagLabel, gameplanNarration, gameplanRecord, offTagLabel, tendencyLabel } from "@/lib/gameplan";
 import { SIM_VERSION } from "@/lib/season-replay";
 import { GameplanOdds } from "@/components/build/ProbabilityPill";
+import PlayoffPath from "@/components/build/PlayoffPath";
+import { venueLabel } from "@/lib/simulator";
 
 export const dynamic = "force-dynamic";
 
@@ -263,12 +265,22 @@ export default async function ShareSeasonPage({ params }: Props) {
       </div>
 
       {/* game log */}
+      <div className="mt-8">
+        <PlayoffPath legacy={(season.simVersion ?? 0) < 5}
+          program={{ slug: season.programSlug, name: season.programName, color: season.programColor,
+            abbr: getTeam(season.programSlug)?.abbr ?? season.programName.slice(0, 4) }}
+          games={season.games.map((game) => ({ ...game,
+            opponent: { slug: game.oppSlug, name: game.oppName, color: game.oppColor,
+              abbr: getTeam(game.oppSlug)?.abbr ?? game.oppName.slice(0, 4) },
+            result: { won: game.won, scoreFor: game.scoreFor, scoreAgainst: game.scoreAgainst },
+          }))} />
+      </div>
       <div className="mt-4 overflow-hidden rounded-2xl border border-edge">
         <p className="border-b border-line bg-panel/60 px-5 py-3 text-[11px] font-semibold text-fog">
           Game log
         </p>
         {season.games.map((g) => {
-          const weekLabel = g.stage === "qf"
+          const weekLabel = g.stage === "fr" ? "FR" : g.stage === "qf"
             ? "QF"
             : g.stage === "sf"
               ? "SF"
@@ -304,7 +316,7 @@ export default async function ShareSeasonPage({ params }: Props) {
                     size="sm"
                   />
                   <p className="min-w-0 flex-1 break-words pt-0.5 font-semibold leading-snug text-paper">
-                    <span className="mr-1 text-xs font-normal text-fog">{g.isHome ? "vs" : "at"}</span>
+                    <span className="mr-1 text-xs font-normal text-fog">{venueLabel(g)}</span>
                     {g.oppName}
                   </p>
                   <span className="shrink-0 whitespace-nowrap pt-0.5 text-sm">{scoreLine(g)}</span>
@@ -322,7 +334,7 @@ export default async function ShareSeasonPage({ params }: Props) {
                 />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold text-paper">
-                    <span className="mr-2 text-xs font-normal text-fog">{g.isHome ? "vs" : "at"}</span>
+                    <span className="mr-2 text-xs font-normal text-fog">{venueLabel(g)}</span>
                     {g.oppName}
                   </p>
                   {details}

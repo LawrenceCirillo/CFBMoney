@@ -8,6 +8,7 @@ import {
   groupRanks,
   ratingsFromAllocation,
   summarizeSeason,
+  venueLabel,
   type Ratings,
   type ScheduledGame,
 } from "@/lib/simulator";
@@ -44,12 +45,14 @@ interface Props {
 }
 
 const STAGE_LABEL: Record<PostseasonStage, string> = {
+  fr: "Playoff first round",
   qf: "Playoff quarterfinal",
   sf: "Playoff semifinal",
   ncg: "National championship",
   bowl: "The Money Bowl",
 };
 const STAGE_SHORT: Record<PostseasonStage, string> = {
+  fr: "FR",
   qf: "QF",
   sf: "SF",
   ncg: "NCG",
@@ -62,7 +65,7 @@ function projection(games: ScheduledGame[]): number {
 }
 
 function rankOf(games: ScheduledGame[], fieldProj: number[]): number {
-  return projectedRank(projection(games.filter((g) => !g.stage || !!g.result)), fieldProj);
+  return projectedRank(projection(games.filter((g) => !g.stage)), fieldProj);
 }
 
 function edgeText(edge: number): string {
@@ -138,7 +141,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Rebuild from canonical prefixes only when committed inputs/progress change.
-  const rankHistory = useMemo(() => Array.from({ length: run.completedGames + 1 }, (_, count) =>
+  const rankHistory = useMemo(() => Array.from({ length: Math.min(12, run.completedGames) + 1 }, (_, count) =>
     rankOf(replaySeason(input, count).games, fieldProj)), [input, run.completedGames, fieldProj]);
   const [revealing, setRevealing] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -164,6 +167,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
         opponentSlug: game.opponent.slug,
         opponentAbbr: game.opponent.abbr,
         isHome: game.isHome,
+        venue: game.venue,
         scoreFor: game.result?.scoreFor,
         scoreAgainst: game.result?.scoreAgainst,
         won: game.result?.won,
@@ -177,9 +181,9 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
     if (copyTimer.current) clearTimeout(copyTimer.current);
   }, []);
 
-  const rank = rankHistory[rankHistory.length - 1];
+  const rank = replay.postseasonSeed ?? rankHistory[rankHistory.length - 1];
   const prevRank = rankHistory.length > 1 ? rankHistory[rankHistory.length - 2] : null;
-  const rankDelta = prevRank != null ? prevRank - rank : 0; // positive = climbed
+  const rankDelta = !postseasonStarted && prevRank != null ? prevRank - rank : 0;
 
   const outcome = done ? postseasonOutcome(games) : null;
   const dna = useMemo(() => groupRanks(alloc, data.teams), [alloc]);
@@ -318,7 +322,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
         </div>
       </div>
 
-      <p className="mb-3 text-sm text-fog">{summary.wins}–{summary.losses} · Projected rank #{rank} · <span className="tabular-nums">{played}/{games.length}</span> played</p>
+      <p className="mb-3 text-sm text-fog">{summary.wins}–{summary.losses} · {postseasonStarted ? "Qualification seed" : "Projected rank"} #{rank} · <span className="tabular-nums">{played}/{games.length}</span> played</p>
       <details className="mb-5 text-sm">
       <summary className="min-h-11 cursor-pointer py-2 font-semibold">Season context</summary>
       <div className="mt-3 grid grid-cols-2 gap-px bg-edge sm:grid-cols-4">
@@ -327,7 +331,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
           <p className="tnum mt-2 text-3xl font-black tracking-tight">{summary.wins}–{summary.losses}</p>
         </div>
         <div className="bg-ink px-5 py-6">
-          <p className="text-[11px] font-semibold text-fog">Proj. rank</p>
+          <p className="text-[11px] font-semibold text-fog">{postseasonStarted ? "Qualification seed" : "Proj. rank"}</p>
           <p className="tnum mt-2 text-3xl font-black tracking-tight">
             #{rank}
             {rankDelta !== 0 && (
@@ -356,8 +360,6 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
       </div>
       </details>
 
-      <PlayoffPath games={games} program={program} />
-
       {fg && (!done || !reportOpen) && (
         <section className="mb-8 rounded-2xl border border-line bg-panel/40 p-4 sm:p-6" aria-label={`Week ${fg.week} gameplan`}>
           {story && (
@@ -377,8 +379,8 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
             <div>
               <p className="text-xs font-semibold text-fog">
                 {fg.stage ? STAGE_LABEL[fg.stage] : `Week ${fg.week}`}
-                {fg.isHome ? " · vs" : " · at"}
-                {fg.stage === "sf" && !games.some((g) => g.stage === "qf") && " · first-round bye"}
+                {` · ${venueLabel(fg)}`}
+                {fg.stage === "qf" && fg.playerSeed != null && fg.playerSeed <= 4 && " · first-round bye"}
               </p>
               <h3 className="mt-1 text-2xl font-black tracking-tight sm:text-4xl">
                 {fg.opponent.name}
@@ -494,6 +496,8 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
         </section>
       )}
 
+      <PlayoffPath games={games} program={program} projectedPath={replay.postseasonPath} />
+
       <div role="region" aria-label="Season game log" className="border-t border-line">
         {games
           .filter((g) => g.result)
@@ -518,7 +522,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
                 <div className="min-w-0 flex-1">
                   <p className="break-words text-sm font-semibold text-paper">
                     <span className="mr-2 text-xs font-normal text-fog">
-                      {g.isHome ? "vs" : "at"}
+                      {venueLabel(g)}
                     </span>
                     {g.opponent.name}
                   </p>
@@ -583,7 +587,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
             {summary.wins}–{summary.losses}
           </p>
           <p className="mt-3 max-w-xl text-sm text-fog">
-            Final projected rank #{rank} · {regWins} regular-season wins against a pregame
+            Frozen qualification seed #{rank} · {regWins} regular-season wins against a pregame
             projection of {projWins.toFixed(1)}.
             {vsProj > 0.05
               ? ` This run finished ${vsProj.toFixed(1)} wins above that projection.`
@@ -706,7 +710,7 @@ export default function SeasonMode({ run, onRunChange, onNew, onReplay, onBack }
         <div className="mt-3 max-w-2xl space-y-2 leading-relaxed">
           <p>
             You play all 12 regular-season games one week at a time. Your projected
-            rank compares your projected final wins (actual + expected from
+            rank compares your projected regular-season wins (actual + expected from
             remaining games) against every other program&rsquo;s modeled expected wins —
             win and you climb, lose and you fall.
           </p>

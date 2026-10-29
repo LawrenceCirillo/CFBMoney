@@ -45,14 +45,14 @@ const draftSchema = z.object({
   pos: playsheetSchema, budgetM: z.number().int().min(GAME_BUDGET_MIN_M).max(GAME_BUDGET_M),
   gravityOn: z.boolean(), programSlug: z.string().refine((slug) => !!getTeam(slug)),
 }).strict().refine((draft) => Object.values(draft.pos).reduce((sum, n) => sum + Math.round(n * 10), 0) <= draft.budgetM * 10);
-const pendingSchema = z.object({ week: z.number().int().min(1).max(15),
+const pendingSchema = z.object({ week: z.number().int().min(1).max(16),
   off: z.enum(["air", "balanced", "ground"]).nullable(), def: z.enum(["blitz", "base", "bracket"]).nullable(),
 }).strict();
 const publishSchema = z.object({ key: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i), payload: SeasonPayloadSchema,
   result: z.object({ id: z.string().regex(/^[a-zA-Z0-9_-]{1,64}$/) }).strict().optional(),
 }).strict();
 const runSchema = z.object({ id: z.uuid(), input: SeasonPayloadSchema, pos: playsheetSchema,
-  completedGames: z.number().int().min(0).max(15), featured: z.number().int().min(0).max(14),
+  completedGames: z.number().int().min(0).max(16), featured: z.number().int().min(0).max(15),
   pending: pendingSchema.nullable(), publish: publishSchema.nullable(),
 }).strict();
 const noticeSchema = z.object({ mode: z.enum(["quick", "season"]), draft: draftSchema, reason: z.string().max(200) }).strict();

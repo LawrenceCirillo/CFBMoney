@@ -6,13 +6,14 @@ import {
   ratingsFromAllocation,
   simulateGame,
   summarizeSeason,
+  gameVenue,
   type Allocation,
   type ScheduledGame,
 } from "./simulator";
 import {
   buildSeasonGames,
   nextPostseasonGame,
-  postseasonOpener,
+  buildPostseasonPath,
   projectedRank,
 } from "./season-mode";
 import type { TeamBudget } from "./types";
@@ -20,7 +21,7 @@ import { neutralPick, resolveGameplan, schemeTagFingerprint, type GameplanPick }
 import { GRAVITY_VERSION, gravityFingerprint } from "./gravity";
 
 /** Change this when schedule, ratings, RNG, or postseason rules change. */
-export const SIM_VERSION = 4;
+export const SIM_VERSION = 5;
 export type ReplayMode = "quick" | "season";
 
 export interface ReplayInput {
@@ -70,6 +71,10 @@ export interface ReplayRun {
   ratings: ReturnType<typeof ratingsFromAllocation>;
   summary: ReturnType<typeof summarizeSeason>;
   tags: string[];
+  /** Frozen from the 12 regular results. Null until qualification is known. */
+  postseasonSeed: number | null;
+  /** Potential player rounds only; unplayed entries are projections, not results. */
+  postseasonPath: ScheduledGame[];
 }
 
 /** Replay from the seed through N finished games (or through the final game). */
@@ -91,8 +96,10 @@ export function replaySeason(
   const fieldProj = field
     ? teams.filter((t) => t.slug !== program.slug).map((t) => modeledExpectedWins(t.budget_mid_m, field))
     : [];
-  const ctx = field ? { program, teams, userR: ratings, field, rng } : null;
+  const ctx = field ? { program, teams, userR: ratings, field } : null;
   const games = buildSeasonGames(input.seed, ratings, program, teams);
+  let postseasonSeed: number | null = null;
+  let postseasonPath: ScheduledGame[] = [];
   const calls = new Map(input.gameplan.map((pick) => [pick.week, pick]));
   let played = 0;
 
@@ -107,20 +114,21 @@ export function replaySeason(
     const gameplan = input.mode === "quick"
       ? { ...resolved, offEdge: 0, defEdge: 0, netEdge: 0, adjustedWinProb: game.winProb }
       : resolved;
-    const result = simulateGame(ratings, game.oppRatings, game.isHome, rng, gameplan.adjustedWinProb);
+    const result = simulateGame(ratings, game.oppRatings, gameVenue(game), rng, gameplan.adjustedWinProb);
     games[index] = { ...game, gameplan, result };
     played++;
 
     if (!ctx) continue;
-    const used = new Set(games.map((g) => g.opponent.slug));
     if (!game.stage && games.filter((g) => !g.stage).every((g) => g.result)) {
       // Seeding uses regular-season results only, before any postseason game exists.
       const projection = games
         .filter((g) => !g.stage)
         .reduce((sum, g) => sum + (g.result?.won ? 1 : 0), 0);
-      games.push(postseasonOpener(projectedRank(projection, fieldProj), used, ctx));
+      postseasonSeed = projectedRank(projection, fieldProj);
+      postseasonPath = buildPostseasonPath(postseasonSeed, new Set(games.filter((g) => !g.stage).map((g) => g.opponent.slug)), ctx);
+      games.push(postseasonPath[0]);
     } else if (game.stage && result.won) {
-      const next = nextPostseasonGame(game.stage, used, ctx);
+      const next = nextPostseasonGame(game.stage, postseasonPath);
       if (next) games.push(next);
     }
   }
@@ -133,5 +141,7 @@ export function replaySeason(
     ratings,
     summary: summarizeSeason(games),
     tags: archetype(input.alloc),
+    postseasonSeed,
+    postseasonPath,
   };
 }

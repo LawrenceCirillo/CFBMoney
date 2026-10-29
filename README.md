@@ -210,6 +210,25 @@ at most 16 KiB of JSON and returns 413 for a larger body. Anyone opening
 `/leaderboard` ranks verified seasons by wins or wins-minus-expected. Seasons
 published before server replay remain in the unranked archive.
 
+Model v5 Season mode follows only the player's fixed projected playoff path.
+Qualification freezes after 12 regular games; the eligible field excludes your
+program and regular opponents, then uses budget-modeled expectations with slug
+tie-breaks among the 68 tracked programs. It does not model national CFP selection
+or other teams' results. Seeds 1–4 have a first-round bye into week 14 quarterfinals;
+seeds 5–12 start in week 13 (5v12, 6v11, 7v10, 8v9). Semifinals are week 15 and
+the championship is week 16. Seeds 5–8 host the opener; subsequent rounds and
+the peer Money Bowl are neutral. A loss ends the path. Quick sim stays at 12 games.
+
+Publish payloads contain canonical inputs and up to 16 ordered weekly calls,
+covering actual games only. Byes have no game or call. Server replay persists the
+explicit venue and frozen path seeds inside existing game JSONB; no new SQL
+columns are required. Stored expectation covers every actual game using neutral
+gameplan probabilities. Current ranks use v5; v4 and earlier results remain
+unchanged in the unranked archive with live recaps. Gravity table/payload version
+is still v1. The v5 gameplan bound fix preserves additive percentage points and
+the ±8 clamp without allowing a negative adjustment to increase win probability
+or a positive adjustment to reduce it.
+
 The data layer (`db/`) uses Drizzle ORM against any Postgres. Without
 `DATABASE_URL` the app still builds and runs — publishing is disabled and the
 leaderboard/share pages explain how to connect.

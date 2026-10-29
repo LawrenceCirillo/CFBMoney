@@ -87,7 +87,7 @@ export default async function OgImage({ params }: { params: Promise<{ id: string
           }}
         />
         <div style={{ fontSize: 28, color: "#71717a" }}>
-          {`CFB Money · Simulated season`}
+          {`CFB Money · ${s.simVersion ? `Model v${s.simVersion}` : "Legacy simulated season"}`}
         </div>
         <div
           style={{ display: "flex", alignItems: "center", gap: 40, marginTop: 24 }}
@@ -103,6 +103,9 @@ export default async function OgImage({ params }: { params: Promise<{ id: string
           </div>
         </div>
         <div style={{ fontSize: 32, color: "#d4d4d8", marginTop: 32 }}>{line}</div>
+        {s.games.some((game) => game.stage) && <div style={{ fontSize: 24, color: "#a1a1aa", marginTop: 12 }}>
+          {`${(s.simVersion ?? 0) >= 5 ? "Modeled player path" : "Earlier-model postseason"} · ${s.games.at(-1)?.stage === "fr" ? "First round" : s.games.at(-1)?.stage === "qf" ? "Quarterfinal" : s.games.at(-1)?.stage === "sf" ? "Semifinal" : s.games.at(-1)?.stage === "ncg" ? "Championship" : "Money Bowl"}${s.games.at(-1)?.venue === "neutral" ? " · neutral site" : ""}`}
+        </div>}
         {s.bestWin ? (
           <div style={{ fontSize: 28, color: "#6ee7b7", marginTop: 12 }}>
             {`Best win: ${s.bestWin.opponent} ${s.bestWin.scoreFor}–${s.bestWin.scoreAgainst}`}

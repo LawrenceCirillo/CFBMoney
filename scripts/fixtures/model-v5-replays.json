@@ -1,0 +1,3500 @@
+[
+  {
+    "name": "quick-auto-gravity-true",
+    "input": {
+      "mode": "quick",
+      "seed": 24,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [],
+      "autoGameplan": true,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": null,
+    "summary": {
+      "wins": 9,
+      "losses": 3,
+      "expectedWins": 9.6,
+      "avgMargin": 12,
+      "bestWin": {
+        "opponent": "LSU",
+        "scoreFor": 49,
+        "scoreAgainst": 30
+      },
+      "worstLoss": {
+        "opponent": "Arkansas",
+        "scoreFor": 34,
+        "scoreAgainst": 36
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "georgia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8562269717260069,
+        "gameplan": {
+          "week": 1,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8562269717260069
+        },
+        "result": {
+          "scoreFor": 28,
+          "scoreAgainst": 38,
+          "won": false
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "auburn",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8507115684593201,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8507115684593201
+        },
+        "result": {
+          "scoreFor": 41,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "vanderbilt",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8270307733976626,
+        "gameplan": {
+          "week": 3,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8270307733976626
+        },
+        "result": {
+          "scoreFor": 39,
+          "scoreAgainst": 18,
+          "won": true
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "texas-am",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5153729120935678,
+        "gameplan": {
+          "week": 4,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.5153729120935678
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 42,
+          "won": false
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "oklahoma-state",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9489874744257977,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "air-raid",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9489874744257977
+        },
+        "result": {
+          "scoreFor": 39,
+          "scoreAgainst": 4,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "virginia-tech",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9079256078833706,
+        "gameplan": {
+          "week": 6,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9079256078833706
+        },
+        "result": {
+          "scoreFor": 46,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "miami",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5215727736864589,
+        "gameplan": {
+          "week": 7,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.5215727736864589
+        },
+        "result": {
+          "scoreFor": 43,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "missouri",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.898199529782483,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.898199529782483
+        },
+        "result": {
+          "scoreFor": 28,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "arkansas",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8714025281211646,
+        "gameplan": {
+          "week": 9,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8714025281211646
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 36,
+          "won": false
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "lsu",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6745424438315756,
+        "gameplan": {
+          "week": 10,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6745424438315756
+        },
+        "result": {
+          "scoreFor": 49,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "oklahoma",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8724602931722558,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8724602931722558
+        },
+        "result": {
+          "scoreFor": 33,
+          "scoreAgainst": 23,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "south-carolina",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8451513249576179,
+        "gameplan": {
+          "week": 12,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8451513249576179
+        },
+        "result": {
+          "scoreFor": 46,
+          "scoreAgainst": 27,
+          "won": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "season-auto-gravity-true",
+    "input": {
+      "mode": "season",
+      "seed": 147,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [],
+      "autoGameplan": true,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": 4,
+    "summary": {
+      "wins": 10,
+      "losses": 3,
+      "expectedWins": 10.4,
+      "avgMargin": 13.2,
+      "bestWin": {
+        "opponent": "LSU",
+        "scoreFor": 33,
+        "scoreAgainst": 14
+      },
+      "worstLoss": {
+        "opponent": "Vanderbilt",
+        "scoreFor": 27,
+        "scoreAgainst": 29
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "texas-am",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6854478671695616,
+        "gameplan": {
+          "week": 1,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6854478671695616
+        },
+        "result": {
+          "scoreFor": 45,
+          "scoreAgainst": 29,
+          "won": true
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "vanderbilt",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8270307733976626,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8270307733976626
+        },
+        "result": {
+          "scoreFor": 27,
+          "scoreAgainst": 29,
+          "won": false
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "georgia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8562269717260069,
+        "gameplan": {
+          "week": 3,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8562269717260069
+        },
+        "result": {
+          "scoreFor": 44,
+          "scoreAgainst": 28,
+          "won": true
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "lsu",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6745424438315756,
+        "gameplan": {
+          "week": 4,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6745424438315756
+        },
+        "result": {
+          "scoreFor": 33,
+          "scoreAgainst": 14,
+          "won": true
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "auburn",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8507115684593201,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 3,
+          "defEdge": 0,
+          "netEdge": 3,
+          "adjustedWinProb": 0.8807115684593201
+        },
+        "result": {
+          "scoreFor": 25,
+          "scoreAgainst": 1,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "oklahoma",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.756050512533891,
+        "gameplan": {
+          "week": 6,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.756050512533891
+        },
+        "result": {
+          "scoreFor": 22,
+          "scoreAgainst": 34,
+          "won": false
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "mississippi-state",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9079256078833706,
+        "gameplan": {
+          "week": 7,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9079256078833706
+        },
+        "result": {
+          "scoreFor": 38,
+          "scoreAgainst": 3,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "syracuse",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9229773699304664,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9229773699304664
+        },
+        "result": {
+          "scoreFor": 45,
+          "scoreAgainst": 17,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "missouri",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.898199529782483,
+        "gameplan": {
+          "week": 9,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.898199529782483
+        },
+        "result": {
+          "scoreFor": 69,
+          "scoreAgainst": 27,
+          "won": true
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "notre-dame",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7189074371345069,
+        "gameplan": {
+          "week": 10,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 3,
+          "defEdge": 0,
+          "netEdge": 3,
+          "adjustedWinProb": 0.7489074371345069
+        },
+        "result": {
+          "scoreFor": 25,
+          "scoreAgainst": 16,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "northwestern",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.878400639723552,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.878400639723552
+        },
+        "result": {
+          "scoreFor": 25,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "south-carolina",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7161401474452741,
+        "gameplan": {
+          "week": 12,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7161401474452741
+        },
+        "result": {
+          "scoreFor": 36,
+          "scoreAgainst": 20,
+          "won": true
+        }
+      },
+      {
+        "week": 14,
+        "opponent": "ole-miss",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "qf",
+        "playerSeed": 4,
+        "opponentSeed": 5,
+        "winProb": 0.67158932860793,
+        "gameplan": {
+          "week": 14,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.67158932860793
+        },
+        "result": {
+          "scoreFor": 6,
+          "scoreAgainst": 32,
+          "won": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "quick-auto-gravity-false",
+    "input": {
+      "mode": "quick",
+      "seed": 24,
+      "programSlug": "texas",
+      "gravityOn": false,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [],
+      "autoGameplan": true,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.49789583566883,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": null,
+    "summary": {
+      "wins": 9,
+      "losses": 3,
+      "expectedWins": 9.6,
+      "avgMargin": 11.9,
+      "bestWin": {
+        "opponent": "LSU",
+        "scoreFor": 48,
+        "scoreAgainst": 30
+      },
+      "worstLoss": {
+        "opponent": "Arkansas",
+        "scoreFor": 34,
+        "scoreAgainst": 36
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "georgia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8535412755120846,
+        "gameplan": {
+          "week": 1,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8535412755120846
+        },
+        "result": {
+          "scoreFor": 28,
+          "scoreAgainst": 38,
+          "won": false
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "auburn",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8479575362916597,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8479575362916597
+        },
+        "result": {
+          "scoreFor": 41,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "vanderbilt",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8240006179965036,
+        "gameplan": {
+          "week": 3,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8240006179965036
+        },
+        "result": {
+          "scoreFor": 39,
+          "scoreAgainst": 18,
+          "won": true
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "texas-am",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5106769791286743,
+        "gameplan": {
+          "week": 4,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.5106769791286743
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 42,
+          "won": false
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "oklahoma-state",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9477413260783045,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "air-raid",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9477413260783045
+        },
+        "result": {
+          "scoreFor": 39,
+          "scoreAgainst": 4,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "virginia-tech",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9059652420631676,
+        "gameplan": {
+          "week": 6,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9059652420631676
+        },
+        "result": {
+          "scoreFor": 46,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "miami",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5168798000657542,
+        "gameplan": {
+          "week": 7,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.5168798000657542
+        },
+        "result": {
+          "scoreFor": 43,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "missouri",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8960898659532682,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8960898659532682
+        },
+        "result": {
+          "scoreFor": 28,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "arkansas",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8689132528401354,
+        "gameplan": {
+          "week": 9,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8689132528401354
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 36,
+          "won": false
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "lsu",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6702899603598054,
+        "gameplan": {
+          "week": 10,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6702899603598054
+        },
+        "result": {
+          "scoreFor": 48,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "oklahoma",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8699851849547686,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8699851849547686
+        },
+        "result": {
+          "scoreFor": 33,
+          "scoreAgainst": 23,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "south-carolina",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.84232998071873,
+        "gameplan": {
+          "week": 12,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.84232998071873
+        },
+        "result": {
+          "scoreFor": 46,
+          "scoreAgainst": 27,
+          "won": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "season-top-four-bye",
+    "input": {
+      "mode": "season",
+      "seed": 0,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [
+        {
+          "week": 1,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 2,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 4,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 5,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 7,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 8,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 10,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 11,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 14,
+          "off": "balanced",
+          "def": "base"
+        }
+      ],
+      "autoGameplan": false,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": 1,
+    "summary": {
+      "wins": 12,
+      "losses": 1,
+      "expectedWins": 10.7,
+      "avgMargin": 16,
+      "bestWin": {
+        "opponent": "Alabama",
+        "scoreFor": 43,
+        "scoreAgainst": 35
+      },
+      "worstLoss": {
+        "opponent": "Ole Miss",
+        "scoreFor": 28,
+        "scoreAgainst": 31
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "alabama",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6164997182205653,
+        "gameplan": {
+          "week": 1,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6164997182205653
+        },
+        "result": {
+          "scoreFor": 43,
+          "scoreAgainst": 35,
+          "won": true
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "mississippi-state",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9079256078833706,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9079256078833706
+        },
+        "result": {
+          "scoreFor": 32,
+          "scoreAgainst": 0,
+          "won": true
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "missouri",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.898199529782483,
+        "gameplan": {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.958199529782483
+        },
+        "result": {
+          "scoreFor": 29,
+          "scoreAgainst": 14,
+          "won": true
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "oklahoma",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.756050512533891,
+        "gameplan": {
+          "week": 4,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.756050512533891
+        },
+        "result": {
+          "scoreFor": 32,
+          "scoreAgainst": 25,
+          "won": true
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "illinois",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9049097440930756,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "power-run",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9049097440930756
+        },
+        "result": {
+          "scoreFor": 47,
+          "scoreAgainst": 11,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "vanderbilt",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.917270064232288,
+        "gameplan": {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.917270064232288
+        },
+        "result": {
+          "scoreFor": 39,
+          "scoreAgainst": 25,
+          "won": true
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "kentucky",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8570278977383443,
+        "gameplan": {
+          "week": 7,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8570278977383443
+        },
+        "result": {
+          "scoreFor": 32,
+          "scoreAgainst": 15,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "south-carolina",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7161401474452741,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7161401474452741
+        },
+        "result": {
+          "scoreFor": 32,
+          "scoreAgainst": 26,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "georgia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8562269717260069,
+        "gameplan": {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": -2,
+          "defEdge": 4,
+          "netEdge": 2,
+          "adjustedWinProb": 0.8762269717260069
+        },
+        "result": {
+          "scoreFor": 44,
+          "scoreAgainst": 29,
+          "won": true
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "auburn",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8507115684593201,
+        "gameplan": {
+          "week": 10,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8507115684593201
+        },
+        "result": {
+          "scoreFor": 43,
+          "scoreAgainst": 23,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "arkansas",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9426586609029586,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9426586609029586
+        },
+        "result": {
+          "scoreFor": 23,
+          "scoreAgainst": 8,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "texas-tech",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7705760873650811,
+        "gameplan": {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": -2,
+          "defEdge": 4,
+          "netEdge": 2,
+          "adjustedWinProb": 0.7905760873650811
+        },
+        "result": {
+          "scoreFor": 58,
+          "scoreAgainst": 32,
+          "won": true
+        }
+      },
+      {
+        "week": 14,
+        "opponent": "ole-miss",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "qf",
+        "playerSeed": 1,
+        "opponentSeed": 8,
+        "winProb": 0.67158932860793,
+        "gameplan": {
+          "week": 14,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.67158932860793
+        },
+        "result": {
+          "scoreFor": 28,
+          "scoreAgainst": 31,
+          "won": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "season-quarterfinal-loss",
+    "input": {
+      "mode": "season",
+      "seed": 2,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [
+        {
+          "week": 1,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 2,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 4,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 5,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 7,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 8,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 10,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 11,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 13,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 14,
+          "off": "balanced",
+          "def": "base"
+        }
+      ],
+      "autoGameplan": false,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": 11,
+    "summary": {
+      "wins": 10,
+      "losses": 4,
+      "expectedWins": 10.6,
+      "avgMargin": 9.3,
+      "bestWin": {
+        "opponent": "Ole Miss",
+        "scoreFor": 35,
+        "scoreAgainst": 26
+      },
+      "worstLoss": {
+        "opponent": "Oklahoma",
+        "scoreFor": 26,
+        "scoreAgainst": 29
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "oklahoma",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.756050512533891,
+        "gameplan": {
+          "week": 1,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.756050512533891
+        },
+        "result": {
+          "scoreFor": 26,
+          "scoreAgainst": 29,
+          "won": false
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "auburn",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7240936027782977,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 3,
+          "defEdge": 0,
+          "netEdge": 3,
+          "adjustedWinProb": 0.7540936027782977
+        },
+        "result": {
+          "scoreFor": 29,
+          "scoreAgainst": 15,
+          "won": true
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "florida",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8168228021047956,
+        "gameplan": {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.8768228021047957
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 24,
+          "won": true
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "vanderbilt",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.917270064232288,
+        "gameplan": {
+          "week": 4,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -5,
+          "netEdge": -3,
+          "adjustedWinProb": 0.8872700642322879
+        },
+        "result": {
+          "scoreFor": 55,
+          "scoreAgainst": 32,
+          "won": true
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "texas-tech",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7705760873650811,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7705760873650811
+        },
+        "result": {
+          "scoreFor": 41,
+          "scoreAgainst": 36,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "missouri",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7958574334266276,
+        "gameplan": {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.8558574334266276
+        },
+        "result": {
+          "scoreFor": 31,
+          "scoreAgainst": 24,
+          "won": true
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "iowa",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9719303938930719,
+        "gameplan": {
+          "week": 7,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 5,
+          "netEdge": 7,
+          "adjustedWinProb": 0.999
+        },
+        "result": {
+          "scoreFor": 50,
+          "scoreAgainst": 14,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "texas-am",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5153729120935678,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.5153729120935678
+        },
+        "result": {
+          "scoreFor": 27,
+          "scoreAgainst": 34,
+          "won": false
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "lsu",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5032102282263085,
+        "gameplan": {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": -2,
+          "defEdge": 4,
+          "netEdge": 2,
+          "adjustedWinProb": 0.5232102282263085
+        },
+        "result": {
+          "scoreFor": 26,
+          "scoreAgainst": 34,
+          "won": false
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "ole-miss",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7474633343691603,
+        "gameplan": {
+          "week": 10,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7474633343691603
+        },
+        "result": {
+          "scoreFor": 35,
+          "scoreAgainst": 26,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "kansas-state",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9634437752815252,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9634437752815252
+        },
+        "result": {
+          "scoreFor": 53,
+          "scoreAgainst": 3,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "georgia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8562269717260069,
+        "gameplan": {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": -2,
+          "defEdge": 4,
+          "netEdge": 2,
+          "adjustedWinProb": 0.8762269717260069
+        },
+        "result": {
+          "scoreFor": 30,
+          "scoreAgainst": 22,
+          "won": true
+        }
+      },
+      {
+        "week": 13,
+        "opponent": "alabama",
+        "isHome": false,
+        "venue": "away",
+        "stage": "fr",
+        "playerSeed": 11,
+        "opponentSeed": 6,
+        "winProb": 0.6164997182205653,
+        "gameplan": {
+          "week": 13,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6164997182205653
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 31,
+          "won": true
+        }
+      },
+      {
+        "week": 14,
+        "opponent": "miami",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "qf",
+        "playerSeed": 11,
+        "opponentSeed": 3,
+        "winProb": 0.6088500762655233,
+        "gameplan": {
+          "week": 14,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6088500762655233
+        },
+        "result": {
+          "scoreFor": 26,
+          "scoreAgainst": 43,
+          "won": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "season-first-round-loss",
+    "input": {
+      "mode": "season",
+      "seed": 4,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [
+        {
+          "week": 1,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 2,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 4,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 5,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 7,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 8,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 10,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 11,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 13,
+          "off": "air",
+          "def": "blitz"
+        }
+      ],
+      "autoGameplan": false,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": 11,
+    "summary": {
+      "wins": 9,
+      "losses": 4,
+      "expectedWins": 10.4,
+      "avgMargin": 12.5,
+      "bestWin": {
+        "opponent": "Tennessee",
+        "scoreFor": 53,
+        "scoreAgainst": 13
+      },
+      "worstLoss": {
+        "opponent": "Georgia",
+        "scoreFor": 21,
+        "scoreAgainst": 23
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "oklahoma",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8724602931722558,
+        "gameplan": {
+          "week": 1,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8724602931722558
+        },
+        "result": {
+          "scoreFor": 49,
+          "scoreAgainst": 20,
+          "won": true
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "georgia",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7320669137238373,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7320669137238373
+        },
+        "result": {
+          "scoreFor": 21,
+          "scoreAgainst": 23,
+          "won": false
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "kansas",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.95781184084745,
+        "gameplan": {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.999
+        },
+        "result": {
+          "scoreFor": 51,
+          "scoreAgainst": 0,
+          "won": true
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "arkansas",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9426586609029586,
+        "gameplan": {
+          "week": 4,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": -2,
+          "defEdge": -2,
+          "netEdge": -4,
+          "adjustedWinProb": 0.9026586609029585
+        },
+        "result": {
+          "scoreFor": 23,
+          "scoreAgainst": 20,
+          "won": true
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "oregon",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6479055742546584,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 3,
+          "defEdge": 0,
+          "netEdge": 3,
+          "adjustedWinProb": 0.6779055742546585
+        },
+        "result": {
+          "scoreFor": 25,
+          "scoreAgainst": 47,
+          "won": false
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "texas-am",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5153729120935678,
+        "gameplan": {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.5753729120935678
+        },
+        "result": {
+          "scoreFor": 24,
+          "scoreAgainst": 39,
+          "won": false
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "california",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9536691896172937,
+        "gameplan": {
+          "week": 7,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "3-4",
+          "offEdge": 5,
+          "defEdge": 5,
+          "netEdge": 8,
+          "adjustedWinProb": 0.999
+        },
+        "result": {
+          "scoreFor": 38,
+          "scoreAgainst": 7,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "south-carolina",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7161401474452741,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7161401474452741
+        },
+        "result": {
+          "scoreFor": 43,
+          "scoreAgainst": 27,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "missouri",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.898199529782483,
+        "gameplan": {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.958199529782483
+        },
+        "result": {
+          "scoreFor": 33,
+          "scoreAgainst": 14,
+          "won": true
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "illinois",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9049097440930756,
+        "gameplan": {
+          "week": 10,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "power-run",
+          "oppDefTag": "3-3-5",
+          "offEdge": -2,
+          "defEdge": -5,
+          "netEdge": -7,
+          "adjustedWinProb": 0.8349097440930755
+        },
+        "result": {
+          "scoreFor": 32,
+          "scoreAgainst": 27,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "auburn",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8507115684593201,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 3,
+          "defEdge": 0,
+          "netEdge": 3,
+          "adjustedWinProb": 0.8807115684593201
+        },
+        "result": {
+          "scoreFor": 46,
+          "scoreAgainst": 33,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "tennessee",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7474633343691603,
+        "gameplan": {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.8074633343691604
+        },
+        "result": {
+          "scoreFor": 53,
+          "scoreAgainst": 13,
+          "won": true
+        }
+      },
+      {
+        "week": 13,
+        "opponent": "alabama",
+        "isHome": false,
+        "venue": "away",
+        "stage": "fr",
+        "playerSeed": 11,
+        "opponentSeed": 6,
+        "winProb": 0.6164997182205653,
+        "gameplan": {
+          "week": 13,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6164997182205653
+        },
+        "result": {
+          "scoreFor": 39,
+          "scoreAgainst": 44,
+          "won": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "season-bowl",
+    "input": {
+      "mode": "season",
+      "seed": 12,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [
+        {
+          "week": 1,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 2,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 4,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 5,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 7,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 8,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 10,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 11,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 13,
+          "off": "air",
+          "def": "blitz"
+        }
+      ],
+      "autoGameplan": false,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": 15,
+    "summary": {
+      "wins": 9,
+      "losses": 4,
+      "expectedWins": 10.4,
+      "avgMargin": 10.5,
+      "bestWin": {
+        "opponent": "Ole Miss",
+        "scoreFor": 21,
+        "scoreAgainst": 14
+      },
+      "worstLoss": {
+        "opponent": "Missouri",
+        "scoreFor": 28,
+        "scoreAgainst": 34
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "missouri",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7958574334266276,
+        "gameplan": {
+          "week": 1,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7958574334266276
+        },
+        "result": {
+          "scoreFor": 28,
+          "scoreAgainst": 34,
+          "won": false
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "arkansas",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8714025281211646,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-3-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.8714025281211646
+        },
+        "result": {
+          "scoreFor": 36,
+          "scoreAgainst": 35,
+          "won": true
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "florida",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6768393177635736,
+        "gameplan": {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.7368393177635737
+        },
+        "result": {
+          "scoreFor": 35,
+          "scoreAgainst": 46,
+          "won": false
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "oregon",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6479055742546584,
+        "gameplan": {
+          "week": 4,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6479055742546584
+        },
+        "result": {
+          "scoreFor": 32,
+          "scoreAgainst": 41,
+          "won": false
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "oklahoma",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.756050512533891,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.756050512533891
+        },
+        "result": {
+          "scoreFor": 49,
+          "scoreAgainst": 38,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "georgia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8562269717260069,
+        "gameplan": {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": -2,
+          "defEdge": 4,
+          "netEdge": 2,
+          "adjustedWinProb": 0.8762269717260069
+        },
+        "result": {
+          "scoreFor": 47,
+          "scoreAgainst": 24,
+          "won": true
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "texas-am",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.6854478671695616,
+        "gameplan": {
+          "week": 7,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6854478671695616
+        },
+        "result": {
+          "scoreFor": 21,
+          "scoreAgainst": 33,
+          "won": false
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "ole-miss",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7474633343691603,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7474633343691603
+        },
+        "result": {
+          "scoreFor": 21,
+          "scoreAgainst": 14,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "louisville",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9426586609029586,
+        "gameplan": {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9426586609029586
+        },
+        "result": {
+          "scoreFor": 48,
+          "scoreAgainst": 3,
+          "won": true
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "iowa",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9286087656480612,
+        "gameplan": {
+          "week": 10,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 5,
+          "netEdge": 7,
+          "adjustedWinProb": 0.9986087656480611
+        },
+        "result": {
+          "scoreFor": 56,
+          "scoreAgainst": 12,
+          "won": true
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "vanderbilt",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.917270064232288,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "power-run",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.917270064232288
+        },
+        "result": {
+          "scoreFor": 29,
+          "scoreAgainst": 23,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "tennessee",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7474633343691603,
+        "gameplan": {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.8074633343691604
+        },
+        "result": {
+          "scoreFor": 33,
+          "scoreAgainst": 27,
+          "won": true
+        }
+      },
+      {
+        "week": 13,
+        "opponent": "wisconsin",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "bowl",
+        "playerSeed": 15,
+        "opponentSeed": null,
+        "winProb": 0.8464988977793451,
+        "gameplan": {
+          "week": 13,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 5,
+          "netEdge": 7,
+          "adjustedWinProb": 0.9164988977793451
+        },
+        "result": {
+          "scoreFor": 54,
+          "scoreAgainst": 23,
+          "won": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "season-manual-four-rounds",
+    "input": {
+      "mode": "season",
+      "seed": 14,
+      "programSlug": "texas",
+      "gravityOn": true,
+      "gravityVersion": "v1",
+      "budgetM": 55,
+      "alloc": {
+        "QB": 9,
+        "RB": 2.7,
+        "WR": 6.3,
+        "OL": 8,
+        "DL": 10.7,
+        "LB": 5.4,
+        "DB": 9.4,
+        "ST": 3.5
+      },
+      "gameplan": [
+        {
+          "week": 1,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 2,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 4,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 5,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 7,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 8,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 10,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 11,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 13,
+          "off": "air",
+          "def": "blitz"
+        },
+        {
+          "week": 14,
+          "off": "balanced",
+          "def": "base"
+        },
+        {
+          "week": 15,
+          "off": "ground",
+          "def": "bracket"
+        },
+        {
+          "week": 16,
+          "off": "air",
+          "def": "blitz"
+        }
+      ],
+      "autoGameplan": false,
+      "simVersion": 5,
+      "dataFingerprint": "v5-c61bcaf53a4368f1"
+    },
+    "ratings": {
+      "off": 76.76288453344017,
+      "def": 79.73957049486462,
+      "st": 87.90697674418605
+    },
+    "postseasonSeed": 11,
+    "summary": {
+      "wins": 12,
+      "losses": 4,
+      "expectedWins": 11.8,
+      "avgMargin": 5,
+      "bestWin": {
+        "opponent": "Oregon",
+        "scoreFor": 36,
+        "scoreAgainst": 21
+      },
+      "worstLoss": {
+        "opponent": "Missouri",
+        "scoreFor": 34,
+        "scoreAgainst": 38
+      }
+    },
+    "games": [
+      {
+        "week": 1,
+        "opponent": "west-virginia",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9664173966724382,
+        "gameplan": {
+          "week": 1,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9664173966724382
+        },
+        "result": {
+          "scoreFor": 31,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 2,
+        "opponent": "georgia",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7320669137238373,
+        "gameplan": {
+          "week": 2,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7320669137238373
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 44,
+          "won": false
+        }
+      },
+      {
+        "week": 3,
+        "opponent": "missouri",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7958574334266276,
+        "gameplan": {
+          "week": 3,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.8558574334266276
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 38,
+          "won": false
+        }
+      },
+      {
+        "week": 4,
+        "opponent": "tennessee",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7474633343691603,
+        "gameplan": {
+          "week": 4,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.7474633343691603
+        },
+        "result": {
+          "scoreFor": 24,
+          "scoreAgainst": 21,
+          "won": true
+        }
+      },
+      {
+        "week": 5,
+        "opponent": "auburn",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8507115684593201,
+        "gameplan": {
+          "week": 5,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 3,
+          "defEdge": 0,
+          "netEdge": 3,
+          "adjustedWinProb": 0.8807115684593201
+        },
+        "result": {
+          "scoreFor": 52,
+          "scoreAgainst": 37,
+          "won": true
+        }
+      },
+      {
+        "week": 6,
+        "opponent": "notre-dame",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.7189074371345069,
+        "gameplan": {
+          "week": 6,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.7789074371345068
+        },
+        "result": {
+          "scoreFor": 27,
+          "scoreAgainst": 20,
+          "won": true
+        }
+      },
+      {
+        "week": 7,
+        "opponent": "texas-am",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5153729120935678,
+        "gameplan": {
+          "week": 7,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": -2,
+          "netEdge": 0,
+          "adjustedWinProb": 0.5153729120935678
+        },
+        "result": {
+          "scoreFor": 25,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 8,
+        "opponent": "smu",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9536691896172937,
+        "gameplan": {
+          "week": 8,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9536691896172937
+        },
+        "result": {
+          "scoreFor": 37,
+          "scoreAgainst": 14,
+          "won": true
+        }
+      },
+      {
+        "week": 9,
+        "opponent": "oklahoma",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8724602931722558,
+        "gameplan": {
+          "week": 9,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.9324602931722559
+        },
+        "result": {
+          "scoreFor": 20,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 10,
+        "opponent": "lsu",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.5032102282263085,
+        "gameplan": {
+          "week": 10,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-3",
+          "offEdge": 5,
+          "defEdge": -2,
+          "netEdge": 3,
+          "adjustedWinProb": 0.5332102282263085
+        },
+        "result": {
+          "scoreFor": 34,
+          "scoreAgainst": 61,
+          "won": false
+        }
+      },
+      {
+        "week": 11,
+        "opponent": "iowa",
+        "isHome": true,
+        "venue": "home",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.9719303938930719,
+        "gameplan": {
+          "week": 11,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.9719303938930719
+        },
+        "result": {
+          "scoreFor": 45,
+          "scoreAgainst": 19,
+          "won": true
+        }
+      },
+      {
+        "week": 12,
+        "opponent": "kentucky",
+        "isHome": false,
+        "venue": "away",
+        "stage": null,
+        "playerSeed": null,
+        "opponentSeed": null,
+        "winProb": 0.8570278977383443,
+        "gameplan": {
+          "week": 12,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.9170278977383444
+        },
+        "result": {
+          "scoreFor": 36,
+          "scoreAgainst": 9,
+          "won": true
+        }
+      },
+      {
+        "week": 13,
+        "opponent": "texas-tech",
+        "isHome": false,
+        "venue": "away",
+        "stage": "fr",
+        "playerSeed": 11,
+        "opponentSeed": 6,
+        "winProb": 0.6164997182205653,
+        "gameplan": {
+          "week": 13,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "spread",
+          "oppDefTag": "3-4",
+          "offEdge": 5,
+          "defEdge": -2,
+          "netEdge": 3,
+          "adjustedWinProb": 0.6464997182205653
+        },
+        "result": {
+          "scoreFor": 25,
+          "scoreAgainst": 22,
+          "won": true
+        }
+      },
+      {
+        "week": 14,
+        "opponent": "miami",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "qf",
+        "playerSeed": 11,
+        "opponentSeed": 3,
+        "winProb": 0.6088500762655233,
+        "gameplan": {
+          "week": 14,
+          "off": "balanced",
+          "def": "base",
+          "oppOffTag": "spread",
+          "oppDefTag": "4-2-5",
+          "offEdge": 0,
+          "defEdge": 0,
+          "netEdge": 0,
+          "adjustedWinProb": 0.6088500762655233
+        },
+        "result": {
+          "scoreFor": 33,
+          "scoreAgainst": 30,
+          "won": true
+        }
+      },
+      {
+        "week": 15,
+        "opponent": "oregon",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "sf",
+        "playerSeed": 11,
+        "opponentSeed": 2,
+        "winProb": 0.56255490790254,
+        "gameplan": {
+          "week": 15,
+          "off": "ground",
+          "def": "bracket",
+          "oppOffTag": "spread",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": 4,
+          "netEdge": 6,
+          "adjustedWinProb": 0.6225549079025401
+        },
+        "result": {
+          "scoreFor": 36,
+          "scoreAgainst": 21,
+          "won": true
+        }
+      },
+      {
+        "week": 16,
+        "opponent": "ohio-state",
+        "isHome": false,
+        "venue": "neutral",
+        "stage": "ncg",
+        "playerSeed": 11,
+        "opponentSeed": 1,
+        "winProb": 0.5570298625022039,
+        "gameplan": {
+          "week": 16,
+          "off": "air",
+          "def": "blitz",
+          "oppOffTag": "pro-style",
+          "oppDefTag": "multiple",
+          "offEdge": 2,
+          "defEdge": 5,
+          "netEdge": 7,
+          "adjustedWinProb": 0.6270298625022039
+        },
+        "result": {
+          "scoreFor": 17,
+          "scoreAgainst": 37,
+          "won": false
+        }
+      }
+    ]
+  }
+]

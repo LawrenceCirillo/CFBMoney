@@ -11,7 +11,7 @@ import { SIM_VERSION } from "./season-replay";
 import { GRAVITY_VERSION } from "./gravity";
 
 const GameplanPickSchema = z.object({
-  week: z.number().int().min(1).max(15),
+  week: z.number().int().min(1).max(16),
   off: z.enum(["air", "balanced", "ground"]),
   def: z.enum(["blitz", "base", "bracket"]),
 }).strict();
@@ -39,7 +39,7 @@ export const SeasonPayloadSchema = z.object({
   budgetM: z.number().int().min(GAME_BUDGET_MIN_M).max(GAME_BUDGET_MAX_M),
   seed: z.number().int().min(0).max(2 ** 31 - 1),
   alloc: AllocSchema,
-  gameplan: z.array(GameplanPickSchema).max(15),
+  gameplan: z.array(GameplanPickSchema).max(16),
   autoGameplan: z.boolean(),
   gravityOn: z.boolean(),
   gravityVersion: z.literal(GRAVITY_VERSION),
