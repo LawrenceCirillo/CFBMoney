@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CompareBoard from "@/components/CompareBoard";
 import { parseComparePair } from "@/lib/compare";
-import { getTeam } from "@/lib/data";
+import { data, getTeam } from "@/lib/data";
+import { seasonSnapshot } from "@/lib/season-snapshot";
+import { scoreboard } from "@/lib/scores";
+import { buildTeamContexts } from "@/lib/team-context";
+
+const contexts = buildTeamContexts(data, seasonSnapshot, scoreboard);
 
 type Props = { params: Promise<{ pair: string }> };
 
@@ -23,5 +28,5 @@ export default async function ComparePair({ params }: Props) {
   const { pair } = await params;
   const parsed = parseComparePair(pair);
   if (!parsed) notFound();
-  return <CompareBoard initialA={parsed.a} initialB={parsed.b} />;
+  return <CompareBoard initialA={parsed.a} initialB={parsed.b} contexts={contexts} />;
 }
